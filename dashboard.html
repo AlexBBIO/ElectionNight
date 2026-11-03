@@ -51,7 +51,9 @@ details .card{margin-top:10px}
 .primary{display:grid;grid-template-columns:auto auto 1fr;gap:10px 34px;align-items:end}
 @media (max-width:820px){.primary{grid-template-columns:1fr 1fr}}
 .verdict{font-size:14px;font-weight:600;margin-top:2px}
-.signals{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media (max-width:820px){.signals{grid-template-columns:1fr}}
+.signals{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.signals .card:first-child{grid-column:span 2}@media (max-width:820px){.signals .card:first-child{grid-column:span 1}}
+.signals table td,.signals table th{padding:4px 6px;white-space:normal}@media (max-width:820px){.signals{grid-template-columns:1fr}}
 .hist{font-size:12px;color:var(--faint);margin-top:6px;border-top:1px dashed var(--line);padding-top:6px}
 .hist b{color:var(--muted);font-weight:600}
 th.grp{text-align:center;border-bottom:none;padding-bottom:0;color:var(--faint);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
@@ -86,6 +88,9 @@ h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fain
       <div class="hist" id="h_t_hist"></div></div>
     <div class="card"><div class="k">LATEST BATCHES VS EXPECTED</div><div class="mid" id="h_b" style="margin-top:6px">—</div><div class="sub" id="h_b_sub">no batches yet</div>
       <div class="hist">each new upload vs what that vote type should look like in that county, given expectations</div></div>
+    <div class="card"><div class="k">SENATE CONTROL · DEMOCRATS</div><div class="row2"><div><div class="sub">market 6 AM</div><div class="mid" id="h_sc0">—</div></div><div><div class="sub">re-priced on what we've seen</div><div class="mid" id="h_sc1">—</div></div></div>
+      <div class="sub" id="h_sc_sub">market-implied race odds shifted by the turnout reads (and counted votes once in), simulated with a shared national error</div>
+      <div class="hist" id="h_sc_hist"></div></div>
     <div class="card"><div class="k">MARKETS SINCE THIS MORNING</div><div class="mid" id="h_mm" style="margin-top:6px">—</div><div class="sub" id="h_mm_sub">average move in market-implied margins since 6 AM ET</div>
       <div class="hist">context only; the expectation stays frozen at the 6 AM prices</div></div>
   </section>
@@ -139,6 +144,7 @@ h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fain
       <div class="card"><h2>By county type (all races)</h2><div class="scroll"><table id="types"><thead><tr><th>Type</th><th>Counties</th><th>Votes</th><th>Dems vs exp.</th><th>Unadjusted</th></tr></thead><tbody></tbody></table></div></div>
       <div class="card"><h2>Unadjusted (raw counted votes)</h2><div id="raw"></div></div>
     </div>
+    <div class="card"><h2>Senate seats · market odds re-priced</h2><div class="scroll"><table id="sen"><thead><tr><th>Seat</th><th>Held by</th><th>P(D) market 6 AM</th><th>Shift (pts)</th><th>Source</th><th>P(D) adjusted</th></tr></thead><tbody></tbody></table></div></div>
     <div class="card"><h2>Vote-type model by race</h2><div class="scroll"><table id="vt"><thead><tr><th>Race</th><th>Expected vote</th><th>Turnout vs '22</th><th>Raw vs exp.</th><th>Vote-type adj.</th><th>+ county mix</th><th>Order</th><th>Early share</th><th>Early − ED lean</th><th>Source</th></tr></thead><tbody></tbody></table></div></div>
     <div class="card"><h2>Add check-in data</h2><div class="sub" style="margin-bottom:6px">Local server only; saved to data/checkins_manual.csv.</div>
       <input id="ci_j" placeholder="Jurisdiction" style="width:180px"> <input id="ci_st" placeholder="ST" style="width:44px"> <input id="ci_y" value="2026" style="width:64px">
@@ -203,6 +209,9 @@ function render(data){const s=data.snapshot;if(!s)return;if(last!==data)scoreBat
    $("#h_tt").innerHTML=rows.join("")||`<tr><td class="sub">needs party-registration turnout data (FL, NC, KY)</td></tr>`;}
   $("#h_t_hist").innerHTML=`Assumes turnout supplies ${Math.round((o.turnout_pi||1/3)*100)}% of an election's swing (range shown: 20–50%). Against a 2024 baseline: ${m(o.turnout_vs_polls_24)} vs polls, ${m(o.turnout_vs_markets_24)} vs markets.<br><b>History</b> · early-vote party mix vs 2024 ${m(o.turnout_party_shift_24)} · vs 2022 ${m(o.turnout_party_shift)} · Election Day check-ins vs 2024 ${m(ck.d_mix_24)} · vs 2022 ${m(ck.d_mix_22)}`;
   const b15=bAgg(15),b60=bAgg(60);set("#h_b",b15.v);$("#h_b_sub").textContent=b15.k?`last 15 min · ${b15.k} uploads · ${n(b15.w)} votes · last hour ${m(b60.v)}`:"no new votes in the last 15 minutes";
+  {const sc=s.senate||{},pc=x=>x==null?"—":Math.round(x*100)+"%";$("#h_sc0").textContent=pc(sc.dem_control_market);$("#h_sc1").textContent=pc(sc.dem_control_adjusted);
+    $("#h_sc1").className="mid "+(sc.dem_control_adjusted==null||sc.dem_control_market==null?"":(sc.dem_control_adjusted>=sc.dem_control_market?"d":"r"));
+    $("#h_sc_hist").innerHTML=sc.races?`market now ${pc(sc.now_market)} · model at zero shift ${pc(sc.dem_control_model0)} (offset ${sc.delta>=0?"+":""}${(sc.delta||0).toFixed(1)} pts to match the market) · national turnout read ${m(sc.national_shift)} applied at ${Math.round((sc.national_weight||0)*100)}% to states without their own · expected D seats ${sc.expected_d_seats_adjusted==null?"—":sc.expected_d_seats_adjusted.toFixed(1)}`:(sc.error||"needs the Senate seat list from the market feed");}
   const mv=s.races.filter(r=>r.market_move!=null);set("#h_mm",mv.length?mv.reduce((a,r)=>a+r.market_move,0)/mv.length:null);
   const nb=mk.national||{},nn=mk.national_now||{},pc=x=>x==null?"?":Math.round(x*100)+"%";
   $("#expect").innerHTML=`<span><b>Going in</b></span><span>Polls: generic ballot <b class="${cls(o.generic_ballot)}">${m(o.generic_ballot)}</b> · race averages in the table</span>`+
@@ -320,6 +329,7 @@ function renderMore(s){const o=s.overall,mn=+$("#bmin").value||0,only=$("#bsel")
   const T=["Rural","Exurban / working metro","College suburbs","Urban core","Black","Hispanic"],ty=o.types||{};
   $("#types tbody").innerHTML=T.map(k=>{const x=ty[k]||{};return `<tr><td>${k}</td><td>${x.counties_reporting||0}</td><td>${n(x.votes||0)}</td><td class="${cls(x.adj_vs_expect)}"><b>${m(x.adj_vs_expect)}</b></td><td class="${cls(x.vs_expect)}">${m(x.vs_expect)}</td></tr>`}).join("");
   $("#raw").innerHTML=`<div class="row2"><div><div class="k">Raw vs expectations</div><div class="mid ${cls(o.vs_expect)}">${m(o.vs_expect)}</div></div><div><div class="k">Swing vs 2024 pres.</div><div class="mid ${cls(o.swing24)}">${m(o.swing24)}</div></div><div><div class="k">Swing vs 2022</div><div class="mid ${cls(o.swing22)}">${m(o.swing22)}</div></div></div><p class="note">Raw counted votes are biased by which vote types and counties report first; use the adjusted number.</p>`;
+  const sc=s.senate||{};$("#sen tbody").innerHTML=(sc.races||[]).map(r=>`<tr><td>${r.race_id}${r.no_market?' <span class="faint">no market</span>':""}</td><td>${r.incumbent_party||"?"}</td><td>${Math.round(r.p_market*100)}%</td><td class="${cls(r.shift)}">${m(r.shift)}</td><td class="faint">${r.shift_source}</td><td class="${cls(r.p_adjusted-r.p_market)}"><b>${Math.round(r.p_adjusted*100)}%</b></td></tr>`).join("")||`<tr><td colspan="6" class="empty">No Senate seat list yet.</td></tr>`;
   $("#vt tbody").innerHTML=s.races.map(r=>{const v=r.vote_type||{};return `<tr><td>${r.label}</td><td>${r.votes?n(r.exp_vote_total):"—"}</td><td>${r.implied_turnout_vs_2022==null?"—":(r.implied_turnout_vs_2022*100).toFixed(0)+"%"}</td>
     <td class="${cls(r.vs_expect)}">${m(r.vs_expect)}</td><td class="${cls(r.adj_vs_expect)}">${m(r.adj_vs_expect)}</td><td class="${cls(r.rw_vs_expect)}"><b>${m(r.rw_vs_expect)}</b></td>
     <td>${v.order||""}</td><td>${v.pre_share==null?"—":Math.round(v.pre_share*100)+"%"}</td><td>${v.delta==null?"—":m(v.delta,0)}</td><td class="faint">${v.source||""}</td></tr>`}).join("")}

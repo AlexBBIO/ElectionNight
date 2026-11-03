@@ -3,7 +3,8 @@
     "Margins are Democratic minus Republican, in percentage points of all votes (D+5 = 5, R+5 = -5).",
     "forecast_margin: final pre-election polling average for that race (null = derive from national generic ballot).",
     "Sources for the defaults (checked 2026-11-03): generic ballot averages D+8.1 to D+9.0 (FiftyPlusOne final D+8.7, RCP D+8.8, Call the Map D+8.6); race averages from RCP / Silver Bulletin / PollCheck. Gov forecasts marked low_confidence come from a single aggregator. Edit before polls close.",
-    "firm_threshold applies to est. share of expected vote counted. expected_turnout_vs_2022 is the fallback turnout factor; per-state values come from vote_type_research.json or a 'states' override, e.g. \"states\": {\"KY\": {\"turnout_factor\": 1.2, \"pre_share\": 0.3, \"delta\": 15, \"order\": \"pre_first\"}}."
+    "firm_threshold applies to est. share of expected vote counted. expected_turnout_vs_2022 is the fallback turnout factor; per-state values come from vote_type_research.json or a 'states' override, e.g. \"states\": {\"KY\": {\"turnout_factor\": 1.2, \"pre_share\": 0.3, \"delta\": 15, \"order\": \"pre_first\"}}.",
+    "TX-GOV forecast: Texas Southern (Abbott 50-47) and NYT/Siena (Hinojosa 48-47) average ~R+1, low confidence. TX-SEN: RCP Talarico +2.5 / Silver +3.3. feed 'none' = no results adapter; turnout and markets only."
   ],
   "poll_seconds": 30,
   "election": "2026-11-03",
@@ -161,6 +162,31 @@
       "forecast_margin": 3.3,
       "low_confidence": true,
       "polls_close_et": "19:30"
+    },
+    {
+      "id": "TX-GOV",
+      "state": "TX",
+      "label": "Texas Governor",
+      "feed": "none",
+      "race": "Governor",
+      "baseline_2022": {
+        "office": "GOVERNOR"
+      },
+      "forecast_margin": -1.0,
+      "low_confidence": true,
+      "polls_close_et": "20:00"
+    },
+    {
+      "id": "TX-SEN",
+      "state": "TX",
+      "label": "Texas Senate",
+      "feed": "none",
+      "race": "U.S. Senate",
+      "baseline_2022": {
+        "office": "US HOUSE"
+      },
+      "forecast_margin": 2.9,
+      "polls_close_et": "20:00"
     }
   ],
   "states": {}

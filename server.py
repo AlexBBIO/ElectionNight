@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import checkins_model, engine
+from . import checkins_model, engine, senate_model, texas
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "out"
@@ -109,6 +109,12 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
 
     def work(i, race):
         t = time.time()
+        if race.get("feed") == "none":
+            res = engine.analyze_race(race, [], b, cfg)
+            res["status"] = "no results feed; turnout and markets only"
+            res["fetch_seconds"] = 0.0
+            results[i] = res
+            return
         if race.get("feed") in skip:
             res = engine.analyze_race(race, [], b, cfg)
             res["status"] = "runs on the local version only (this state blocks cloud servers)"
@@ -196,6 +202,9 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
     snap["_pi"] = cfg.get("turnout_share_of_swing", PI_DEFAULT)
     try:
         turnout_vs_expectation(results, snap, b)
+        snap["texas"] = texas.read(b, cfg, _MK[1][0] if _MK[1] else None, pi=snap["_pi"])
+        _texas_into_races(results, snap)
+        snap["senate"] = senate_control(results, snap, cfg)
     except Exception:  # noqa: BLE001
         traceback.print_exc()
     return snap
@@ -380,9 +389,71 @@ def turnout_vs_expectation(results: list[dict], snap: dict, b) -> None:
     o["turnout_pi"] = PI_DEFAULT if "_pi" not in snap else snap["_pi"]
 
 
+_SEN: tuple[float, str, dict] = (0.0, "", {})
+
+
+def _texas_into_races(results, snap):
+    tx = snap.get("texas") or {}
+    for r in results:
+        x = (tx.get("races") or {}).get(r["id"])
+        if x and x.get("years"):
+            r["turnout_split"] = {"early": {"label": "early vote (primary history / geography)", "years": {
+                y: {"expected": v.get("expected"), "market_expected": v.get("market_expected"),
+                    "comp_effect": v["turnout_effect"], "vs_polls": v.get("vs_polls"),
+                    "vs_polls_range": v.get("vs_polls_range"), "vs_markets": v.get("vs_markets"),
+                    "turnout": v["turnout_effect"], "persuasion": None, "share": None}
+                for y, v in x["years"].items()}}}
+
+
+def senate_control(results, snap, cfg):
+    """Senate control re-priced for the turnout reads (and, later, counted votes). Cached 5 min."""
+    global _SEN
+    base = _MK[1][0] if _MK[1] else {}
+    blk = (base or {}).get("senate_seats")
+    if not blk:
+        return None
+    o = snap["overall"]
+    # own-state turnout reads vs the 6 AM market: mean of the 2022 and 2024 bases where both exist
+    # (2022 inflates the D read where voters shifted to early voting / re-sorted by primary;
+    # 2024 deflates it by comparing with a presidential electorate), scaled by turnout_weight
+    # because turnout composition is a partial signal of the final margin.
+    w = cfg.get("senate_turnout_weight", 0.5)
+    own = {}
+    for r in results:
+        ts = r.get("turnout_split")
+        if not ts or not r["id"].endswith("-SEN"):
+            continue
+        v = ts.get("full") or ts.get("early")
+        vals = [x["vs_markets"] for y in (2022, 2024, "2022", "2024")
+                for x in [((v or {}).get("years") or {}).get(y) or {}] if x.get("vs_markets") is not None]
+        if vals:
+            own[r["state"]] = w * sum(vals) / len(vals)
+    nats = [o.get(k) for k in ("turnout_vs_markets_22", "turnout_vs_markets_24") if o.get(k) is not None]
+    nat = (w * sum(nats) / len(nats)) if nats else None
+    counted = {r["id"]: r["rw_vs_market"] for r in results
+               if r.get("rw_vs_market") is not None and (r.get("adj_est_in") or 0) >= 0.10}
+    key = json.dumps([sorted((k, round(v, 2)) for k, v in own.items()), None if nat is None else round(nat, 2),
+                      sorted((k, round(v, 2)) for k, v in counted.items())])
+    if _SEN[1] == key and time.time() - _SEN[0] < 300:
+        return _SEN[2]
+    blk = dict(blk)
+    blk.setdefault("baseline_control_p", (base.get("national") or {}).get("senate_dem_control"))
+    try:
+        out = senate_model.control(blk, own, nat, national_weight=cfg.get("senate_national_weight", 0.5),
+                                   counted=counted or None)
+    except Exception as exc:  # noqa: BLE001
+        out = {"error": str(exc)}
+    out["now_market"] = ((_MK[1][1] or {}).get("national") or {}).get("senate_dem_control_now") if _MK[1] else None
+    out["turnout_weight"] = w
+    out["own_reads"] = own
+    _SEN = (time.time(), key, out)
+    return out
+
+
 def history_row(snap: dict) -> dict:
     return {"ts": snap["ts"], "overall": snap["overall"],
             "checkins": {k: (snap.get("checkins") or {}).get(k) for k in ("d_gap_22", "d_gap_24")},
+            "senate": {k: (snap.get("senate") or {}).get(k) for k in ("dem_control_market", "dem_control_adjusted", "now_market")},
             "races": {r["id"]: {k: r.get(k) for k in ("vs_expect", "firm_vs_expect", "projected",
                                                        "projected_vs_forecast", "est_in", "votes",
                                                        "swing24", "swing22", "current_margin",
