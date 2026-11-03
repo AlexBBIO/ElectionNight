@@ -1,25 +1,26 @@
-"""Election Day check-ins by party: compare 2026 with 2022 / 2024 at the same clock hour.
+"""Election Day check-ins by party vs 2022 / 2024.
 
-Data (all optional, merged; later sources win for the same jurisdiction/year/hour):
-  data/checkins.csv          researched / archived rows
-  data/checkins_manual.csv   rows entered on the dashboard form (local server) or by hand
-  feeds/checkins.py          live machine-readable feeds, if any (fetch() -> rows)
-Columns: jurisdiction,state,year,hour_local,rep,dem,oth,source,as_of   (cumulative ED check-ins)
+Data (merged; later sources win for the same jurisdiction/year/hour):
+  data/checkins.csv          researched rows + hourly 2026 snapshots saved by the poller
+                             (python3 -m election_night.feeds.checkins --save)
+  data/checkins_manual.csv   rows typed into the dashboard form, or by hand
+  feeds/checkins.py          live fetch (Florida county VR Systems feeds, Washoe NV)
+Columns: jurisdiction,state,year,hour_local,rep,dem,oth,source,as_of   (cumulative ED in-person)
 
-Per jurisdiction, at the latest hour that 2026 has and a comparison year also has:
-  gap_y        = 100 * (dem - rep) / total          party gap of the ED electorate, D-R pts
-  d_gap_22/24  = gap_2026 - gap_y                    + = ED electorate more Democratic in mix
-  vol_22/24    = total_2026 / total_y                ED volume vs that year at the same hour
-  implied_ed_shift_22 = LOYALTY * d_gap_22           rough vote-margin equivalent, assuming
-               partisans vote ~88 net for their party and independents split as in 2022
-  proj_final   = 2022 final ED by party scaled by each party's 2026/2022 same-hour ratio
-Party registration is not vote choice, and Election Day's share of the vote keeps shrinking as
-voters (lately more Republicans) move to early voting: read the ED mix together with the
-pre-Election-Day ballots by party (turnout panel), not alone.
+For each jurisdiction, and for each state with several counties (sum of counties that have
+2026 data and both 2022 and 2024 finals):
+  series[year]  cumulative [hour, R, D, O] points (hour in local time; Eastern for state sums)
+  finals[year]  final ED totals by party, where known
+  mix           (D - R) / total of the ED electorate, 2026 now vs the same hour in 2022/2024
+                where we have it, else vs that year's final ED electorate
+  pace          2026 so far / that year's final, by party
+Party registration is not vote choice, and Election Day's share keeps shrinking as voters
+(lately more Republicans) move to early voting: read alongside the early-vote party mix.
 """
 from __future__ import annotations
 
 import csv
+import datetime as _dt
 import importlib
 import time
 from collections import defaultdict
@@ -29,36 +30,59 @@ HERE = Path(__file__).resolve().parent
 DATA = HERE / "data"
 COLS = ["jurisdiction", "state", "year", "hour_local", "rep", "dem", "oth", "source", "as_of"]
 MANUAL = DATA / "checkins_manual.csv"
-LOYALTY = 0.88
+SAVED = DATA / "checkins.csv"
+ET = _dt.timezone(_dt.timedelta(hours=-5))
 _LIVE: tuple[float, list] = (0.0, [])
 
 
-def _hour_key(h: str) -> float:
-    h = (h or "").strip().lower()
+def _num(x):
+    try:
+        return float(str(x).replace(",", "")) if x not in (None, "") else None
+    except ValueError:
+        return None
+
+
+def _hours(r: dict, eastern: bool) -> float | None:
+    h = (r.get("hour_local") or "").strip().lower()
     if h == "final":
-        return 99.0
+        return None
+    if eastern and r.get("as_of"):
+        try:
+            t = _dt.datetime.fromisoformat(r["as_of"].replace(" ", "T")[:22])
+            if t.tzinfo:
+                t = t.astimezone(ET)
+                return t.hour + t.minute / 60
+        except ValueError:
+            pass
     try:
         hh, mm = (h.split(":") + ["0"])[:2]
         return int(hh) + int(mm) / 60
     except ValueError:
-        return -1.0
+        return None
 
 
 def _read(p: Path) -> list[dict]:
     if not p.exists():
         return []
     with open(p, newline="") as fh:
-        return [r for r in csv.DictReader(fh)]
+        return list(csv.DictReader(fh))
 
 
-def _live_rows() -> list[dict]:
+def _live_rows(save: bool) -> list[dict]:
+    """Live rows (cached 10 min). When `save`, new snapshots are merged into data/checkins.csv
+    so the same-day hourly series builds up (no-op on read-only deploys)."""
     global _LIVE
-    if time.time() - _LIVE[0] < 120:
+    if time.time() - _LIVE[0] < 600:
         return _LIVE[1]
     rows = []
     try:
         mod = importlib.import_module("election_night.feeds.checkins")
         rows = mod.fetch() or []
+        if save and rows:
+            try:
+                mod.merge_into_csv(rows)
+            except OSError:
+                pass
     except Exception:  # noqa: BLE001
         rows = []
     _LIVE = (time.time(), rows)
@@ -74,67 +98,98 @@ def append_manual(row: dict) -> None:
         w.writerow({k: row.get(k, "") for k in COLS})
 
 
-def _num(x):
-    try:
-        return float(str(x).replace(",", "")) if x not in (None, "") else None
-    except ValueError:
+def _gap(r, d, o):
+    t = r + d + o
+    return 100 * (d - r) / t if t else None
+
+
+def _panel(name, state, series, finals, note=""):
+    s26 = series.get(2026) or []
+    if not s26:
         return None
+    t, R, D, O = s26[-1]
+    out = {"name": name, "state": state, "note": note, "series": {str(y): v for y, v in series.items()},
+           "finals": {str(y): v for y, v in finals.items()},
+           "latest": {"hour": t, "rep": R, "dem": D, "oth": O, "total": R + D + O},
+           "mix_2026": _gap(R, D, O)}
+    for y in (2022, 2024):
+        same = next((p for p in series.get(y, []) if abs(p[0] - t) < 0.26), None)
+        fin = finals.get(y)
+        if same:
+            out[f"mix_{y}"] = _gap(*same[1:]); out[f"basis_{y}"] = "same hour"
+            out[f"vol_{y}"] = (R + D + O) / sum(same[1:])
+        elif fin:
+            out[f"mix_{y}"] = _gap(*fin); out[f"basis_{y}"] = "final"
+        if fin:
+            out[f"mix_{y}_final"] = _gap(*fin)
+            out[f"pace_{y}"] = {"rep": R / fin[0] if fin[0] else None, "dem": D / fin[1] if fin[1] else None,
+                                "oth": O / fin[2] if fin[2] else None, "total": (R + D + O) / sum(fin) if sum(fin) else None}
+        if out.get(f"mix_{y}") is not None and out["mix_2026"] is not None:
+            out[f"d_mix_{y % 100}"] = out["mix_2026"] - out[f"mix_{y}"]
+    return out
 
 
-def summary(live: bool = True) -> dict:
+def summary(live: bool = True, save: bool = True) -> dict:
     data: dict[tuple, dict] = {}
-    for src in (_read(DATA / "checkins.csv"), _read(MANUAL), _live_rows() if live else []):
+    for src in (_read(SAVED), _read(MANUAL), _live_rows(save) if live else []):
         for r in src:
             try:
-                key = (r["jurisdiction"].strip(), int(r["year"]), _hour_key(r["hour_local"]))
+                key = (r["jurisdiction"].strip(), r.get("state", ""), int(r["year"]), (r["hour_local"] or "").strip().lower())
             except (KeyError, ValueError):
                 continue
             rep, dem, oth = _num(r.get("rep")), _num(r.get("dem")), _num(r.get("oth"))
             if rep is None or dem is None:
                 continue
-            data[key] = {"state": r.get("state", ""), "rep": rep, "dem": dem, "oth": oth or 0.0,
-                         "hour": r["hour_local"], "source": r.get("source", ""), "as_of": r.get("as_of", "")}
-    by_j: dict[str, dict] = defaultdict(lambda: defaultdict(dict))
-    for (j, y, hk), v in data.items():
-        by_j[j][y][hk] = v
-    out = []
-    for j, years in by_j.items():
-        cur = {hk: v for hk, v in years.get(2026, {}).items() if hk < 99}
-        if not cur:
+            data[key] = {**r, "rep": rep, "dem": dem, "oth": oth or 0.0}
+    per: dict[tuple, dict] = defaultdict(lambda: {"series": defaultdict(list), "series_et": defaultdict(list), "finals": {}})
+    for (j, st, y, h), r in data.items():
+        p = per[(j, st)]
+        if h == "final":
+            p["finals"][y] = [r["rep"], r["dem"], r["oth"]]
             continue
-        # latest 2026 hour that a comparison year also has
-        hours = sorted(cur, reverse=True)
-        h = next((hk for hk in hours if any(hk in years.get(y, {}) for y in (2022, 2024))), hours[0])
-        a = cur[h]
-        tot = a["rep"] + a["dem"] + a["oth"]
-        row = {"jurisdiction": j, "state": a["state"], "hour": a["hour"], "rep": a["rep"], "dem": a["dem"],
-               "oth": a["oth"], "total": tot, "gap_2026": 100 * (a["dem"] - a["rep"]) / tot if tot else None,
-               "source": a["source"], "as_of": a["as_of"],
-               "series": {str(y): sorted(([hk, (v["dem"] - v["rep"]) / (v["rep"] + v["dem"] + v["oth"]) * 100,
-                                          v["rep"] + v["dem"] + v["oth"]]
-                                         for hk, v in hs.items() if hk < 99), key=lambda x: x[0])
-                          for y, hs in years.items()}}
-        for y in (2022, 2024):
-            b = years.get(y, {}).get(h)
-            if b:
-                bt = b["rep"] + b["dem"] + b["oth"]
-                g = 100 * (b["dem"] - b["rep"]) / bt if bt else None
-                row[f"gap_{y}"] = g
-                row[f"d_gap_{y % 100}"] = (row["gap_2026"] - g) if (g is not None and row["gap_2026"] is not None) else None
-                row[f"vol_{y % 100}"] = tot / bt if bt else None
-            fin = years.get(y, {}).get(99.0)
-            if y == 2022 and fin and b:
-                proj = {p: fin[p] * (a[p] / b[p]) if b[p] else fin[p] for p in ("rep", "dem", "oth")}
-                pt = sum(proj.values())
-                row["proj_final_gap"] = 100 * (proj["dem"] - proj["rep"]) / pt if pt else None
-                row["proj_final_total"] = pt
-                row["final_2022_gap"] = 100 * (fin["dem"] - fin["rep"]) / (fin["rep"] + fin["dem"] + fin["oth"])
-        if row.get("d_gap_22") is not None:
-            row["implied_ed_shift_22"] = LOYALTY * row["d_gap_22"]
-        out.append(row)
-    w = [(r["d_gap_22"], r["total"]) for r in out if r.get("d_gap_22") is not None]
-    w24 = [(r["d_gap_24"], r["total"]) for r in out if r.get("d_gap_24") is not None]
-    agg = (sum(a * b for a, b in w) / sum(b for _, b in w)) if w else None
-    agg24 = (sum(a * b for a, b in w24) / sum(b for _, b in w24)) if w24 else None
-    return {"jurisdictions": sorted(out, key=lambda r: -r["total"]), "d_gap_22": agg, "d_gap_24": agg24,
-            "implied_ed_shift_22": None if agg is None else LOYALTY * agg}
+        for key, east in (("series", False), ("series_et", True)):
+            t = _hours(r, east)
+            if t is not None:
+                p[key][y].append([t, r["rep"], r["dem"], r["oth"]])
+    panels = []
+    for (j, st), p in per.items():
+        for y in p["series"]:
+            p["series"][y].sort(); p["series_et"][y].sort()
+        pn = _panel(j, st, dict(p["series"]), p["finals"])
+        if pn:
+            pn["key"] = f"{st}|{j}"
+            panels.append(pn)
+    # state sums (Eastern time), over counties with 2026 data and both finals
+    by_state = defaultdict(list)
+    for (j, st), p in per.items():
+        if p["series_et"].get(2026) and 2022 in p["finals"] and 2024 in p["finals"]:
+            by_state[st].append(p)
+    states = []
+    for st, ps in by_state.items():
+        if len(ps) < 5:
+            continue
+        times = sorted({round(pt[0] * 2) / 2 for p in ps for pt in p["series_et"][2026]})
+        ser = []
+        for t in times:
+            tot = [0.0, 0.0, 0.0]
+            for p in ps:
+                last = [pt for pt in p["series_et"][2026] if round(pt[0] * 2) / 2 <= t]
+                if last:
+                    tot = [a + b for a, b in zip(tot, last[-1][1:])]
+            ser.append([t] + tot)
+        finals = {y: [sum(p["finals"][y][i] for p in ps) for i in range(3)] for y in (2022, 2024)}
+        pn = _panel(f"{st} — {len(ps)} counties", st, {2026: ser}, finals,
+                    note="sum of counties reporting today that also have 2022 and 2024 finals; Eastern time")
+        if pn:
+            pn["key"] = f"{st}|__state"
+            pn["is_state"] = True
+            states.append(pn)
+    # headline: state sums + jurisdictions in states without a sum
+    summed = {s["state"] for s in states}
+    head = states + [p for p in panels if p["state"] not in summed]
+    def wavg(k):
+        xs = [(p[k], p["latest"]["total"]) for p in head if p.get(k) is not None]
+        return sum(a * b for a, b in xs) / sum(b for _, b in xs) if xs else None
+    panels.sort(key=lambda p: -p["latest"]["total"])
+    return {"panels": states + panels, "d_mix_22": wavg("d_mix_22"), "d_mix_24": wavg("d_mix_24"),
+            "jurisdictions": len(panels)}

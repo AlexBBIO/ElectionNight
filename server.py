@@ -127,7 +127,8 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
             "overall": engine.overall(results, cfg), "races": results,
             "national": cfg["national"], "firm_threshold": cfg.get("firm_threshold", 0.9)}
     try:
-        snap["checkins"] = checkins_model.summary(live=cfg.get("turnout_mode", "live") != "off")
+        snap["checkins"] = checkins_model.summary(live=cfg.get("checkins_live", cfg.get("turnout_mode", "live") != "off"),
+                                                  save=cfg.get("checkins_save", True))
     except Exception as exc:  # noqa: BLE001
         snap["checkins"] = {"error": str(exc), "jurisdictions": []}
     return snap
@@ -140,7 +141,7 @@ def history_row(snap: dict) -> dict:
                                                        "projected_vs_forecast", "est_in", "votes",
                                                        "swing24", "swing22", "current_margin",
                                                        "adj_vs_expect", "adj_firm_vs_expect", "adj_projected",
-                                                       "adj_est_in", "implied_turnout_vs_2022", "rw_vs_expect")}
+                                                       "adj_est_in", "implied_turnout_vs_2022", "rw_vs_expect", "rw_projected")}
                       for r in snap["races"]}}
 
 

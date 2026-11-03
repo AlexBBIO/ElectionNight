@@ -43,6 +43,9 @@ def build(query: dict) -> bytes:
     demo = query.get("demo", ["0"])[0] not in ("0", "")
     # big turnout files don't fit the serverless time limit: use the committed snapshot there
     cfg["turnout_mode"] = "off" if demo else os.environ.get("TURNOUT_MODE", "snapshot")
+    # check-in snapshots are pushed to data/checkins.csv every 30 min; read those, don't write
+    cfg["checkins_live"] = os.environ.get("CHECKINS_LIVE", "0") == "1"
+    cfg["checkins_save"] = False
     if demo:
         feed = server.DemoFeed(_B, cfg, span=DEMO_CYCLE * 0.5)
         now = time.time()

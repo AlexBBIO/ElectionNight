@@ -251,6 +251,8 @@ def overall(results: list[dict], cfg: dict) -> dict:
         **overall_adjusted(live, gb),
         **reweight_by_type(results, gb),
         **overall_turnout(results),
+        "counted": (sum(r["votes"] for r in live) / sum(r.get("exp_vote_total") or 0 for r in live))
+        if live and sum(r.get("exp_vote_total") or 0 for r in live) else 0.0,
     }
 
 

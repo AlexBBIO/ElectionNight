@@ -15,6 +15,11 @@ What is machine-readable today (2026-11-03):
   snapshots), which is where the 2022/2024 "final" rows in data/checkins.csv come from
   (`python3 -m election_night.feeds.checkins --history`).
 
+* Washoe County, NV -- the Registrar posts voter-level in-person turnout CSVs (with
+  VOTER_REG_PARTY and DATE_VOTED) on https://www.washoecounty.gov/voters/results/2026data.php,
+  including Election Day snapshots labelled "In-Person 9:00am Report" (the June primary also
+  had 12pm, 3pm and Final). washoe_rows() aggregates DATE_VOTED == 11/3/2026 by party.
+
 Not machine-readable (manual only) -- see SOURCES and data/checkins.csv:
 * Maricopa County AZ: party-level ED check-ins are distributed to parties/campaigns through the
   county's login-only "Election Data" portal; the public sees only total check-in counts in
@@ -27,6 +32,7 @@ from __future__ import annotations
 import argparse
 import csv
 import datetime as _dt
+import io
 import json
 import re
 import sys
@@ -72,18 +78,24 @@ SOURCES = [
               "No intraday history in the file; past elections (2018-2026) remain at their own ids "
               "as final snapshots. Wayback Machine was unreachable from this environment "
               "(connection resets), so 2022/2024 same-hour FL figures were not recovered."},
-    {"jurisdiction": "Maricopa County", "state": "AZ", "kind": "manual (third-party chart)",
+    {"jurisdiction": "Maricopa County", "state": "AZ", "kind": "manual (third-party chart); news pages 403",
      "party": True, "hourly_history": True,
      "url": "https://elections.maricopa.gov/results-and-data/election-data.html",
      "notes": "Party-level ED check-in data goes to parties/campaigns via a login-only data portal "
               "(cities, towns, political parties). Public: total check-ins only (@MaricopaVote on X, "
               "press briefings). Party splits circulate via Data Orbital / Stealth Analytics "
               "(@treyterry) charts; seeded into data/checkins.csv by hand."},
-    {"jurisdiction": "Clark / Washoe Counties", "state": "NV", "kind": "manual, next-day",
+    {"jurisdiction": "Washoe County", "state": "NV", "kind": "live (a few ED snapshots), machine-readable",
+     "party": True, "hourly_history": True,
+     "url": "https://www.washoecounty.gov/voters/results/2026data.php",
+     "notes": "Voter-level in-person CSVs (VOTER_REG_PARTY, DATE_VOTED); ED reports labelled 9:00am "
+              "(12pm/3pm/Final expected, as in the 2026 primary). Only aggregate party counts are kept. "
+              "No 2022/2024 equivalents found on the site (2022data.php/2024data.php 404)."},
+    {"jurisdiction": "Clark County / NV statewide", "state": "NV", "kind": "not reachable / next-day",
      "party": True, "hourly_history": False,
-     "url": "https://www.nvsos.gov/sos/elections/election-information/election-turnout",
-     "notes": "NV SOS and Clark County publish daily turnout by party (early in-person, mail, and "
-              "Election Day in-person) as end-of-day spreadsheets, not intraday. Use for 'final' rows."},
+     "url": "https://www.nvsos.gov/vivid/",
+     "notes": "nvsos.gov sits behind an Incapsula bot check (not circumvented). NV SOS/Clark publish "
+              "daily turnout by party, incl. ED in-person, as end-of-day files, not intraday."},
     {"jurisdiction": "North Carolina", "state": "NC", "kind": "none live",
      "party": True, "hourly_history": False,
      "url": "https://dl.ncsbe.gov/?prefix=ENRS/",
@@ -160,6 +172,60 @@ def tqv_row(cty: str, data: dict, hour_local: str | None = None) -> dict:
     }
 
 
+# ------------------------------------------------------------------ Washoe County, NV
+WASHOE_PAGE = "https://www.washoecounty.gov/voters/results/2026data.php"
+WASHOE_BASE = "https://www.washoecounty.gov/voters/results/"
+WASHOE_SOURCE = "Washoe County Registrar of Voters in-person turnout report ({label})"
+
+
+def _washoe_reports() -> list[tuple[str, str]]:
+    """[(hour_local, url)] for the 2026 general's Election Day in-person reports. The page
+    labels them 'Download In-Person 9:00am Report' / '... Final Report' (2026 primary pattern:
+    9am, 12pm, 3pm, Final); pre-ED daily files carry no time label and are skipped."""
+    page = common.decode(common.http_get(WASHOE_PAGE, timeout=20, retries=1, memo_seconds=120))
+    out = []
+    for href, label in re.findall(r'<a[^>]+href="([^"]*In-Person[^"]*)"[^>]*>(.*?)</a>', page, flags=re.S):
+        label = re.sub(r"<[^>]+>|\s+", " ", label).strip()
+        if not href.startswith("resultsfiles/"):  # 'datafiles/' = 2026 primary
+            continue
+        m = re.search(r"(\d{1,2}):(\d{2})\s*([ap])m", label, re.I)
+        if m:
+            h = int(m.group(1)) % 12 + (12 if m.group(3).lower() == "p" else 0)
+            out.append((f"{h:02d}:{m.group(2)}", WASHOE_BASE + href))
+        elif re.search(r"\bfinal\b", label, re.I):
+            out.append(("final", WASHOE_BASE + href))
+    return out
+
+
+def washoe_rows(day: str = "11/3/2026") -> list[dict]:
+    """ED in-person voters by registration party from each posted Washoe ED report. The files
+    are voter-level public lists (names); only party counts are kept. Posted reports don't
+    change, so each is cached on disk once downloaded."""
+    rows = []
+    for hour, url in _washoe_reports():
+        name = url.rsplit("/", 1)[-1]
+        raw = common.decode(common.http_get(url, timeout=60, retries=1,
+                                            cache_name=f"checkins/washoe_2026_{hour.replace(':', '')}_{name}",
+                                            cache_max_age=None if hour == "final" else float("inf")))
+        rep = dem = oth = 0
+        for r in csv.DictReader(io.StringIO(raw)):
+            if (r.get("DATE_VOTED") or "").split(" ")[0] != day:
+                continue
+            p = (r.get("VOTER_REG_PARTY") or "").strip().upper()
+            if p == "REP":
+                rep += 1
+            elif p == "DEM":
+                dem += 1
+            else:
+                oth += 1
+        if rep + dem + oth:
+            rows.append({"jurisdiction": "Washoe County", "state": "NV", "year": 2026, "hour_local": hour,
+                         "rep": rep, "dem": dem, "oth": oth,
+                         "source": WASHOE_SOURCE.format(label=name),
+                         "as_of": f"2026-11-03T{hour}-08:00" if hour != "final" else "2026-11-03"})
+    return rows
+
+
 # ------------------------------------------------------------------ public API
 def fetch(counties: list[str] | None = None, workers: int = 8) -> list[dict]:
     """Current 2026 cumulative ED in-person turnout by party, one row per FL county (live TQV).
@@ -168,7 +234,7 @@ def fetch(counties: list[str] | None = None, workers: int = 8) -> list[dict]:
     rows collected by repeated polling form the same-hour series. Counties whose feed fails or
     whose current election is not the 2026 general are skipped (errors are printed to stderr).
     """
-    codes = counties or list(FL_COUNTIES)
+    codes = [c for c in counties if c in FL_COUNTIES] if counties else list(FL_COUNTIES)
 
     def one(cty: str) -> dict | None:
         try:
@@ -199,10 +265,15 @@ def fetch(counties: list[str] | None = None, workers: int = 8) -> list[dict]:
 
     with ThreadPoolExecutor(workers) as ex:
         rows = [r for r in ex.map(one, codes) if r]
+    if counties is None or "WASHOE" in [c.upper() for c in counties]:
+        try:
+            rows += washoe_rows()
+        except (common.FeedError, csv.Error) as e:
+            print(f"checkins: NV Washoe: {e}", file=sys.stderr)
     return rows
 
 
-def find_history(cty: str, years=(2022, 2024), max_back: int = 40) -> list[dict]:
+def find_history(cty: str, years=(2022, 2024), max_back: int = 120) -> list[dict]:
     """Final ED in-person-by-party rows (hour_local='final') for the November general elections
     in `years`, found by walking election ids down from the county's current one."""
     want = {y: None for y in years}
@@ -219,9 +290,17 @@ def find_history(cty: str, years=(2022, 2024), max_back: int = 40) -> list[dict]
         if y in want and want[y] is None and date.startswith("11/") and "General" in name \
                 and "Runoff" not in name and "Municipal" not in name:
             want[y] = eid
-            out.append(tqv_row(cty, d, hour_local="final"))
-        if all(want.values()) or (y is not None and y < min(years)):
+            row = tqv_row(cty, d, hour_local="final")
+            if _ed_total(row):  # some counties never uploaded ED to TQV (e.g. Seminole 2022)
+                out.append(row)
+            else:
+                print(f"checkins: FL {cty} {y}: TQV id {eid} has no Election Day turnout", file=sys.stderr)
+        if all(want.values()):  # ids are not chronological (municipal elections interleave)
             break
+    missing = [y for y, e in want.items() if e is None]
+    if missing:
+        print(f"checkins: FL {cty}: no TQV general election found for {missing} "
+              f"within {max_back} ids below {top}", file=sys.stderr)
     return out
 
 
