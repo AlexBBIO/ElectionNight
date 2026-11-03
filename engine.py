@@ -663,6 +663,16 @@ def turnout_2026(st: str, cfg: dict) -> dict:
     if hit and _t.time() - hit[0] < 300:
         return hit[1]
     rows = {}
+    if st == "TX":  # county early ballots from the SOS report captured in data/turnout_tx.json
+        try:
+            tx = json.loads((DATA / "turnout_tx.json").read_text())
+            rows = {str(f).zfill(5): {"fips": str(f).zfill(5), "county": v.get("county"), "pre_ballots": v.get("ev_2026"),
+                                      "as_of": (tx.get("statewide") or {}).get("ev_2026_as_of")}
+                    for f, v in (tx.get("county_early") or {}).items() if v.get("ev_2026")}
+        except (OSError, ValueError):
+            rows = {}
+        _TURNOUT_CACHE[st] = (_t.time(), rows)
+        return rows
     try:
         import importlib
         mod = importlib.import_module("election_night.feeds.turnout")

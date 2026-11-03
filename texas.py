@@ -160,3 +160,81 @@ if __name__ == "__main__":
     mp = HERE / "data" / "markets_baseline.json"
     m = json.loads(mp.read_text()) if mp.exists() else None
     print(json.dumps(read(b, cfg, m), indent=1, default=str)[:4000])
+
+
+# ======================================================================================
+# Pre-close probability model for the Texas Governor (and Senate) race
+#
+# final margin = s * M_early + (1 - s) * M_eday
+#   s        early share of the total vote: early ballots (known, 7.71M) / total turnout T
+#   M_early  D-R margin of the early electorate: prior from the two published models of the
+#            early vote (D+1 Democratic model, D+6.6 Republican pollster) -> mean 3.8, sd 3
+#   M_eday   D-R margin of Election Day voters: the weakest-known quantity. Prior centred on
+#            what the poll/market prior implies given M_early (so that with no turnout evidence
+#            the model reproduces the prior), then pulled toward the "remaining pool" evidence
+#            (Ryan: >2.1M recent GOP-primary voters unvoted vs a much smaller D pool) via ED_POOL.
+#   T        total turnout, prior mean 11.0M (early was 68% of the 2022 total), sd 0.4M
+# Monte Carlo -> distribution of the final margin, P(D win), and a scenario table over
+# M_eday assumptions so the dependence on that assumption is visible. As counties report,
+# observed early-vote and Election Day margins replace the priors (update()).
+# ======================================================================================
+import random as _random
+from statistics import NormalDist as _ND
+
+ED_POOL = {"mean": -20.0, "sd": 8.0,
+           "note": "Election Day margin: Ryan counts >2.1M recent GOP-primary voters unvoted at the end of early "
+                   "voting vs a much smaller D pool, which points to a strongly Republican Election Day (R+20 "
+                   "+/- 8 on that evidence). Counter-evidence: in 2022 the early-only count was R+10 and the "
+                   "final R+10.9, i.e. Election Day was only a few points more Republican than the early vote. "
+                   "The prior used is the average of the pool estimate and the Election Day margin implied by the "
+                   "poll/market prior (which equals ~R+14 when the early vote is D+3.8)."}
+BENCH_2022 = {"early_only_margin": -10.0, "final": -10.9,
+              "note": "2022: Abbott 54-44 with all early votes and ~30% of Election Day precincts (Texas Tribune)"}
+
+
+def pre_close(cfg: dict, markets: dict | None, early_votes: float = 7_711_462, m_early=(3.8, 3.0),
+              total=(11.0e6, 0.4e6), ed=None, n: int = 40000, seed: int = 5, rid: str = "TX-GOV",
+              observed: dict | None = None) -> dict:
+    rng = _random.Random(seed)
+    E_poll = cfg_forecast(cfg, rid)
+    E_mkt = (((markets or {}).get("races") or {}).get(rid) or {}).get("implied_margin")
+    p_mkt = (((markets or {}).get("races") or {}).get(rid) or {}).get("p_dem")
+    prior = E_poll if E_mkt is None else (E_poll + E_mkt) / 2
+    split = 0.0
+    if rid != "TX-GOV":
+        g_poll = cfg_forecast(cfg, "TX-GOV")
+        g_mkt = (((markets or {}).get("races") or {}).get("TX-GOV") or {}).get("implied_margin")
+        g_prior = g_poll if g_mkt is None else (g_poll + g_mkt) / 2
+        split = prior - g_prior            # ticket split vs the governor race, applied to both vote types
+        m_early = (m_early[0] + split, m_early[1])
+        prior_gov = g_prior
+    s0 = early_votes / total[0]
+    # Election Day prior: implied by the overall prior given the early-vote prior, blended with pool evidence
+    ed_implied = (prior - s0 * m_early[0]) / (1 - s0)
+    ed = ed or {"mean": 0.5 * ed_implied + 0.5 * (ED_POOL["mean"] + split), "sd": ED_POOL["sd"],
+                "implied_by_prior": ed_implied, "pool": ED_POOL["mean"], "note": ED_POOL["note"]}
+    obs = observed or {}
+    finals = []
+    for _ in range(n):
+        T = max(early_votes * 1.02, rng.gauss(*total))
+        s = early_votes / T
+        me = obs["m_early"] if "m_early" in obs else rng.gauss(*m_early)
+        md = obs["m_eday"] if "m_eday" in obs else rng.gauss(ed["mean"], ed["sd"])
+        finals.append(s * me + (1 - s) * md)
+    finals.sort()
+    q = lambda f: finals[int(f * (len(finals) - 1))]
+    p_d = sum(1 for x in finals if x > 0) / len(finals)
+    table = []
+    for md0 in (-5, -10, -15, -20, -25, -30):
+        md = md0 + split
+        row = {"m_eday": md}
+        for name, me in (("early low", 1.0 + split), ("early mid", 3.8 + split), ("early high", 6.6 + split)):
+            row[name] = s0 * me + (1 - s0) * md
+        table.append(row)
+    return {"race": rid, "prior_polls": E_poll, "prior_market": E_mkt, "p_dem_market": p_mkt, "prior": prior,
+            "early_votes": early_votes, "early_share": s0, "m_early": m_early, "total": total, "ed": ed,
+            "median": q(0.5), "p10": q(0.1), "p90": q(0.9), "p_dem": p_d,
+            "scenarios": table, "observed": obs, "n": n, "bench_2022": BENCH_2022, "split": split,
+            # what the 8 PM early-vote dump has to show for the race to be on track
+            "early_needed": {"for_prior": (prior - (1 - s0) * ed["mean"]) / s0,
+                             "for_tie_if_ED": {str(md): (0 - (1 - s0) * md) / s0 for md in (-10, -15, -20, -25)}}}

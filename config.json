@@ -167,7 +167,7 @@
       "id": "TX-GOV",
       "state": "TX",
       "label": "Texas Governor",
-      "feed": "none",
+      "feed": "tx",
       "race": "Governor",
       "baseline_2022": {
         "office": "GOVERNOR"
@@ -180,7 +180,7 @@
       "id": "TX-SEN",
       "state": "TX",
       "label": "Texas Senate",
-      "feed": "none",
+      "feed": "tx",
       "race": "U.S. Senate",
       "baseline_2022": {
         "office": "US HOUSE"
@@ -189,5 +189,13 @@
       "polls_close_et": "20:00"
     }
   ],
-  "states": {}
+  "states": {
+    "TX": {
+      "order": "pre_first",
+      "pre_share": 0.7,
+      "delta": 12.0,
+      "turnout_factor": 1.36,
+      "notes": "TX: early vote 7.71M posts first (right after 8 PM ET), Election Day after. delta (early minus Election Day lean) is a prior: 2022 gap was only ~3 pts (early-only R+10, final R+10.9) but the 2026 unvoted pool is far more Republican; 12 used until counties report both vote types. turnout_factor 1.36 = ~11.0M expected / 8.1M in 2022."
+    }
+  }
 }

@@ -203,6 +203,30 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
     try:
         turnout_vs_expectation(results, snap, b)
         snap["texas"] = texas.read(b, cfg, _MK[1][0] if _MK[1] else None, pi=snap["_pi"])
+        if snap["texas"] is not None:
+            mkb = _MK[1][0] if _MK[1] else None
+            snap["texas"]["model"] = {}
+            for rid in ("TX-GOV", "TX-SEN"):
+                r = next((x for x in results if x["id"] == rid), None)
+                if not r:
+                    continue
+                obs = {}
+                pre = [0, 0, 0]; ed = [0, 0, 0]
+                for c in r["counties"]:
+                    lm = c.get("lm")
+                    if lm:
+                        if lm.get("pre"): pre = [a_ + b_ for a_, b_ in zip(pre, lm["pre"])]
+                        if lm.get("eday"): ed = [a_ + b_ for a_, b_ in zip(ed, lm["eday"])]
+                    elif c["votes"] and c.get("prec_in") == 0:   # early-only batch, no vote-type split
+                        pre = [pre[0] + c["dem"], pre[1] + c["rep"], pre[2] + c["votes"]]
+                tot_pre = sum(v.get("pre_ballots") or 0 for v in (engine.turnout_2026("TX", cfg) or {}).values()) or 7_711_462
+                if pre[2] >= 0.5 * tot_pre:      # enough of the early vote counted to use its margin
+                    obs["m_early"] = engine.margin(*pre)
+                    obs["early_counted_share"] = pre[2] / tot_pre
+                if ed[2] >= 500_000:
+                    obs["m_eday"] = engine.margin(*ed)
+                    obs["eday_counted"] = ed[2]
+                snap["texas"]["model"][rid] = texas.pre_close(cfg, mkb, rid=rid, n=12000, observed=obs or None)
         _texas_into_races(results, snap)
         snap["senate"] = senate_control(results, snap, cfg)
     except Exception:  # noqa: BLE001

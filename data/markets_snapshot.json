@@ -136,17 +136,17 @@
     }
    },
    "p_dem_now": 0.0344,
-   "implied_margin_now": -17.82,
+   "implied_margin_now": -17.94,
    "margin_brackets_now": [
     {
      "lo": null,
      "hi": -45.0,
-     "p": 0.0369
+     "p": 0.0399
     },
     {
      "lo": -45.0,
      "hi": -40.0,
-     "p": 0.0374
+     "p": 0.0378
     },
     {
      "lo": -40.0,
@@ -156,37 +156,37 @@
     {
      "lo": -35.0,
      "hi": -30.0,
-     "p": 0.0286
+     "p": 0.0285
     },
     {
      "lo": -30.0,
      "hi": -25.0,
-     "p": 0.0504
+     "p": 0.0502
     },
     {
      "lo": -25.0,
      "hi": -20.0,
-     "p": 0.1351
+     "p": 0.1346
     },
     {
      "lo": -20.0,
      "hi": -15.0,
-     "p": 0.2911
+     "p": 0.29
     },
     {
      "lo": -15.0,
      "hi": -10.0,
-     "p": 0.2287
+     "p": 0.2279
     },
     {
      "lo": -10.0,
      "hi": 0.0,
-     "p": 0.1466
+     "p": 0.146
     },
     {
      "lo": 0.0,
      "hi": null,
-     "p": 0.0317
+     "p": 0.0316
     }
    ],
    "margin_brackets_source_now": "polymarket",
@@ -201,21 +201,21 @@
       "D": "Charles Booker",
       "R": "Andy Barr"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "kentucky-senate-margin-of-victory-2026",
      "margin_volume": 25522,
-     "implied_margin_brackets": -17.82,
+     "implied_margin_brackets": -17.94,
      "brackets": [
       {
        "lo": null,
        "hi": -45.0,
-       "p": 0.0369
+       "p": 0.0399
       },
       {
        "lo": -45.0,
        "hi": -40.0,
-       "p": 0.0374
+       "p": 0.0378
       },
       {
        "lo": -40.0,
@@ -225,42 +225,42 @@
       {
        "lo": -35.0,
        "hi": -30.0,
-       "p": 0.0286
+       "p": 0.0285
       },
       {
        "lo": -30.0,
        "hi": -25.0,
-       "p": 0.0504
+       "p": 0.0502
       },
       {
        "lo": -25.0,
        "hi": -20.0,
-       "p": 0.1351
+       "p": 0.1346
       },
       {
        "lo": -20.0,
        "hi": -15.0,
-       "p": 0.2911
+       "p": 0.29
       },
       {
        "lo": -15.0,
        "hi": -10.0,
-       "p": 0.2287
+       "p": 0.2279
       },
       {
        "lo": -10.0,
        "hi": 0.0,
-       "p": 0.1466
+       "p": 0.146
       },
       {
        "lo": 0.0,
        "hi": null,
-       "p": 0.0317
+       "p": 0.0316
       }
      ]
     }
    },
-   "move": 0.48,
+   "move": 0.36,
    "p_dem_move": 0.0024
   },
   "IN-SOS": {
@@ -302,39 +302,39 @@
      }
     }
    },
-   "p_dem_now": 0.665,
-   "implied_margin_now": 2.13,
+   "p_dem_now": 0.6893,
+   "implied_margin_now": 2.47,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
-   "margin_from_p_now": 2.13,
+   "margin_from_p_now": 2.47,
    "margin_method_now": "p_dem",
    "sources_now": {
     "kalshi": {
-     "p_dem": 0.66,
+     "p_dem": 0.6881,
      "ticker": "KXSECSTATEIN-26",
-     "volume": 76386,
-     "volume_24h": 18416,
+     "volume": 78281,
+     "volume_24h": 20988,
      "candidates": {
       "D": "Beau Bayh",
       "R": "Max Engling"
      },
-     "updated": "2026-11-03T20:15:02Z",
-     "stale": true
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
     },
     "polymarket": {
-     "p_dem": 0.6884,
+     "p_dem": 0.695,
      "slug": "indiana-secretary-of-state-election-winner-2026",
-     "volume": 16235,
+     "volume": 16253,
      "candidates": {
       "D": "Beau Bayh",
       "R": "Max Engling"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
-   "move": 1.15,
-   "p_dem_move": 0.0872
+   "move": 1.49,
+   "p_dem_move": 0.1115
   },
   "IN-HOUSE": {
    "tier": "key",
@@ -575,75 +575,75 @@
      }
     }
    },
-   "p_dem_now": 0.3945,
-   "implied_margin_now": -2.06,
+   "p_dem_now": 0.3631,
+   "implied_margin_now": -2.15,
    "margin_brackets_now": [
     {
      "lo": null,
      "hi": -18.0,
-     "p": 0.0054
+     "p": 0.0041
     },
     {
      "lo": -18.0,
      "hi": -15.0,
-     "p": 0.014
+     "p": 0.0086
     },
     {
      "lo": -15.0,
      "hi": -12.0,
-     "p": 0.038
+     "p": 0.0353
     },
     {
      "lo": -12.0,
      "hi": -9.0,
-     "p": 0.0475
+     "p": 0.0412
     },
     {
      "lo": -9.0,
      "hi": -6.0,
-     "p": 0.114
+     "p": 0.1273
     },
     {
      "lo": -6.0,
      "hi": -3.0,
-     "p": 0.1493
+     "p": 0.1812
     },
     {
      "lo": -3.0,
      "hi": 0.0,
-     "p": 0.2397
+     "p": 0.2537
     },
     {
      "lo": 0.0,
      "hi": 3.0,
-     "p": 0.3035
+     "p": 0.2614
     },
     {
      "lo": 3.0,
      "hi": 6.0,
-     "p": 0.0565
+     "p": 0.0548
     },
     {
      "lo": 6.0,
      "hi": null,
-     "p": 0.0321
+     "p": 0.0322
     }
    ],
    "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": -1.34,
+   "margin_from_p_now": -1.75,
    "margin_method_now": "brackets",
    "sources_now": {
     "kalshi": {
-     "p_dem": 0.395,
+     "p_dem": 0.3614,
      "ticker": "GOVPARTYFL-26",
-     "volume": 19547184,
-     "volume_24h": 8513082,
+     "volume": 21035465,
+     "volume_24h": 9450322,
      "candidates": {
       "D": "David Jolly",
       "R": "Byron Donalds"
      },
-     "updated": "2026-11-03T20:15:02Z",
-     "stale": true,
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
      "margin_ticker": "KXGENERALMOV-GOVPARTYFL-26",
      "margin_volume": 43390,
      "implied_margin_brackets": -1.73,
@@ -711,74 +711,74 @@
      ]
     },
     "polymarket": {
-     "p_dem": 0.3911,
+     "p_dem": 0.375,
      "slug": "florida-governor-winner-2026",
-     "volume": 2792420,
+     "volume": 2923028,
      "candidates": {
       "D": "David Jolly",
       "R": "Byron Donalds"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "florida-governor-margin-of-victory-2026",
-     "margin_volume": 113845,
-     "implied_margin_brackets": -2.19,
+     "margin_volume": 114219,
+     "implied_margin_brackets": -2.3,
      "brackets": [
       {
        "lo": null,
        "hi": -18.0,
-       "p": 0.0054
+       "p": 0.0041
       },
       {
        "lo": -18.0,
        "hi": -15.0,
-       "p": 0.014
+       "p": 0.0086
       },
       {
        "lo": -15.0,
        "hi": -12.0,
-       "p": 0.038
+       "p": 0.0353
       },
       {
        "lo": -12.0,
        "hi": -9.0,
-       "p": 0.0475
+       "p": 0.0412
       },
       {
        "lo": -9.0,
        "hi": -6.0,
-       "p": 0.114
+       "p": 0.1273
       },
       {
        "lo": -6.0,
        "hi": -3.0,
-       "p": 0.1493
+       "p": 0.1812
       },
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.2397
+       "p": 0.2537
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.3035
+       "p": 0.2614
       },
       {
        "lo": 3.0,
        "hi": 6.0,
-       "p": 0.0565
+       "p": 0.0548
       },
       {
        "lo": 6.0,
        "hi": null,
-       "p": 0.0321
+       "p": 0.0322
       }
      ]
     }
    },
-   "move": -0.23,
-   "p_dem_move": 0.0207
+   "move": -0.32,
+   "p_dem_move": -0.0107
   },
   "FL-SEN": {
    "tier": "key",
@@ -993,75 +993,75 @@
      }
     }
    },
-   "p_dem_now": 0.1236,
-   "implied_margin_now": -5.87,
+   "p_dem_now": 0.1247,
+   "implied_margin_now": -5.6,
    "margin_brackets_now": [
     {
      "lo": null,
      "hi": -21.0,
-     "p": 0.013
+     "p": 0.0125
     },
     {
      "lo": -21.0,
      "hi": -18.0,
-     "p": 0.0351
+     "p": 0.0338
     },
     {
      "lo": -18.0,
      "hi": -15.0,
-     "p": 0.022
+     "p": 0.0212
     },
     {
      "lo": -15.0,
      "hi": -12.0,
-     "p": 0.0922
+     "p": 0.0796
     },
     {
      "lo": -12.0,
      "hi": -9.0,
-     "p": 0.1052
+     "p": 0.1013
     },
     {
      "lo": -9.0,
      "hi": -6.0,
-     "p": 0.1503
+     "p": 0.1447
     },
     {
      "lo": -6.0,
      "hi": -3.0,
-     "p": 0.2355
+     "p": 0.2412
     },
     {
      "lo": -3.0,
      "hi": 0.0,
-     "p": 0.231
+     "p": 0.2262
     },
     {
      "lo": 0.0,
      "hi": 3.0,
-     "p": 0.0812
+     "p": 0.1061
     },
     {
      "lo": 3.0,
      "hi": null,
-     "p": 0.0346
+     "p": 0.0333
     }
    ],
    "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": -5.79,
+   "margin_from_p_now": -5.76,
    "margin_method_now": "brackets",
    "sources_now": {
     "kalshi": {
-     "p_dem": 0.125,
+     "p_dem": 0.1263,
      "ticker": "SENATEFLS-26",
-     "volume": 5776485,
-     "volume_24h": 1421529,
+     "volume": 5894216,
+     "volume_24h": 1521608,
      "candidates": {
       "D": "Angie Nixon",
       "R": "Ashley Moody"
      },
-     "updated": "2026-11-03T20:15:02Z",
-     "stale": true,
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
      "margin_ticker": "KXGENERALMOV-SENATEFLS-26",
      "margin_volume": 15654,
      "implied_margin_brackets": -5.85,
@@ -1126,72 +1126,72 @@
     "polymarket": {
      "p_dem": 0.1162,
      "slug": "florida-senate-election-winner",
-     "volume": 1100144,
+     "volume": 1106437,
      "candidates": {
       "D": "Angie Nixon",
       "R": "Ashley Moody"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "florida-senate-margin-of-victory-2026",
-     "margin_volume": 100565,
-     "implied_margin_brackets": -5.87,
+     "margin_volume": 101399,
+     "implied_margin_brackets": -5.56,
      "brackets": [
       {
        "lo": null,
        "hi": -21.0,
-       "p": 0.013
+       "p": 0.0125
       },
       {
        "lo": -21.0,
        "hi": -18.0,
-       "p": 0.0351
+       "p": 0.0338
       },
       {
        "lo": -18.0,
        "hi": -15.0,
-       "p": 0.022
+       "p": 0.0212
       },
       {
        "lo": -15.0,
        "hi": -12.0,
-       "p": 0.0922
+       "p": 0.0796
       },
       {
        "lo": -12.0,
        "hi": -9.0,
-       "p": 0.1052
+       "p": 0.1013
       },
       {
        "lo": -9.0,
        "hi": -6.0,
-       "p": 0.1503
+       "p": 0.1447
       },
       {
        "lo": -6.0,
        "hi": -3.0,
-       "p": 0.2355
+       "p": 0.2412
       },
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.231
+       "p": 0.2262
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.0812
+       "p": 0.1061
       },
       {
        "lo": 3.0,
        "hi": null,
-       "p": 0.0346
+       "p": 0.0333
       }
      ]
     }
    },
-   "move": -0.63,
-   "p_dem_move": -0.0298
+   "move": -0.36,
+   "p_dem_move": -0.0287
   },
   "GA-SEN": {
    "tier": "key",
@@ -1417,12 +1417,12 @@
     }
    },
    "p_dem_now": 0.9691,
-   "implied_margin_now": 10.9,
+   "implied_margin_now": 10.89,
    "margin_brackets_now": [
     {
      "lo": null,
      "hi": -6.0,
-     "p": 0.0056
+     "p": 0.0055
     },
     {
      "lo": -6.0,
@@ -1432,42 +1432,42 @@
     {
      "lo": -3.0,
      "hi": 0.0,
-     "p": 0.0205
+     "p": 0.0208
     },
     {
      "lo": 0.0,
      "hi": 3.0,
-     "p": 0.0233
+     "p": 0.0231
     },
     {
      "lo": 3.0,
      "hi": 6.0,
-     "p": 0.1905
+     "p": 0.19
     },
     {
      "lo": 6.0,
      "hi": 9.0,
-     "p": 0.1304
+     "p": 0.1294
     },
     {
      "lo": 9.0,
      "hi": 12.0,
-     "p": 0.1351
+     "p": 0.1387
     },
     {
      "lo": 12.0,
      "hi": 15.0,
-     "p": 0.2748
+     "p": 0.2728
     },
     {
      "lo": 15.0,
      "hi": 18.0,
-     "p": 0.1304
+     "p": 0.1308
     },
     {
      "lo": 18.0,
      "hi": null,
-     "p": 0.0806
+     "p": 0.08
     }
    ],
    "margin_brackets_source_now": "polymarket",
@@ -1477,14 +1477,14 @@
     "kalshi": {
      "p_dem": 0.9685,
      "ticker": "SENATEGA-26",
-     "volume": 5109441,
-     "volume_24h": 1039577,
+     "volume": 5133667,
+     "volume_24h": 1051890,
      "candidates": {
       "D": "Jon Ossoff",
       "R": "Mike Collins"
      },
-     "updated": "2026-11-03T20:15:02Z",
-     "stale": true,
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
      "margin_ticker": "KXGENERALMOV-SENATEGA-26",
      "margin_volume": 21736,
      "implied_margin_brackets": 10.99,
@@ -1559,12 +1559,12 @@
     "polymarket": {
      "p_dem": 0.9735,
      "slug": "georgia-senate-election-winner",
-     "volume": 734412,
+     "volume": 734512,
      "candidates": {
       "D": "Jon Ossoff",
       "R": "Mike Collins"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "georgia-senate-election-first-round-margin-of-victory-20260804175717495",
      "margin_volume": 74510,
@@ -1573,7 +1573,7 @@
       {
        "lo": null,
        "hi": -6.0,
-       "p": 0.0056
+       "p": 0.0055
       },
       {
        "lo": -6.0,
@@ -1583,47 +1583,47 @@
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.0205
+       "p": 0.0208
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.0233
+       "p": 0.0231
       },
       {
        "lo": 3.0,
        "hi": 6.0,
-       "p": 0.1905
+       "p": 0.19
       },
       {
        "lo": 6.0,
        "hi": 9.0,
-       "p": 0.1304
+       "p": 0.1294
       },
       {
        "lo": 9.0,
        "hi": 12.0,
-       "p": 0.1351
+       "p": 0.1387
       },
       {
        "lo": 12.0,
        "hi": 15.0,
-       "p": 0.2748
+       "p": 0.2728
       },
       {
        "lo": 15.0,
        "hi": 18.0,
-       "p": 0.1304
+       "p": 0.1308
       },
       {
        "lo": 18.0,
        "hi": null,
-       "p": 0.0806
+       "p": 0.08
       }
      ]
     }
    },
-   "move": -0.46,
+   "move": -0.47,
    "p_dem_move": 0.001
   },
   "GA-GOV": {
@@ -1665,39 +1665,39 @@
      }
     }
    },
-   "p_dem_now": 0.7163,
-   "implied_margin_now": 2.86,
+   "p_dem_now": 0.7089,
+   "implied_margin_now": 2.75,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
-   "margin_from_p_now": 2.86,
+   "margin_from_p_now": 2.75,
    "margin_method_now": "p_dem",
    "sources_now": {
     "kalshi": {
-     "p_dem": 0.715,
+     "p_dem": 0.7079,
      "ticker": "GOVPARTYGA-26",
-     "volume": 5001141,
-     "volume_24h": 1117601,
+     "volume": 5091934,
+     "volume_24h": 1206120,
      "candidates": {
       "D": "Keisha Lance Bottoms",
       "R": "Rick Jackson"
      },
-     "updated": "2026-11-03T20:15:02Z",
-     "stale": true
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
     },
     "polymarket": {
-     "p_dem": 0.7277,
+     "p_dem": 0.7178,
      "slug": "georgia-governor-winner-2026",
-     "volume": 559504,
+     "volume": 560226,
      "candidates": {
       "D": "Keisha Lance Bottoms",
       "R": "Rick Jackson"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
-   "move": -0.04,
-   "p_dem_move": -0.0029
+   "move": -0.15,
+   "p_dem_move": -0.0103
   },
   "VA-SEN": {
    "tier": "key",
@@ -1848,7 +1848,7 @@
      }
     }
    },
-   "p_dem_now": 0.989,
+   "p_dem_now": 0.9885,
    "implied_margin_now": 20.26,
    "margin_brackets_now": [
     {
@@ -1907,26 +1907,26 @@
    "margin_method_now": "brackets",
    "sources_now": {
     "kalshi": {
-     "p_dem": 0.989,
+     "p_dem": 0.9885,
      "ticker": "SENATEVA-26",
-     "volume": 145058,
-     "volume_24h": 60274,
+     "volume": 151824,
+     "volume_24h": 57260,
      "candidates": {
       "D": "Mark Warner",
       "R": "Bert Mizusawa"
      },
-     "updated": "2026-11-03T20:15:02Z",
-     "stale": true
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
     },
     "polymarket": {
-     "p_dem": 0.989,
+     "p_dem": 0.9885,
      "slug": "virginia-senate-election-winner",
      "volume": 26590,
      "candidates": {
       "D": "Mark Warner",
       "R": "Bert Mizusawa"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "virginia-senate-margin-of-victory-2026",
      "margin_volume": 21807,
@@ -1986,7 +1986,7 @@
     }
    },
    "move": -0.59,
-   "p_dem_move": 0.0002
+   "p_dem_move": -0.0003
   },
   "SC-SEN": {
    "tier": "key",
@@ -2277,14 +2277,14 @@
     "kalshi": {
      "p_dem": 0.305,
      "ticker": "SENATESC-26",
-     "volume": 11182236,
-     "volume_24h": 1496665,
+     "volume": 11315703,
+     "volume_24h": 1618208,
      "candidates": {
       "D": "Annie Andrews",
       "R": "Darline Graham"
      },
-     "updated": "2026-11-03T20:15:02Z",
-     "stale": true,
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
      "margin_ticker": "KXGENERALMOV-SENATESC-26",
      "margin_volume": 87663,
      "implied_margin_brackets": -1.73,
@@ -2354,12 +2354,12 @@
     "polymarket": {
      "p_dem": 0.305,
      "slug": "south-carolina-senate-election-winner",
-     "volume": 2243833,
+     "volume": 2244001,
      "candidates": {
       "D": "Annie Andrews",
       "R": "Darline Graham Nordone"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "south-carolina-senate-margin-of-victory-2026",
      "margin_volume": 83107,
@@ -2639,75 +2639,75 @@
      }
     }
    },
-   "p_dem_now": 0.9714,
-   "implied_margin_now": 13.62,
+   "p_dem_now": 0.9732,
+   "implied_margin_now": 13.75,
    "margin_brackets_now": [
     {
      "lo": null,
      "hi": -6.0,
-     "p": 0.0077
+     "p": 0.0049
     },
     {
      "lo": -6.0,
      "hi": -3.0,
-     "p": 0.0038
+     "p": 0.0039
     },
     {
      "lo": -3.0,
      "hi": 0.0,
-     "p": 0.0149
+     "p": 0.0151
     },
     {
      "lo": 0.0,
      "hi": 3.0,
-     "p": 0.0326
+     "p": 0.0303
     },
     {
      "lo": 3.0,
      "hi": 6.0,
-     "p": 0.0293
+     "p": 0.0298
     },
     {
      "lo": 6.0,
      "hi": 9.0,
-     "p": 0.1132
+     "p": 0.1006
     },
     {
      "lo": 9.0,
      "hi": 12.0,
-     "p": 0.1966
+     "p": 0.2002
     },
     {
      "lo": 12.0,
      "hi": 15.0,
-     "p": 0.1655
+     "p": 0.1748
     },
     {
      "lo": 15.0,
      "hi": 18.0,
-     "p": 0.2321
+     "p": 0.2363
     },
     {
      "lo": 18.0,
      "hi": null,
-     "p": 0.2043
+     "p": 0.2041
     }
    ],
    "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": 9.51,
+   "margin_from_p_now": 9.65,
    "margin_method_now": "brackets",
    "sources_now": {
     "kalshi": {
-     "p_dem": 0.971,
+     "p_dem": 0.9726,
      "ticker": "SENATENC-26",
-     "volume": 6685426,
-     "volume_24h": 617295,
+     "volume": 6714841,
+     "volume_24h": 636368,
      "candidates": {
       "D": "Roy Cooper",
       "R": "Michael Whatley"
      },
-     "updated": "2026-11-03T20:15:02Z",
-     "stale": true,
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
      "margin_ticker": "KXGENERALMOV-SENATENC-26",
      "margin_volume": 35073,
      "implied_margin_brackets": 13.25,
@@ -2785,74 +2785,74 @@
      ]
     },
     "polymarket": {
-     "p_dem": 0.9775,
+     "p_dem": 0.9825,
      "slug": "north-carolina-senate-election-winner",
-     "volume": 464914,
+     "volume": 470806,
      "candidates": {
       "D": "Roy Cooper",
       "R": "Michael Whatley"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "north-carolina-senate-margin-of-victory-2026",
-     "margin_volume": 118737,
-     "implied_margin_brackets": 13.73,
+     "margin_volume": 119828,
+     "implied_margin_brackets": 13.9,
      "brackets": [
       {
        "lo": null,
        "hi": -6.0,
-       "p": 0.0077
+       "p": 0.0049
       },
       {
        "lo": -6.0,
        "hi": -3.0,
-       "p": 0.0038
+       "p": 0.0039
       },
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.0149
+       "p": 0.0151
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.0326
+       "p": 0.0303
       },
       {
        "lo": 3.0,
        "hi": 6.0,
-       "p": 0.0293
+       "p": 0.0298
       },
       {
        "lo": 6.0,
        "hi": 9.0,
-       "p": 0.1132
+       "p": 0.1006
       },
       {
        "lo": 9.0,
        "hi": 12.0,
-       "p": 0.1966
+       "p": 0.2002
       },
       {
        "lo": 12.0,
        "hi": 15.0,
-       "p": 0.1655
+       "p": 0.1748
       },
       {
        "lo": 15.0,
        "hi": 18.0,
-       "p": 0.2321
+       "p": 0.2363
       },
       {
        "lo": 18.0,
        "hi": null,
-       "p": 0.2043
+       "p": 0.2041
       }
      ]
     }
    },
-   "move": -0.5,
-   "p_dem_move": -0.0006
+   "move": -0.37,
+   "p_dem_move": 0.0012
   },
   "OH-SEN": {
    "tier": "key",
@@ -3072,8 +3072,8 @@
      }
     }
    },
-   "p_dem_now": 0.7114,
-   "implied_margin_now": 3.3,
+   "p_dem_now": 0.7136,
+   "implied_margin_now": 3.27,
    "margin_brackets_now": [
     {
      "lo": null,
@@ -3088,59 +3088,59 @@
     {
      "lo": -9.0,
      "hi": -6.0,
-     "p": 0.0295
+     "p": 0.0294
     },
     {
      "lo": -6.0,
      "hi": -3.0,
-     "p": 0.0705
+     "p": 0.0706
     },
     {
      "lo": -3.0,
      "hi": 0.0,
-     "p": 0.1751
+     "p": 0.1741
     },
     {
      "lo": 0.0,
      "hi": 3.0,
-     "p": 0.1901
+     "p": 0.204
     },
     {
      "lo": 3.0,
      "hi": 6.0,
-     "p": 0.2301
+     "p": 0.2189
     },
     {
      "lo": 6.0,
      "hi": 9.0,
-     "p": 0.1801
+     "p": 0.1791
     },
     {
      "lo": 9.0,
      "hi": 12.0,
-     "p": 0.057
+     "p": 0.0567
     },
     {
      "lo": 12.0,
      "hi": null,
-     "p": 0.0605
+     "p": 0.0602
     }
    ],
    "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": 2.79,
+   "margin_from_p_now": 2.82,
    "margin_method_now": "brackets",
    "sources_now": {
     "kalshi": {
-     "p_dem": 0.7079,
+     "p_dem": 0.7108,
      "ticker": "SENATEOHS-26",
-     "volume": 11706768,
-     "volume_24h": 1636981,
+     "volume": 11888430,
+     "volume_24h": 1813453,
      "candidates": {
       "D": "Sherrod Brown",
       "R": "Jon Husted"
      },
-     "updated": "2026-11-03T20:15:02Z",
-     "stale": true,
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
      "margin_ticker": "KXGENERALMOV-SENATEOHS-26",
      "margin_volume": 26332,
      "implied_margin_brackets": 2.94,
@@ -3210,16 +3210,16 @@
     "polymarket": {
      "p_dem": 0.725,
      "slug": "ohio-senate-election-winner",
-     "volume": 2981775,
+     "volume": 2982276,
      "candidates": {
       "D": "Sherrod Brown",
       "R": "Jon Husted"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "ohio-senate-margin-of-victory-2026",
      "margin_volume": 88281,
-     "implied_margin_brackets": 3.41,
+     "implied_margin_brackets": 3.36,
      "brackets": [
       {
        "lo": null,
@@ -3234,48 +3234,48 @@
       {
        "lo": -9.0,
        "hi": -6.0,
-       "p": 0.0295
+       "p": 0.0294
       },
       {
        "lo": -6.0,
        "hi": -3.0,
-       "p": 0.0705
+       "p": 0.0706
       },
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.1751
+       "p": 0.1741
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.1901
+       "p": 0.204
       },
       {
        "lo": 3.0,
        "hi": 6.0,
-       "p": 0.2301
+       "p": 0.2189
       },
       {
        "lo": 6.0,
        "hi": 9.0,
-       "p": 0.1801
+       "p": 0.1791
       },
       {
        "lo": 9.0,
        "hi": 12.0,
-       "p": 0.057
+       "p": 0.0567
       },
       {
        "lo": 12.0,
        "hi": null,
-       "p": 0.0605
+       "p": 0.0602
       }
      ]
     }
    },
-   "move": -0.18,
-   "p_dem_move": 0.0021
+   "move": -0.21,
+   "p_dem_move": 0.0043
   },
   "OH-GOV": {
    "tier": "key",
@@ -3501,7 +3501,7 @@
     }
    },
    "p_dem_now": 0.8169,
-   "implied_margin_now": 4.26,
+   "implied_margin_now": 4.28,
    "margin_brackets_now": [
     {
      "lo": null,
@@ -3516,42 +3516,42 @@
     {
      "lo": -9.0,
      "hi": -6.0,
-     "p": 0.024
+     "p": 0.0235
     },
     {
      "lo": -6.0,
      "hi": -3.0,
-     "p": 0.0465
+     "p": 0.0464
     },
     {
      "lo": -3.0,
      "hi": 0.0,
-     "p": 0.1
+     "p": 0.0998
     },
     {
      "lo": 0.0,
      "hi": 3.0,
-     "p": 0.1549
+     "p": 0.1547
     },
     {
      "lo": 3.0,
      "hi": 6.0,
-     "p": 0.3248
+     "p": 0.3244
     },
     {
      "lo": 6.0,
      "hi": 9.0,
-     "p": 0.1644
+     "p": 0.1642
     },
     {
      "lo": 9.0,
      "hi": 12.0,
-     "p": 0.1119
+     "p": 0.1118
     },
     {
      "lo": 12.0,
      "hi": null,
-     "p": 0.0475
+     "p": 0.0494
     }
    ],
    "margin_brackets_source_now": "polymarket",
@@ -3561,14 +3561,14 @@
     "kalshi": {
      "p_dem": 0.815,
      "ticker": "GOVPARTYOH-26",
-     "volume": 11050457,
-     "volume_24h": 2796372,
+     "volume": 11103476,
+     "volume_24h": 2811229,
      "candidates": {
       "D": "Amy Acton",
       "R": "Vivek Ramaswamy"
      },
-     "updated": "2026-11-03T20:15:02Z",
-     "stale": true,
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
      "margin_ticker": "KXGENERALMOV-GOVPARTYOH-26",
      "margin_volume": 35651,
      "implied_margin_brackets": 4.65,
@@ -3643,16 +3643,16 @@
     "polymarket": {
      "p_dem": 0.8267,
      "slug": "ohio-governor-winner-2026",
-     "volume": 2186163,
+     "volume": 2202950,
      "candidates": {
       "D": "Amy Acton",
       "R": "Vivek Ramaswamy"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "ohio-governor-margin-of-victory-2026",
-     "margin_volume": 54349,
-     "implied_margin_brackets": 4.01,
+     "margin_volume": 54400,
+     "implied_margin_brackets": 4.04,
      "brackets": [
       {
        "lo": null,
@@ -3667,115 +3667,188 @@
       {
        "lo": -9.0,
        "hi": -6.0,
-       "p": 0.024
+       "p": 0.0235
       },
       {
        "lo": -6.0,
        "hi": -3.0,
-       "p": 0.0465
+       "p": 0.0464
       },
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.1
+       "p": 0.0998
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.1549
+       "p": 0.1547
       },
       {
        "lo": 3.0,
        "hi": 6.0,
-       "p": 0.3248
+       "p": 0.3244
       },
       {
        "lo": 6.0,
        "hi": 9.0,
-       "p": 0.1644
+       "p": 0.1642
       },
       {
        "lo": 9.0,
        "hi": 12.0,
-       "p": 0.1119
+       "p": 0.1118
       },
       {
        "lo": 12.0,
        "hi": null,
-       "p": 0.0475
+       "p": 0.0494
       }
      ]
     }
    },
-   "move": -0.28,
+   "move": -0.26,
    "p_dem_move": -0.0098
   },
   "TX-SEN": {
    "tier": "key",
    "state": "TX",
    "office": "senate",
-   "p_dem": 0.745,
-   "implied_margin": 3.28,
+   "p_dem": 0.7364,
+   "implied_margin": 3.27,
    "margin_brackets": [
     {
      "lo": null,
-     "hi": -12.0,
-     "p": 0.0061
+     "hi": -8.0,
+     "p": 0.0244
     },
     {
-     "lo": -12.0,
-     "hi": -9.0,
-     "p": 0.0052
-    },
-    {
-     "lo": -9.0,
+     "lo": -8.0,
      "hi": -6.0,
-     "p": 0.0147
+     "p": 0.0146
     },
     {
      "lo": -6.0,
-     "hi": -3.0,
-     "p": 0.0307
+     "hi": -4.0,
+     "p": 0.0146
     },
     {
-     "lo": -3.0,
+     "lo": -4.0,
+     "hi": -2.0,
+     "p": 0.0341
+    },
+    {
+     "lo": -2.0,
      "hi": 0.0,
-     "p": 0.1844
+     "p": 0.1317
     },
     {
      "lo": 0.0,
-     "hi": 3.0,
-     "p": 0.2459
+     "hi": 2.0,
+     "p": 0.1463
     },
     {
-     "lo": 3.0,
+     "lo": 2.0,
+     "hi": 4.0,
+     "p": 0.239
+    },
+    {
+     "lo": 4.0,
      "hi": 6.0,
-     "p": 0.2506
+     "p": 0.1512
     },
     {
      "lo": 6.0,
-     "hi": 9.0,
-     "p": 0.1707
+     "hi": 8.0,
+     "p": 0.1317
     },
     {
-     "lo": 9.0,
-     "hi": 12.0,
-     "p": 0.0582
-    },
-    {
-     "lo": 12.0,
+     "lo": 8.0,
      "hi": null,
-     "p": 0.0336
+     "p": 0.1122
     }
    ],
-   "margin_brackets_source": "polymarket",
-   "margin_from_p": 3.29,
+   "margin_brackets_source": "kalshi",
+   "margin_from_p": 3.16,
    "margin_method": "brackets",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.735,
+     "ticker": "SENATETX-26",
+     "volume": 91957431,
+     "volume_24h": 18898304,
+     "candidates": {
+      "D": "James Talarico",
+      "R": "Ken Paxton"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-SENATETX-26",
+     "margin_volume": 549369,
+     "implied_margin_brackets": 3.27,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -8.0,
+       "p": 0.0244
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0146
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0146
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0341
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1317
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.1463
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.239
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.1512
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.1317
+      },
+      {
+       "lo": 8.0,
+       "hi": null,
+       "p": 0.1122
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.745,
      "slug": "texas-senate-election-winner",
-     "volume": 15223848,
+     "volume": 15255177,
      "candidates": {
       "D": "James Talarico",
       "R": "Ken Paxton"
@@ -3785,7 +3858,7 @@
       "newest": "2026-11-03T11:00:20Z"
      },
      "margin_slug": "texas-senate-margin-of-victory-2026",
-     "margin_volume": 397700,
+     "margin_volume": 400122,
      "implied_margin_brackets": 3.28,
      "brackets": [
       {
@@ -3845,77 +3918,144 @@
      }
     }
    },
-   "p_dem_now": 0.7475,
-   "implied_margin_now": 3.38,
+   "p_dem_now": 0.7401,
+   "implied_margin_now": 3.3,
    "margin_brackets_now": [
     {
      "lo": null,
-     "hi": -12.0,
-     "p": 0.0043
+     "hi": -8.0,
+     "p": 0.0192
     },
     {
-     "lo": -12.0,
-     "hi": -9.0,
-     "p": 0.0072
-    },
-    {
-     "lo": -9.0,
+     "lo": -8.0,
      "hi": -6.0,
-     "p": 0.0077
+     "p": 0.0192
     },
     {
      "lo": -6.0,
-     "hi": -3.0,
-     "p": 0.0394
+     "hi": -4.0,
+     "p": 0.0385
     },
     {
-     "lo": -3.0,
+     "lo": -4.0,
+     "hi": -2.0,
+     "p": 0.0913
+    },
+    {
+     "lo": -2.0,
      "hi": 0.0,
-     "p": 0.1488
+     "p": 0.125
     },
     {
      "lo": 0.0,
-     "hi": 3.0,
-     "p": 0.2928
+     "hi": 2.0,
+     "p": 0.1587
     },
     {
-     "lo": 3.0,
+     "lo": 2.0,
+     "hi": 4.0,
+     "p": 0.1635
+    },
+    {
+     "lo": 4.0,
      "hi": 6.0,
-     "p": 0.216
+     "p": 0.1394
     },
     {
      "lo": 6.0,
-     "hi": 9.0,
-     "p": 0.1949
+     "hi": 8.0,
+     "p": 0.1106
     },
     {
-     "lo": 9.0,
-     "hi": 12.0,
-     "p": 0.0614
-    },
-    {
-     "lo": 12.0,
+     "lo": 8.0,
      "hi": null,
-     "p": 0.0274
+     "p": 0.1346
     }
    ],
-   "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": 3.33,
+   "margin_brackets_source_now": "kalshi",
+   "margin_from_p_now": 3.22,
    "margin_method_now": "brackets",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.7475,
-     "slug": "texas-senate-election-winner",
-     "volume": 15223848,
+    "kalshi": {
+     "p_dem": 0.7376,
+     "ticker": "SENATETX-26",
+     "volume": 92236047,
+     "volume_24h": 19053655,
      "candidates": {
       "D": "James Talarico",
       "R": "Ken Paxton"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-SENATETX-26",
+     "margin_volume": 549369,
+     "implied_margin_brackets": 2.89,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -8.0,
+       "p": 0.0192
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0192
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0385
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0913
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.125
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.1587
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1635
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.1394
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.1106
+      },
+      {
+       "lo": 8.0,
+       "hi": null,
+       "p": 0.1346
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.755,
+     "slug": "texas-senate-election-winner",
+     "volume": 15255177,
+     "candidates": {
+      "D": "James Talarico",
+      "R": "Ken Paxton"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "texas-senate-margin-of-victory-2026",
-     "margin_volume": 397700,
-     "implied_margin_brackets": 3.38,
+     "margin_volume": 400122,
+     "implied_margin_brackets": 3.85,
      "brackets": [
       {
        "lo": null,
@@ -3925,120 +4065,203 @@
       {
        "lo": -12.0,
        "hi": -9.0,
-       "p": 0.0072
+       "p": 0.0061
       },
       {
        "lo": -9.0,
        "hi": -6.0,
-       "p": 0.0077
+       "p": 0.0071
       },
       {
        "lo": -6.0,
        "hi": -3.0,
-       "p": 0.0394
+       "p": 0.0317
       },
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.1488
+       "p": 0.1465
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.2928
+       "p": 0.2505
       },
       {
        "lo": 3.0,
        "hi": 6.0,
-       "p": 0.216
+       "p": 0.2316
       },
       {
        "lo": 6.0,
        "hi": 9.0,
-       "p": 0.1949
+       "p": 0.2193
       },
       {
        "lo": 9.0,
        "hi": 12.0,
-       "p": 0.0614
+       "p": 0.0624
       },
       {
        "lo": 12.0,
        "hi": null,
-       "p": 0.0274
+       "p": 0.0406
       }
      ]
     }
    },
-   "move": 0.1,
-   "p_dem_move": 0.0025
+   "move": 0.03,
+   "p_dem_move": 0.0037
   },
   "TX-GOV": {
    "tier": "key",
    "state": "TX",
    "office": "governor",
-   "p_dem": 0.3737,
-   "implied_margin": -2.17,
+   "p_dem": 0.3781,
+   "implied_margin": -2.03,
    "margin_brackets": [
     {
      "lo": null,
-     "hi": -18.0,
-     "p": 0.0179
-    },
-    {
-     "lo": -18.0,
-     "hi": -15.0,
-     "p": 0.0074
-    },
-    {
-     "lo": -15.0,
      "hi": -12.0,
-     "p": 0.0238
+     "p": 0.0239
     },
     {
      "lo": -12.0,
-     "hi": -9.0,
-     "p": 0.0412
+     "hi": -10.0,
+     "p": 0.0239
     },
     {
-     "lo": -9.0,
+     "lo": -10.0,
+     "hi": -8.0,
+     "p": 0.0335
+    },
+    {
+     "lo": -8.0,
      "hi": -6.0,
-     "p": 0.0844
+     "p": 0.0766
     },
     {
      "lo": -6.0,
-     "hi": -3.0,
-     "p": 0.1936
+     "hi": -4.0,
+     "p": 0.1148
     },
     {
-     "lo": -3.0,
+     "lo": -4.0,
+     "hi": -2.0,
+     "p": 0.1866
+    },
+    {
+     "lo": -2.0,
      "hi": 0.0,
-     "p": 0.283
+     "p": 0.1962
     },
     {
      "lo": 0.0,
-     "hi": 3.0,
-     "p": 0.2319
+     "hi": 2.0,
+     "p": 0.177
     },
     {
-     "lo": 3.0,
+     "lo": 2.0,
+     "hi": 4.0,
+     "p": 0.11
+    },
+    {
+     "lo": 4.0,
      "hi": 6.0,
-     "p": 0.0899
+     "p": 0.0431
     },
     {
      "lo": 6.0,
      "hi": null,
-     "p": 0.0268
+     "p": 0.0144
     }
    ],
-   "margin_brackets_source": "polymarket",
-   "margin_from_p": -1.61,
+   "margin_brackets_source": "kalshi",
+   "margin_from_p": -1.55,
    "margin_method": "brackets",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.3788,
+     "ticker": "GOVPARTYTX-26",
+     "volume": 22352840,
+     "volume_24h": 6960232,
+     "candidates": {
+      "D": "Gina Hinojosa",
+      "R": "Greg Abbott"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-GOVPARTYTX-26",
+     "margin_volume": 126251,
+     "implied_margin_brackets": -1.96,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -12.0,
+       "p": 0.0239
+      },
+      {
+       "lo": -12.0,
+       "hi": -10.0,
+       "p": 0.0239
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.0335
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0766
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.1148
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.1866
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1962
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.177
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.11
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.0431
+      },
+      {
+       "lo": 6.0,
+       "hi": null,
+       "p": 0.0144
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T07:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.3737,
      "slug": "texas-governor-winner-2026",
-     "volume": 3623029,
+     "volume": 3631812,
      "candidates": {
       "D": "Gina Hinojosa",
       "R": "Greg Abbott"
@@ -4048,7 +4271,7 @@
       "newest": "2026-11-03T11:00:20Z"
      },
      "margin_slug": "texas-governor-margin-of-victory-2026",
-     "margin_volume": 73358,
+     "margin_volume": 73415,
      "implied_margin_brackets": -2.17,
      "brackets": [
       {
@@ -4108,87 +4331,164 @@
      }
     }
    },
-   "p_dem_now": 0.394,
-   "implied_margin_now": -2.72,
+   "p_dem_now": 0.3811,
+   "implied_margin_now": -2.6,
    "margin_brackets_now": [
     {
      "lo": null,
-     "hi": -18.0,
-     "p": 0.0271
-    },
-    {
-     "lo": -18.0,
-     "hi": -15.0,
-     "p": 0.0037
-    },
-    {
-     "lo": -15.0,
      "hi": -12.0,
-     "p": 0.0189
+     "p": 0.0356
     },
     {
      "lo": -12.0,
-     "hi": -9.0,
-     "p": 0.0474
+     "hi": -10.0,
+     "p": 0.0267
     },
     {
-     "lo": -9.0,
+     "lo": -10.0,
+     "hi": -8.0,
+     "p": 0.04
+    },
+    {
+     "lo": -8.0,
      "hi": -6.0,
-     "p": 0.1564
+     "p": 0.0711
     },
     {
      "lo": -6.0,
-     "hi": -3.0,
-     "p": 0.1656
+     "hi": -4.0,
+     "p": 0.1289
     },
     {
-     "lo": -3.0,
+     "lo": -4.0,
+     "hi": -2.0,
+     "p": 0.2178
+    },
+    {
+     "lo": -2.0,
      "hi": 0.0,
-     "p": 0.2254
+     "p": 0.1956
     },
     {
      "lo": 0.0,
-     "hi": 3.0,
-     "p": 0.2309
+     "hi": 2.0,
+     "p": 0.1467
     },
     {
-     "lo": 3.0,
+     "lo": 2.0,
+     "hi": 4.0,
+     "p": 0.1022
+    },
+    {
+     "lo": 4.0,
      "hi": 6.0,
-     "p": 0.115
+     "p": 0.0222
     },
     {
      "lo": 6.0,
      "hi": null,
-     "p": 0.0097
+     "p": 0.0133
     }
    ],
-   "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": -1.34,
+   "margin_brackets_source_now": "kalshi",
+   "margin_from_p_now": -1.51,
    "margin_method_now": "brackets",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.394,
-     "slug": "texas-governor-winner-2026",
-     "volume": 3623029,
+    "kalshi": {
+     "p_dem": 0.3812,
+     "ticker": "GOVPARTYTX-26",
+     "volume": 22509350,
+     "volume_24h": 7144639,
      "candidates": {
       "D": "Gina Hinojosa",
       "R": "Greg Abbott"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-GOVPARTYTX-26",
+     "margin_volume": 126251,
+     "implied_margin_brackets": -2.54,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -12.0,
+       "p": 0.0356
+      },
+      {
+       "lo": -12.0,
+       "hi": -10.0,
+       "p": 0.0267
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.04
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0711
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.1289
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.2178
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1956
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.1467
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1022
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.0222
+      },
+      {
+       "lo": 6.0,
+       "hi": null,
+       "p": 0.0133
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.3808,
+     "slug": "texas-governor-winner-2026",
+     "volume": 3631812,
+     "candidates": {
+      "D": "Gina Hinojosa",
+      "R": "Greg Abbott"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "texas-governor-margin-of-victory-2026",
-     "margin_volume": 73358,
-     "implied_margin_brackets": -2.72,
+     "margin_volume": 73415,
+     "implied_margin_brackets": -2.7,
      "brackets": [
       {
        "lo": null,
        "hi": -18.0,
-       "p": 0.0271
+       "p": 0.0244
       },
       {
        "lo": -18.0,
        "hi": -15.0,
-       "p": 0.0037
+       "p": 0.0046
       },
       {
        "lo": -15.0,
@@ -4198,59 +4498,183 @@
       {
        "lo": -12.0,
        "hi": -9.0,
-       "p": 0.0474
+       "p": 0.047
       },
       {
        "lo": -9.0,
        "hi": -6.0,
-       "p": 0.1564
+       "p": 0.1565
       },
       {
        "lo": -6.0,
        "hi": -3.0,
-       "p": 0.1656
+       "p": 0.1565
       },
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.2254
+       "p": 0.244
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.2309
+       "p": 0.2279
       },
       {
        "lo": 3.0,
        "hi": 6.0,
-       "p": 0.115
+       "p": 0.1133
       },
       {
        "lo": 6.0,
        "hi": null,
-       "p": 0.0097
+       "p": 0.0069
       }
      ]
     }
    },
-   "move": -0.55,
-   "p_dem_move": 0.0203
+   "move": -0.57,
+   "p_dem_move": 0.003
   },
   "ME-SEN": {
    "tier": "key",
    "state": "ME",
    "office": "senate",
-   "p_dem": 0.735,
-   "implied_margin": 3.14,
-   "margin_brackets": null,
-   "margin_brackets_source": null,
-   "margin_from_p": 3.14,
-   "margin_method": "p_dem",
+   "p_dem": 0.7269,
+   "implied_margin": 2.68,
+   "margin_brackets": [
+    {
+     "lo": null,
+     "hi": -8.0,
+     "p": 0.0182
+    },
+    {
+     "lo": -8.0,
+     "hi": -6.0,
+     "p": 0.0227
+    },
+    {
+     "lo": -6.0,
+     "hi": -4.0,
+     "p": 0.0364
+    },
+    {
+     "lo": -4.0,
+     "hi": -2.0,
+     "p": 0.0909
+    },
+    {
+     "lo": -2.0,
+     "hi": 0.0,
+     "p": 0.1591
+    },
+    {
+     "lo": 0.0,
+     "hi": 2.0,
+     "p": 0.1455
+    },
+    {
+     "lo": 2.0,
+     "hi": 4.0,
+     "p": 0.1591
+    },
+    {
+     "lo": 4.0,
+     "hi": 6.0,
+     "p": 0.15
+    },
+    {
+     "lo": 6.0,
+     "hi": 8.0,
+     "p": 0.0864
+    },
+    {
+     "lo": 8.0,
+     "hi": null,
+     "p": 0.1318
+    }
+   ],
+   "margin_brackets_source": "kalshi",
+   "margin_from_p": 3.02,
+   "margin_method": "brackets",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.725,
+     "ticker": "SENATEME-26",
+     "volume": 17445287,
+     "volume_24h": 2444333,
+     "candidates": {
+      "D": "Troy Jackson",
+      "R": "Susan Collins"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-SENATEME-26",
+     "margin_volume": 58513,
+     "implied_margin_brackets": 2.68,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -8.0,
+       "p": 0.0182
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0227
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0364
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0909
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1591
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.1455
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1591
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.15
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.0864
+      },
+      {
+       "lo": 8.0,
+       "hi": null,
+       "p": 0.1318
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T07:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.735,
      "slug": "maine-senate-election-winner",
-     "volume": 4092378,
+     "volume": 4093039,
      "candidates": {
       "D": "Troy Jackson",
       "R": "Susan Collins"
@@ -4261,34 +4685,152 @@
      }
     }
    },
-   "p_dem_now": 0.705,
-   "implied_margin_now": 2.69,
-   "margin_brackets_now": null,
-   "margin_brackets_source_now": null,
-   "margin_from_p_now": 2.69,
-   "margin_method_now": "p_dem",
+   "p_dem_now": 0.6969,
+   "implied_margin_now": 2.4,
+   "margin_brackets_now": [
+    {
+     "lo": null,
+     "hi": -8.0,
+     "p": 0.0255
+    },
+    {
+     "lo": -8.0,
+     "hi": -6.0,
+     "p": 0.0153
+    },
+    {
+     "lo": -6.0,
+     "hi": -4.0,
+     "p": 0.0459
+    },
+    {
+     "lo": -4.0,
+     "hi": -2.0,
+     "p": 0.0969
+    },
+    {
+     "lo": -2.0,
+     "hi": 0.0,
+     "p": 0.1582
+    },
+    {
+     "lo": 0.0,
+     "hi": 2.0,
+     "p": 0.1582
+    },
+    {
+     "lo": 2.0,
+     "hi": 4.0,
+     "p": 0.1582
+    },
+    {
+     "lo": 4.0,
+     "hi": 6.0,
+     "p": 0.1378
+    },
+    {
+     "lo": 6.0,
+     "hi": 8.0,
+     "p": 0.0765
+    },
+    {
+     "lo": 8.0,
+     "hi": null,
+     "p": 0.1276
+    }
+   ],
+   "margin_brackets_source_now": "kalshi",
+   "margin_from_p_now": 2.58,
+   "margin_method_now": "brackets",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.705,
-     "slug": "maine-senate-election-winner",
-     "volume": 4092378,
+    "kalshi": {
+     "p_dem": 0.695,
+     "ticker": "SENATEME-26",
+     "volume": 17470594,
+     "volume_24h": 2444126,
      "candidates": {
       "D": "Troy Jackson",
       "R": "Susan Collins"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-SENATEME-26",
+     "margin_volume": 58513,
+     "implied_margin_brackets": 2.4,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -8.0,
+       "p": 0.0255
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0153
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0459
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0969
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1582
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.1582
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1582
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.1378
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.0765
+      },
+      {
+       "lo": 8.0,
+       "hi": null,
+       "p": 0.1276
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.705,
+     "slug": "maine-senate-election-winner",
+     "volume": 4093039,
+     "candidates": {
+      "D": "Troy Jackson",
+      "R": "Susan Collins"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
-   "move": -0.45,
+   "move": -0.28,
    "p_dem_move": -0.03
   },
   "MI-SEN": {
    "tier": "key",
    "state": "MI",
    "office": "senate",
-   "p_dem": 0.805,
-   "implied_margin": 5.25,
+   "p_dem": 0.799,
+   "implied_margin": 4.67,
    "margin_brackets": [
     {
      "lo": null,
@@ -4342,13 +4884,86 @@
     }
    ],
    "margin_brackets_source": "polymarket",
-   "margin_from_p": 4.3,
+   "margin_from_p": 4.19,
    "margin_method": "brackets",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.797,
+     "ticker": "SENATEMI-26",
+     "volume": 29095100,
+     "volume_24h": 7370449,
+     "candidates": {
+      "D": "Abdul El-Sayed",
+      "R": "Mike Rogers"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-SENATEMI-26",
+     "margin_volume": 143281,
+     "implied_margin_brackets": 4.07,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -6.0,
+       "p": 0.0189
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0189
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0566
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1274
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.1321
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1887
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.1368
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.1274
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.0849
+      },
+      {
+       "lo": 10.0,
+       "hi": null,
+       "p": 0.1085
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T09:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.805,
      "slug": "michigan-senate-election-winner",
-     "volume": 9604564,
+     "volume": 9620292,
      "candidates": {
       "D": "Abdul El-Sayed",
       "R": "Mike Rogers"
@@ -4358,7 +4973,7 @@
       "newest": "2026-11-03T11:00:20Z"
      },
      "margin_slug": "michigan-senate-margin-of-victory-2026",
-     "margin_volume": 149138,
+     "margin_volume": 150109,
      "implied_margin_brackets": 5.25,
      "brackets": [
       {
@@ -4418,8 +5033,8 @@
      }
     }
    },
-   "p_dem_now": 0.7626,
-   "implied_margin_now": 4.54,
+   "p_dem_now": 0.7569,
+   "implied_margin_now": 4.02,
    "margin_brackets_now": [
     {
      "lo": null,
@@ -4439,56 +5054,123 @@
     {
      "lo": -6.0,
      "hi": -3.0,
-     "p": 0.0262
+     "p": 0.0258
     },
     {
      "lo": -3.0,
      "hi": 0.0,
-     "p": 0.1759
+     "p": 0.1816
     },
     {
      "lo": 0.0,
      "hi": 3.0,
-     "p": 0.1902
+     "p": 0.1912
     },
     {
      "lo": 3.0,
      "hi": 6.0,
-     "p": 0.2187
+     "p": 0.2151
     },
     {
      "lo": 6.0,
      "hi": 9.0,
-     "p": 0.2092
+     "p": 0.2055
     },
     {
      "lo": 9.0,
      "hi": 12.0,
-     "p": 0.0747
+     "p": 0.075
     },
     {
      "lo": 12.0,
      "hi": null,
-     "p": 0.0865
+     "p": 0.087
     }
    ],
    "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": 3.57,
+   "margin_from_p_now": 3.48,
    "margin_method_now": "brackets",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.7626,
-     "slug": "michigan-senate-election-winner",
-     "volume": 9604564,
+    "kalshi": {
+     "p_dem": 0.755,
+     "ticker": "SENATEMI-26",
+     "volume": 29192488,
+     "volume_24h": 7403709,
      "candidates": {
       "D": "Abdul El-Sayed",
       "R": "Mike Rogers"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-SENATEMI-26",
+     "margin_volume": 143281,
+     "implied_margin_brackets": 3.5,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -6.0,
+       "p": 0.0283
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0236
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0519
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1462
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.1557
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1934
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.1274
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.1132
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.0566
+      },
+      {
+       "lo": 10.0,
+       "hi": null,
+       "p": 0.1038
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.7626,
+     "slug": "michigan-senate-election-winner",
+     "volume": 9620292,
+     "candidates": {
+      "D": "Abdul El-Sayed",
+      "R": "Mike Rogers"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "michigan-senate-margin-of-victory-2026",
-     "margin_volume": 149138,
-     "implied_margin_brackets": 4.54,
+     "margin_volume": 150109,
+     "implied_margin_brackets": 4.51,
      "brackets": [
       {
        "lo": null,
@@ -4508,50 +5190,50 @@
       {
        "lo": -6.0,
        "hi": -3.0,
-       "p": 0.0262
+       "p": 0.0258
       },
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.1759
+       "p": 0.1816
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.1902
+       "p": 0.1912
       },
       {
        "lo": 3.0,
        "hi": 6.0,
-       "p": 0.2187
+       "p": 0.2151
       },
       {
        "lo": 6.0,
        "hi": 9.0,
-       "p": 0.2092
+       "p": 0.2055
       },
       {
        "lo": 9.0,
        "hi": 12.0,
-       "p": 0.0747
+       "p": 0.075
       },
       {
        "lo": 12.0,
        "hi": null,
-       "p": 0.0865
+       "p": 0.087
       }
      ]
     }
    },
-   "move": -0.71,
-   "p_dem_move": -0.0424
+   "move": -0.65,
+   "p_dem_move": -0.0421
   },
   "IA-SEN": {
    "tier": "key",
    "state": "IA",
    "office": "senate",
-   "p_dem": 0.5327,
-   "implied_margin": 0.87,
+   "p_dem": 0.522,
+   "implied_margin": 0.68,
    "margin_brackets": [
     {
      "lo": null,
@@ -4605,13 +5287,91 @@
     }
    ],
    "margin_brackets_source": "polymarket",
-   "margin_from_p": 0.41,
+   "margin_from_p": 0.28,
    "margin_method": "brackets",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.5198,
+     "ticker": "SENATEIA-26",
+     "volume": 11703927,
+     "volume_24h": 1390571,
+     "candidates": {
+      "D": "Josh Turek",
+      "R": "Ashley Hinson"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-SENATEIA-26",
+     "margin_volume": 50856,
+     "implied_margin_brackets": 0.31,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -10.0,
+       "p": 0.0102
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.0102
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0408
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0816
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.1276
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.199
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.2092
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1582
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.0918
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.0408
+      },
+      {
+       "lo": 8.0,
+       "hi": null,
+       "p": 0.0306
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T07:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.5327,
      "slug": "iowa-senate-election-winner",
-     "volume": 2374692,
+     "volume": 2380011,
      "candidates": {
       "D": "Josh Turek",
       "R": "Ashley Hinson"
@@ -4681,190 +5441,355 @@
      }
     }
    },
-   "p_dem_now": 0.5099,
-   "implied_margin_now": 0.74,
+   "p_dem_now": 0.5013,
+   "implied_margin_now": 0.49,
    "margin_brackets_now": [
     {
      "lo": null,
      "hi": -12.0,
-     "p": 0.0309
+     "p": 0.0306
     },
     {
      "lo": -12.0,
      "hi": -9.0,
-     "p": 0.0247
+     "p": 0.025
     },
     {
      "lo": -9.0,
      "hi": -6.0,
-     "p": 0.0412
+     "p": 0.0408
     },
     {
      "lo": -6.0,
      "hi": -3.0,
-     "p": 0.1389
+     "p": 0.1378
     },
     {
      "lo": -3.0,
      "hi": 0.0,
-     "p": 0.216
+     "p": 0.2348
     },
     {
      "lo": 0.0,
      "hi": 3.0,
-     "p": 0.2572
+     "p": 0.2501
     },
     {
      "lo": 3.0,
      "hi": 6.0,
-     "p": 0.1343
+     "p": 0.1332
     },
     {
      "lo": 6.0,
      "hi": 9.0,
-     "p": 0.0602
+     "p": 0.0572
     },
     {
      "lo": 9.0,
      "hi": 12.0,
-     "p": 0.0473
+     "p": 0.0429
     },
     {
      "lo": 12.0,
      "hi": null,
-     "p": 0.0494
+     "p": 0.0475
     }
    ],
    "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": 0.12,
+   "margin_from_p_now": 0.02,
    "margin_method_now": "brackets",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.5099,
-     "slug": "iowa-senate-election-winner",
-     "volume": 2374692,
+    "kalshi": {
+     "p_dem": 0.5,
+     "ticker": "SENATEIA-26",
+     "volume": 11791356,
+     "volume_24h": 1466517,
      "candidates": {
       "D": "Josh Turek",
       "R": "Ashley Hinson"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-SENATEIA-26",
+     "margin_volume": 50856,
+     "implied_margin_brackets": 0.29,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -10.0,
+       "p": 0.0145
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.0097
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0531
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0821
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.1159
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1981
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.2126
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1401
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.0966
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.0338
+      },
+      {
+       "lo": 8.0,
+       "hi": null,
+       "p": 0.0435
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.5075,
+     "slug": "iowa-senate-election-winner",
+     "volume": 2380011,
+     "candidates": {
+      "D": "Josh Turek",
+      "R": "Ashley Hinson"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "iowa-senate-margin-of-victory-2026",
      "margin_volume": 100613,
-     "implied_margin_brackets": 0.74,
+     "implied_margin_brackets": 0.6,
      "brackets": [
       {
        "lo": null,
        "hi": -12.0,
-       "p": 0.0309
+       "p": 0.0306
       },
       {
        "lo": -12.0,
        "hi": -9.0,
-       "p": 0.0247
+       "p": 0.025
       },
       {
        "lo": -9.0,
        "hi": -6.0,
-       "p": 0.0412
+       "p": 0.0408
       },
       {
        "lo": -6.0,
        "hi": -3.0,
-       "p": 0.1389
+       "p": 0.1378
       },
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.216
+       "p": 0.2348
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.2572
+       "p": 0.2501
       },
       {
        "lo": 3.0,
        "hi": 6.0,
-       "p": 0.1343
+       "p": 0.1332
       },
       {
        "lo": 6.0,
        "hi": 9.0,
-       "p": 0.0602
+       "p": 0.0572
       },
       {
        "lo": 9.0,
        "hi": 12.0,
-       "p": 0.0473
+       "p": 0.0429
       },
       {
        "lo": 12.0,
        "hi": null,
-       "p": 0.0494
+       "p": 0.0475
       }
      ]
     }
    },
-   "move": -0.13,
-   "p_dem_move": -0.0228
+   "move": -0.19,
+   "p_dem_move": -0.0207
   },
   "KS-SEN": {
    "tier": "key",
    "state": "KS",
    "office": "senate",
-   "p_dem": 0.6219,
-   "implied_margin": 0.91,
+   "p_dem": 0.6244,
+   "implied_margin": 1.57,
    "margin_brackets": [
     {
      "lo": null,
-     "hi": -30.0,
-     "p": 0.0034
-    },
-    {
-     "lo": -30.0,
-     "hi": -25.0,
-     "p": 0.0015
-    },
-    {
-     "lo": -25.0,
-     "hi": -20.0,
-     "p": 0.0024
-    },
-    {
-     "lo": -20.0,
-     "hi": -15.0,
-     "p": 0.0049
-    },
-    {
-     "lo": -15.0,
      "hi": -10.0,
-     "p": 0.0272
+     "p": 0.0048
     },
     {
      "lo": -10.0,
-     "hi": -5.0,
-     "p": 0.1147
+     "hi": -8.0,
+     "p": 0.0144
     },
     {
-     "lo": -5.0,
+     "lo": -8.0,
+     "hi": -6.0,
+     "p": 0.0239
+    },
+    {
+     "lo": -6.0,
+     "hi": -4.0,
+     "p": 0.0431
+    },
+    {
+     "lo": -4.0,
+     "hi": -2.0,
+     "p": 0.0861
+    },
+    {
+     "lo": -2.0,
      "hi": 0.0,
-     "p": 0.2431
+     "p": 0.177
     },
     {
      "lo": 0.0,
+     "hi": 2.0,
+     "p": 0.2105
+    },
+    {
+     "lo": 2.0,
+     "hi": 4.0,
+     "p": 0.1388
+    },
+    {
+     "lo": 4.0,
+     "hi": 6.0,
+     "p": 0.1005
+    },
+    {
+     "lo": 6.0,
+     "hi": 8.0,
+     "p": 0.1005
+    },
+    {
+     "lo": 8.0,
      "hi": null,
-     "p": 0.6028
+     "p": 0.1005
     }
    ],
-   "margin_brackets_source": "polymarket",
-   "margin_from_p": 1.55,
+   "margin_brackets_source": "kalshi",
+   "margin_from_p": 1.59,
    "margin_method": "brackets",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.625,
+     "ticker": "SENATEKS-26",
+     "volume": 11216551,
+     "volume_24h": 1590226,
+     "candidates": {
+      "D": "Adam Hamilton",
+      "R": "Roger Marshall"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-SENATEKS-26",
+     "margin_volume": 69859,
+     "implied_margin_brackets": 2.12,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -10.0,
+       "p": 0.0048
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.0144
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0239
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0431
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0861
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.177
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.2105
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1388
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.1005
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.1005
+      },
+      {
+       "lo": 8.0,
+       "hi": null,
+       "p": 0.1005
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T09:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.6219,
      "slug": "kansas-senate-election-winner",
-     "volume": 2709640,
+     "volume": 2711635,
      "candidates": {
       "D": "Adam Hamilton",
       "R": "Roger Marshall"
@@ -4924,67 +5849,154 @@
      }
     }
    },
-   "p_dem_now": 0.635,
-   "implied_margin_now": 1.19,
+   "p_dem_now": 0.6386,
+   "implied_margin_now": 1.58,
    "margin_brackets_now": [
     {
      "lo": null,
-     "hi": -30.0,
-     "p": 0.0025
-    },
-    {
-     "lo": -30.0,
-     "hi": -25.0,
-     "p": 0.0015
-    },
-    {
-     "lo": -25.0,
-     "hi": -20.0,
-     "p": 0.002
-    },
-    {
-     "lo": -20.0,
-     "hi": -15.0,
-     "p": 0.0133
-    },
-    {
-     "lo": -15.0,
      "hi": -10.0,
-     "p": 0.0093
+     "p": 0.0231
     },
     {
      "lo": -10.0,
-     "hi": -5.0,
-     "p": 0.1071
+     "hi": -8.0,
+     "p": 0.0139
     },
     {
-     "lo": -5.0,
+     "lo": -8.0,
+     "hi": -6.0,
+     "p": 0.0231
+    },
+    {
+     "lo": -6.0,
+     "hi": -4.0,
+     "p": 0.037
+    },
+    {
+     "lo": -4.0,
+     "hi": -2.0,
+     "p": 0.0787
+    },
+    {
+     "lo": -2.0,
      "hi": 0.0,
-     "p": 0.2407
+     "p": 0.1806
     },
     {
      "lo": 0.0,
+     "hi": 2.0,
+     "p": 0.2176
+    },
+    {
+     "lo": 2.0,
+     "hi": 4.0,
+     "p": 0.1435
+    },
+    {
+     "lo": 4.0,
+     "hi": 6.0,
+     "p": 0.0787
+    },
+    {
+     "lo": 6.0,
+     "hi": 8.0,
+     "p": 0.0972
+    },
+    {
+     "lo": 8.0,
      "hi": null,
-     "p": 0.6238
+     "p": 0.1065
     }
    ],
-   "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": 1.73,
+   "margin_brackets_source_now": "kalshi",
+   "margin_from_p_now": 1.77,
    "margin_method_now": "brackets",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.635,
-     "slug": "kansas-senate-election-winner",
-     "volume": 2709640,
+    "kalshi": {
+     "p_dem": 0.6386,
+     "ticker": "SENATEKS-26",
+     "volume": 11266838,
+     "volume_24h": 1588175,
      "candidates": {
       "D": "Adam Hamilton",
       "R": "Roger Marshall"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-SENATEKS-26",
+     "margin_volume": 69859,
+     "implied_margin_brackets": 1.87,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -10.0,
+       "p": 0.0231
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.0139
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0231
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.037
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0787
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1806
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.2176
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1435
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.0787
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.0972
+      },
+      {
+       "lo": 8.0,
+       "hi": null,
+       "p": 0.1065
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.6386,
+     "slug": "kansas-senate-election-winner",
+     "volume": 2711635,
+     "candidates": {
+      "D": "Adam Hamilton",
+      "R": "Roger Marshall"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "kansas-senate-margin-of-victory-2026",
      "margin_volume": 58722,
-     "implied_margin_brackets": 1.19,
+     "implied_margin_brackets": 1.23,
      "brackets": [
       {
        "lo": null,
@@ -5004,49 +6016,63 @@
       {
        "lo": -20.0,
        "hi": -15.0,
-       "p": 0.0133
+       "p": 0.0108
       },
       {
        "lo": -15.0,
        "hi": -10.0,
-       "p": 0.0093
+       "p": 0.0083
       },
       {
        "lo": -10.0,
        "hi": -5.0,
-       "p": 0.1071
+       "p": 0.1074
       },
       {
        "lo": -5.0,
        "hi": 0.0,
-       "p": 0.2407
+       "p": 0.2451
       },
       {
        "lo": 0.0,
        "hi": null,
-       "p": 0.6238
+       "p": 0.6225
       }
      ]
     }
    },
-   "move": 0.28,
-   "p_dem_move": 0.0131
+   "move": 0.01,
+   "p_dem_move": 0.0142
   },
   "AK-SEN": {
    "tier": "key",
    "state": "AK",
    "office": "senate",
-   "p_dem": 0.715,
-   "implied_margin": 2.84,
+   "p_dem": 0.7007,
+   "implied_margin": 2.63,
    "margin_brackets": null,
    "margin_brackets_source": null,
-   "margin_from_p": 2.84,
+   "margin_from_p": 2.63,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.695,
+     "ticker": "SENATEAK-26",
+     "volume": 6997597,
+     "volume_24h": 728599,
+     "candidates": {
+      "D": "Democratic party",
+      "R": "Republican party"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.715,
      "slug": "alaska-senate-election-winner",
-     "volume": 2783889,
+     "volume": 2784418,
      "candidates": {
       "D": "Mary Peltola",
       "R": "Sen. Dan Sullivan"
@@ -5057,33 +6083,45 @@
      }
     }
    },
-   "p_dem_now": 0.698,
-   "implied_margin_now": 2.59,
+   "p_dem_now": 0.6887,
+   "implied_margin_now": 2.46,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
-   "margin_from_p_now": 2.59,
+   "margin_from_p_now": 2.46,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.685,
+     "ticker": "SENATEAK-26",
+     "volume": 7021027,
+     "volume_24h": 738133,
+     "candidates": {
+      "D": "Democratic party",
+      "R": "Republican party"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
      "p_dem": 0.698,
      "slug": "alaska-senate-election-winner",
-     "volume": 2783889,
+     "volume": 2784418,
      "candidates": {
       "D": "Mary Peltola",
       "R": "Sen. Dan Sullivan"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
-   "move": -0.25,
-   "p_dem_move": -0.017
+   "move": -0.17,
+   "p_dem_move": -0.012
   },
   "NH-SEN": {
    "tier": "key",
    "state": "NH",
    "office": "senate",
-   "p_dem": 0.945,
+   "p_dem": 0.9344,
    "implied_margin": 7.97,
    "margin_brackets": [
     {
@@ -5138,13 +6176,27 @@
     }
    ],
    "margin_brackets_source": "polymarket",
-   "margin_from_p": 7.99,
+   "margin_from_p": 7.55,
    "margin_method": "brackets",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.9321,
+     "ticker": "SENATENH-26",
+     "volume": 3707642,
+     "volume_24h": 461425,
+     "candidates": {
+      "D": "Chris Pappas",
+      "R": "John E. Sununu"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.945,
      "slug": "new-hampshire-senate-election-winner",
-     "volume": 812459,
+     "volume": 816023,
      "candidates": {
       "D": "Chris Pappas",
       "R": "John E. Sununu"
@@ -5214,73 +6266,85 @@
      }
     }
    },
-   "p_dem_now": 0.955,
+   "p_dem_now": 0.9439,
    "implied_margin_now": 8.21,
    "margin_brackets_now": [
     {
      "lo": null,
      "hi": -6.0,
-     "p": 0.0358
+     "p": 0.0356
     },
     {
      "lo": -6.0,
      "hi": -3.0,
-     "p": 0.0153
+     "p": 0.0152
     },
     {
      "lo": -3.0,
      "hi": 0.0,
-     "p": 0.0267
+     "p": 0.0266
     },
     {
      "lo": 0.0,
      "hi": 3.0,
-     "p": 0.1112
+     "p": 0.1106
     },
     {
      "lo": 3.0,
      "hi": 6.0,
-     "p": 0.1336
+     "p": 0.133
     },
     {
      "lo": 6.0,
      "hi": 9.0,
-     "p": 0.2433
+     "p": 0.2469
     },
     {
      "lo": 9.0,
      "hi": 12.0,
-     "p": 0.1479
+     "p": 0.1472
     },
     {
      "lo": 12.0,
      "hi": 15.0,
-     "p": 0.1283
+     "p": 0.1277
     },
     {
      "lo": 15.0,
      "hi": 18.0,
-     "p": 0.1231
+     "p": 0.1225
     },
     {
      "lo": 18.0,
      "hi": null,
-     "p": 0.0348
+     "p": 0.0347
     }
    ],
    "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": 8.48,
+   "margin_from_p_now": 7.94,
    "margin_method_now": "brackets",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.955,
-     "slug": "new-hampshire-senate-election-winner",
-     "volume": 812459,
+    "kalshi": {
+     "p_dem": 0.9415,
+     "ticker": "SENATENH-26",
+     "volume": 3711749,
+     "volume_24h": 473080,
      "candidates": {
       "D": "Chris Pappas",
       "R": "John E. Sununu"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
+    "polymarket": {
+     "p_dem": 0.955,
+     "slug": "new-hampshire-senate-election-winner",
+     "volume": 816023,
+     "candidates": {
+      "D": "Chris Pappas",
+      "R": "John E. Sununu"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "new-hampshire-senate-margin-of-victory-2026",
      "margin_volume": 28839,
@@ -5289,64 +6353,64 @@
       {
        "lo": null,
        "hi": -6.0,
-       "p": 0.0358
+       "p": 0.0356
       },
       {
        "lo": -6.0,
        "hi": -3.0,
-       "p": 0.0153
+       "p": 0.0152
       },
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.0267
+       "p": 0.0266
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.1112
+       "p": 0.1106
       },
       {
        "lo": 3.0,
        "hi": 6.0,
-       "p": 0.1336
+       "p": 0.133
       },
       {
        "lo": 6.0,
        "hi": 9.0,
-       "p": 0.2433
+       "p": 0.2469
       },
       {
        "lo": 9.0,
        "hi": 12.0,
-       "p": 0.1479
+       "p": 0.1472
       },
       {
        "lo": 12.0,
        "hi": 15.0,
-       "p": 0.1283
+       "p": 0.1277
       },
       {
        "lo": 15.0,
        "hi": 18.0,
-       "p": 0.1231
+       "p": 0.1225
       },
       {
        "lo": 18.0,
        "hi": null,
-       "p": 0.0348
+       "p": 0.0347
       }
      ]
     }
    },
    "move": 0.24,
-   "p_dem_move": 0.01
+   "p_dem_move": 0.0095
   },
   "NE-SEN": {
    "tier": "key",
    "state": "NE",
    "office": "senate",
-   "p_dem": 0.3253,
+   "p_dem": 0.3314,
    "implied_margin": -3.18,
    "margin_brackets": [
     {
@@ -5401,13 +6465,27 @@
     }
    ],
    "margin_brackets_source": "polymarket",
-   "margin_from_p": -2.26,
+   "margin_from_p": -2.18,
    "margin_method": "brackets",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.335,
+     "ticker": "SENATENE-26",
+     "volume": 4431599,
+     "volume_24h": 658967,
+     "candidates": {
+      "D": "Cindy Burbank",
+      "R": "Pete Ricketts"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.3253,
      "slug": "nebraska-senate-election-winner",
-     "volume": 2670564,
+     "volume": 2672646,
      "candidates": {
       "D": "Democrat",
       "R": "Pete Ricketts"
@@ -5477,141 +6555,153 @@
      }
     }
    },
-   "p_dem_now": 0.2912,
-   "implied_margin_now": -3.84,
+   "p_dem_now": 0.2936,
+   "implied_margin_now": -3.85,
    "margin_brackets_now": [
     {
      "lo": null,
      "hi": -21.0,
-     "p": 0.0321
+     "p": 0.0314
     },
     {
      "lo": -21.0,
      "hi": -18.0,
-     "p": 0.0228
+     "p": 0.0227
     },
     {
      "lo": -18.0,
      "hi": -15.0,
-     "p": 0.033
+     "p": 0.0329
     },
     {
      "lo": -15.0,
      "hi": -12.0,
-     "p": 0.0413
+     "p": 0.0406
     },
     {
      "lo": -12.0,
      "hi": -9.0,
-     "p": 0.0355
+     "p": 0.0402
     },
     {
      "lo": -9.0,
      "hi": -6.0,
-     "p": 0.1457
+     "p": 0.1451
     },
     {
      "lo": -6.0,
      "hi": -3.0,
-     "p": 0.1748
+     "p": 0.1742
     },
     {
      "lo": -3.0,
      "hi": 0.0,
-     "p": 0.2234
+     "p": 0.2225
     },
     {
      "lo": 0.0,
      "hi": 3.0,
-     "p": 0.1846
+     "p": 0.1838
     },
     {
      "lo": 3.0,
      "hi": null,
-     "p": 0.1068
+     "p": 0.1064
     }
    ],
    "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": -2.75,
+   "margin_from_p_now": -2.71,
    "margin_method_now": "brackets",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.295,
+     "ticker": "SENATENE-26",
+     "volume": 4438028,
+     "volume_24h": 660817,
+     "candidates": {
+      "D": "Cindy Burbank",
+      "R": "Pete Ricketts"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
      "p_dem": 0.2912,
      "slug": "nebraska-senate-election-winner",
-     "volume": 2670564,
+     "volume": 2672646,
      "candidates": {
       "D": "Democrat",
       "R": "Pete Ricketts"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "nebraska-senate-margin-of-victory-2026",
      "margin_volume": 39655,
-     "implied_margin_brackets": -3.84,
+     "implied_margin_brackets": -3.85,
      "brackets": [
       {
        "lo": null,
        "hi": -21.0,
-       "p": 0.0321
+       "p": 0.0314
       },
       {
        "lo": -21.0,
        "hi": -18.0,
-       "p": 0.0228
+       "p": 0.0227
       },
       {
        "lo": -18.0,
        "hi": -15.0,
-       "p": 0.033
+       "p": 0.0329
       },
       {
        "lo": -15.0,
        "hi": -12.0,
-       "p": 0.0413
+       "p": 0.0406
       },
       {
        "lo": -12.0,
        "hi": -9.0,
-       "p": 0.0355
+       "p": 0.0402
       },
       {
        "lo": -9.0,
        "hi": -6.0,
-       "p": 0.1457
+       "p": 0.1451
       },
       {
        "lo": -6.0,
        "hi": -3.0,
-       "p": 0.1748
+       "p": 0.1742
       },
       {
        "lo": -3.0,
        "hi": 0.0,
-       "p": 0.2234
+       "p": 0.2225
       },
       {
        "lo": 0.0,
        "hi": 3.0,
-       "p": 0.1846
+       "p": 0.1838
       },
       {
        "lo": 3.0,
        "hi": null,
-       "p": 0.1068
+       "p": 0.1064
       }
      ]
     }
    },
-   "move": -0.66,
-   "p_dem_move": -0.0341,
+   "move": -0.67,
+   "p_dem_move": -0.0378,
    "p_dem_meaning": "p(not Republican): independent Dan Osborn vs Pete Ricketts (R)"
   },
   "MN-SEN": {
    "tier": "key",
    "state": "MN",
    "office": "senate",
-   "p_dem": 0.915,
-   "implied_margin": 7.8,
+   "p_dem": 0.9119,
+   "implied_margin": 7.78,
    "margin_brackets": [
     {
      "lo": null,
@@ -5655,13 +6745,86 @@
     }
    ],
    "margin_brackets_source": "polymarket",
-   "margin_from_p": 6.86,
+   "margin_from_p": 6.76,
    "margin_method": "brackets",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.9114,
+     "ticker": "SENATEMN-26",
+     "volume": 8672416,
+     "volume_24h": 1611218,
+     "candidates": {
+      "D": "Peggy Flanagan",
+      "R": "Michele Tafoya"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-SENATEMN-26",
+     "margin_volume": 13481,
+     "implied_margin_brackets": 7.73,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -2.0,
+       "p": 0.0297
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.0446
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.0644
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1188
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.1436
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.1485
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.1337
+      },
+      {
+       "lo": 10.0,
+       "hi": 12.0,
+       "p": 0.1139
+      },
+      {
+       "lo": 12.0,
+       "hi": 14.0,
+       "p": 0.0842
+      },
+      {
+       "lo": 14.0,
+       "hi": null,
+       "p": 0.1188
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T03:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.915,
      "slug": "minnesota-senate-election-winner",
-     "volume": 1334909,
+     "volume": 1334949,
      "candidates": {
       "D": "Peggy Flanagan",
       "R": "Michele Tafoya"
@@ -5721,8 +6884,8 @@
      }
     }
    },
-   "p_dem_now": 0.915,
-   "implied_margin_now": 7.63,
+   "p_dem_now": 0.9118,
+   "implied_margin_now": 7.44,
    "margin_brackets_now": [
     {
      "lo": null,
@@ -5766,18 +6929,85 @@
     }
    ],
    "margin_brackets_source_now": "polymarket",
-   "margin_from_p_now": 6.86,
+   "margin_from_p_now": 6.76,
    "margin_method_now": "brackets",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.915,
-     "slug": "minnesota-senate-election-winner",
-     "volume": 1334909,
+    "kalshi": {
+     "p_dem": 0.9113,
+     "ticker": "SENATEMN-26",
+     "volume": 8710987,
+     "volume_24h": 1623971,
      "candidates": {
       "D": "Peggy Flanagan",
       "R": "Michele Tafoya"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-SENATEMN-26",
+     "margin_volume": 13481,
+     "implied_margin_brackets": 6.93,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -2.0,
+       "p": 0.0459
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.0612
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.0612
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1327
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.148
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.148
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.1327
+      },
+      {
+       "lo": 10.0,
+       "hi": 12.0,
+       "p": 0.1071
+      },
+      {
+       "lo": 12.0,
+       "hi": 14.0,
+       "p": 0.0663
+      },
+      {
+       "lo": 14.0,
+       "hi": null,
+       "p": 0.0969
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.915,
+     "slug": "minnesota-senate-election-winner",
+     "volume": 1334949,
+     "candidates": {
+      "D": "Peggy Flanagan",
+      "R": "Michele Tafoya"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "minnesota-senate-margin-of-victory-2026",
      "margin_volume": 35363,
@@ -5826,24 +7056,38 @@
      ]
     }
    },
-   "move": -0.17,
-   "p_dem_move": 0.0
+   "move": -0.34,
+   "p_dem_move": -0.0001
   },
   "MS-SEN": {
    "tier": "key",
    "state": "MS",
    "office": "senate",
-   "p_dem": 0.135,
-   "implied_margin": -5.52,
+   "p_dem": 0.142,
+   "implied_margin": -5.36,
    "margin_brackets": null,
    "margin_brackets_source": null,
-   "margin_from_p": -5.52,
+   "margin_from_p": -5.36,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.145,
+     "ticker": "SENATEMS-26",
+     "volume": 2533762,
+     "volume_24h": 676469,
+     "candidates": {
+      "D": "Scott Colom",
+      "R": "Cindy Hyde-Smith"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.135,
      "slug": "mississippi-senate-election-winner",
-     "volume": 1073608,
+     "volume": 1075981,
      "candidates": {
       "D": "Scott Colom",
       "R": "Cindy Hyde-Smith"
@@ -5854,27 +7098,39 @@
      }
     }
    },
-   "p_dem_now": 0.125,
-   "implied_margin_now": -5.75,
+   "p_dem_now": 0.135,
+   "implied_margin_now": -5.52,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
-   "margin_from_p_now": -5.75,
+   "margin_from_p_now": -5.52,
    "margin_method_now": "p_dem",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.125,
-     "slug": "mississippi-senate-election-winner",
-     "volume": 1073608,
+    "kalshi": {
+     "p_dem": 0.135,
+     "ticker": "SENATEMS-26",
+     "volume": 2550186,
+     "volume_24h": 694752,
      "candidates": {
       "D": "Scott Colom",
       "R": "Cindy Hyde-Smith"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
+    "polymarket": {
+     "p_dem": 0.135,
+     "slug": "mississippi-senate-election-winner",
+     "volume": 1075981,
+     "candidates": {
+      "D": "Scott Colom",
+      "R": "Cindy Hyde-Smith"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
-   "move": -0.23,
-   "p_dem_move": -0.01
+   "move": -0.16,
+   "p_dem_move": -0.007
   },
   "LA-SEN": {
    "tier": "key",
@@ -6007,7 +7263,7 @@
     {
      "lo": null,
      "hi": -35.0,
-     "p": 0.0231
+     "p": 0.0232
     },
     {
      "lo": -35.0,
@@ -6017,37 +7273,37 @@
     {
      "lo": -30.0,
      "hi": -25.0,
-     "p": 0.0261
+     "p": 0.0262
     },
     {
      "lo": -25.0,
      "hi": -20.0,
-     "p": 0.0231
+     "p": 0.0232
     },
     {
      "lo": -20.0,
      "hi": -15.0,
-     "p": 0.0565
+     "p": 0.0569
     },
     {
      "lo": -15.0,
      "hi": -10.0,
-     "p": 0.2262
+     "p": 0.2275
     },
     {
      "lo": -10.0,
      "hi": -5.0,
-     "p": 0.2114
+     "p": 0.2077
     },
     {
      "lo": -5.0,
      "hi": 0.0,
-     "p": 0.2699
+     "p": 0.2705
     },
     {
      "lo": 0.0,
      "hi": null,
-     "p": 0.1573
+     "p": 0.1583
     }
    ],
    "margin_brackets_source_now": "polymarket",
@@ -6057,12 +7313,12 @@
     "polymarket": {
      "p_dem": 0.1634,
      "slug": "louisiana-senate-election-winner",
-     "volume": 230619,
+     "volume": 231866,
      "candidates": {
       "D": "Jamie Davis",
       "R": "Julia Letlow"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false,
      "margin_slug": "louisiana-senate-margin-of-victory-2026",
      "margin_volume": 30070,
@@ -6071,7 +7327,7 @@
       {
        "lo": null,
        "hi": -35.0,
-       "p": 0.0231
+       "p": 0.0232
       },
       {
        "lo": -35.0,
@@ -6081,37 +7337,37 @@
       {
        "lo": -30.0,
        "hi": -25.0,
-       "p": 0.0261
+       "p": 0.0262
       },
       {
        "lo": -25.0,
        "hi": -20.0,
-       "p": 0.0231
+       "p": 0.0232
       },
       {
        "lo": -20.0,
        "hi": -15.0,
-       "p": 0.0565
+       "p": 0.0569
       },
       {
        "lo": -15.0,
        "hi": -10.0,
-       "p": 0.2262
+       "p": 0.2275
       },
       {
        "lo": -10.0,
        "hi": -5.0,
-       "p": 0.2114
+       "p": 0.2077
       },
       {
        "lo": -5.0,
        "hi": 0.0,
-       "p": 0.2699
+       "p": 0.2705
       },
       {
        "lo": 0.0,
        "hi": null,
-       "p": 0.1573
+       "p": 0.1583
       }
      ]
     }
@@ -6123,38 +7379,80 @@
    "tier": "safe",
    "state": "AL",
    "office": "senate",
-   "p_dem": null,
-   "implied_margin": null,
+   "p_dem": 0.022,
+   "implied_margin": -10.07,
    "margin_brackets": null,
    "margin_brackets_source": null,
-   "margin_from_p": null,
-   "margin_method": null,
-   "sources": {},
-   "p_dem_now": null,
-   "implied_margin_now": null,
+   "margin_from_p": -10.07,
+   "margin_method": "p_dem",
+   "sources": {
+    "kalshi": {
+     "p_dem": 0.022,
+     "ticker": "SENATEAL-26",
+     "volume": 43057,
+     "volume_24h": 18064,
+     "candidates": {
+      "D": "Everett Wess",
+      "R": "Barry Moore"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    }
+   },
+   "p_dem_now": 0.0225,
+   "implied_margin_now": -10.02,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
-   "margin_from_p_now": null,
-   "margin_method_now": null,
-   "sources_now": {},
-   "move": null,
-   "p_dem_move": null
+   "margin_from_p_now": -10.02,
+   "margin_method_now": "p_dem",
+   "sources_now": {
+    "kalshi": {
+     "p_dem": 0.0225,
+     "ticker": "SENATEAL-26",
+     "volume": 43940,
+     "volume_24h": 19011,
+     "candidates": {
+      "D": "Everett Wess",
+      "R": "Barry Moore"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    }
+   },
+   "move": 0.05,
+   "p_dem_move": 0.0005
   },
   "AR-SEN": {
    "tier": "safe",
    "state": "AR",
    "office": "senate",
-   "p_dem": 0.021,
-   "implied_margin": -10.17,
+   "p_dem": 0.0231,
+   "implied_margin": -9.96,
    "margin_brackets": null,
    "margin_brackets_source": null,
-   "margin_from_p": -10.17,
+   "margin_from_p": -9.96,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.0235,
+     "ticker": "SENATEAR-26",
+     "volume": 732177,
+     "volume_24h": 186588,
+     "candidates": {
+      "D": "Hallie Shoffner",
+      "R": "Tom Cotton"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.021,
      "slug": "arkansas-senate-election-winner",
-     "volume": 126039,
+     "volume": 126139,
      "candidates": {
       "D": "Hallie Shoffner",
       "R": "Tom Cotton"
@@ -6165,39 +7463,65 @@
      }
     }
    },
-   "p_dem_now": 0.0394,
-   "implied_margin_now": -8.79,
+   "p_dem_now": 0.0429,
+   "implied_margin_now": -8.59,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
-   "margin_from_p_now": -8.79,
+   "margin_from_p_now": -8.59,
    "margin_method_now": "p_dem",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.0394,
-     "slug": "arkansas-senate-election-winner",
-     "volume": 126039,
+    "kalshi": {
+     "p_dem": 0.0435,
+     "ticker": "SENATEAR-26",
+     "volume": 738149,
+     "volume_24h": 193976,
      "candidates": {
       "D": "Hallie Shoffner",
       "R": "Tom Cotton"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
+    "polymarket": {
+     "p_dem": 0.0394,
+     "slug": "arkansas-senate-election-winner",
+     "volume": 126139,
+     "candidates": {
+      "D": "Hallie Shoffner",
+      "R": "Tom Cotton"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
-   "move": 1.38,
-   "p_dem_move": 0.0184
+   "move": 1.37,
+   "p_dem_move": 0.0198
   },
   "CO-SEN": {
    "tier": "safe",
    "state": "CO",
    "office": "senate",
-   "p_dem": 0.9895,
+   "p_dem": 0.9912,
    "implied_margin": 10.27,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": 10.27,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.992,
+     "ticker": "SENATECO-26",
+     "volume": 116237,
+     "volume_24h": 25820,
+     "candidates": {
+      "D": "John Hickenlooper",
+      "R": "Mark Baisley"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.9895,
      "slug": "colorado-senate-election-winner",
@@ -6212,39 +7536,65 @@
      }
     }
    },
-   "p_dem_now": 0.9885,
+   "p_dem_now": 0.9903,
    "implied_margin_now": 10.27,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
    "margin_from_p_now": 10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.989,
+     "ticker": "SENATECO-26",
+     "volume": 118427,
+     "volume_24h": 27617,
+     "candidates": {
+      "D": "John Hickenlooper",
+      "R": "Mark Baisley"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
-     "p_dem": 0.9885,
+     "p_dem": 0.993,
      "slug": "colorado-senate-election-winner",
      "volume": 56282,
      "candidates": {
       "D": "John Hickenlooper",
       "R": "Mark Baisley"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
    "move": 0.0,
-   "p_dem_move": -0.001
+   "p_dem_move": -0.0009
   },
   "DE-SEN": {
    "tier": "safe",
    "state": "DE",
    "office": "senate",
-   "p_dem": 0.988,
+   "p_dem": 0.9893,
    "implied_margin": 10.27,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": 10.27,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.99,
+     "ticker": "SENATEDE-26",
+     "volume": 71125,
+     "volume_24h": 21754,
+     "candidates": {
+      "D": "Chris Coons",
+      "R": "Michael Katz"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.988,
      "slug": "delaware-senate-election-winner",
@@ -6259,13 +7609,25 @@
      }
     }
    },
-   "p_dem_now": 0.9885,
+   "p_dem_now": 0.9888,
    "implied_margin_now": 10.27,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
    "margin_from_p_now": 10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.989,
+     "ticker": "SENATEDE-26",
+     "volume": 71211,
+     "volume_24h": 21815,
+     "candidates": {
+      "D": "Chris Coons",
+      "R": "Michael Katz"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
      "p_dem": 0.9885,
      "slug": "delaware-senate-election-winner",
@@ -6274,28 +7636,42 @@
       "D": "Democrat",
       "R": "Republican"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
    "move": 0.0,
-   "p_dem_move": 0.0005
+   "p_dem_move": -0.0005
   },
   "ID-SEN": {
    "tier": "safe",
    "state": "ID",
    "office": "senate",
-   "p_dem": 0.0294,
-   "implied_margin": -9.45,
+   "p_dem": 0.0314,
+   "implied_margin": -9.3,
    "margin_brackets": null,
    "margin_brackets_source": null,
-   "margin_from_p": -9.45,
+   "margin_from_p": -9.3,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.0325,
+     "ticker": "SENATEID-26",
+     "volume": 850870,
+     "volume_24h": 97271,
+     "candidates": {
+      "D": "David Roth",
+      "R": "Jim Risch"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.0294,
      "slug": "idaho-senate-election-winner",
-     "volume": 485361,
+     "volume": 485367,
      "candidates": {
       "D": "Democrat",
       "R": "Jim Risch"
@@ -6306,40 +7682,66 @@
      }
     }
    },
-   "p_dem_now": 0.0361,
-   "implied_margin_now": -8.99,
+   "p_dem_now": 0.0343,
+   "implied_margin_now": -9.11,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
-   "margin_from_p_now": -8.99,
+   "margin_from_p_now": -9.11,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.0335,
+     "ticker": "SENATEID-26",
+     "volume": 852072,
+     "volume_24h": 94412,
+     "candidates": {
+      "D": "David Roth",
+      "R": "Jim Risch"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
-     "p_dem": 0.0361,
+     "p_dem": 0.0356,
      "slug": "idaho-senate-election-winner",
-     "volume": 485361,
+     "volume": 485367,
      "candidates": {
       "D": "Democrat",
       "R": "Jim Risch"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
-   "move": 0.46,
-   "p_dem_move": 0.0067,
+   "move": 0.19,
+   "p_dem_move": 0.0029,
    "p_dem_meaning": "p(not Republican): an independent, not the Democrat, is the main challenger"
   },
   "IL-SEN": {
    "tier": "safe",
    "state": "IL",
    "office": "senate",
-   "p_dem": 0.9935,
+   "p_dem": 0.9885,
    "implied_margin": 10.27,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": 10.27,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.986,
+     "ticker": "SENATEIL-26",
+     "volume": 101201,
+     "volume_24h": 20414,
+     "candidates": {
+      "D": "Juliana Stratton",
+      "R": "Don Tracy"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.9935,
      "slug": "illinois-senate-election-winner",
@@ -6354,39 +7756,65 @@
      }
     }
    },
-   "p_dem_now": 0.9865,
+   "p_dem_now": 0.986,
    "implied_margin_now": 10.27,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
    "margin_from_p_now": 10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.9855,
+     "ticker": "SENATEIL-26",
+     "volume": 101856,
+     "volume_24h": 21016,
+     "candidates": {
+      "D": "Juliana Stratton",
+      "R": "Don Tracy"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
-     "p_dem": 0.9865,
+     "p_dem": 0.987,
      "slug": "illinois-senate-election-winner",
      "volume": 49377,
      "candidates": {
       "D": "Juliana Stratton",
       "R": "Don Tracy"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
    "move": 0.0,
-   "p_dem_move": -0.007
+   "p_dem_move": -0.0025
   },
   "MA-SEN": {
    "tier": "safe",
    "state": "MA",
    "office": "senate",
-   "p_dem": 0.9905,
+   "p_dem": 0.9909,
    "implied_margin": 10.27,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": 10.27,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.991,
+     "ticker": "SENATEMA-26",
+     "volume": 588077,
+     "volume_24h": 367978,
+     "candidates": {
+      "D": "Ed Markey",
+      "R": "John Deaton"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.9905,
      "slug": "massachusetts-senate-election-winner",
@@ -6401,13 +7829,25 @@
      }
     }
    },
-   "p_dem_now": 0.992,
+   "p_dem_now": 0.9911,
    "implied_margin_now": 10.27,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
    "margin_from_p_now": 10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.991,
+     "ticker": "SENATEMA-26",
+     "volume": 619614,
+     "volume_24h": 399726,
+     "candidates": {
+      "D": "Ed Markey",
+      "R": "John Deaton"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
      "p_dem": 0.992,
      "slug": "massachusetts-senate-election-winner",
@@ -6416,28 +7856,42 @@
       "D": "Ed Markey",
       "R": "John Deaton"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
    "move": 0.0,
-   "p_dem_move": 0.0015
+   "p_dem_move": 0.0002
   },
   "MT-SEN": {
    "tier": "safe",
    "state": "MT",
    "office": "senate",
-   "p_dem": 0.0964,
-   "implied_margin": -6.51,
+   "p_dem": 0.1024,
+   "implied_margin": -6.34,
    "margin_brackets": null,
    "margin_brackets_source": null,
-   "margin_from_p": -6.51,
+   "margin_from_p": -6.34,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.105,
+     "ticker": "SENATEMT-26",
+     "volume": 1328392,
+     "volume_24h": 360334,
+     "candidates": {
+      "D": "Alani Bankhead",
+      "R": "Kurt Alme"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.0964,
      "slug": "montana-senate-election-winner",
-     "volume": 563095,
+     "volume": 563211,
      "candidates": {
       "D": "Alani Bankhead",
       "R": "Kurt Alme"
@@ -6448,40 +7902,66 @@
      }
     }
    },
-   "p_dem_now": 0.0745,
-   "implied_margin_now": -7.22,
+   "p_dem_now": 0.0734,
+   "implied_margin_now": -7.25,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
-   "margin_from_p_now": -7.22,
+   "margin_from_p_now": -7.25,
    "margin_method_now": "p_dem",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.0745,
-     "slug": "montana-senate-election-winner",
-     "volume": 563095,
+    "kalshi": {
+     "p_dem": 0.073,
+     "ticker": "SENATEMT-26",
+     "volume": 1335484,
+     "volume_24h": 366055,
      "candidates": {
       "D": "Alani Bankhead",
       "R": "Kurt Alme"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
+    "polymarket": {
+     "p_dem": 0.0745,
+     "slug": "montana-senate-election-winner",
+     "volume": 563211,
+     "candidates": {
+      "D": "Alani Bankhead",
+      "R": "Kurt Alme"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
-   "move": -0.71,
-   "p_dem_move": -0.0219,
+   "move": -0.91,
+   "p_dem_move": -0.029,
    "p_dem_meaning": "p(not Republican): an independent, not the Democrat, is the main challenger"
   },
   "NJ-SEN": {
    "tier": "safe",
    "state": "NJ",
    "office": "senate",
-   "p_dem": 0.9865,
+   "p_dem": 0.9805,
    "implied_margin": 10.27,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": 10.27,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.98,
+     "ticker": "SENATENJ-26",
+     "volume": 446501,
+     "volume_24h": 115064,
+     "candidates": {
+      "D": "Cory Booker",
+      "R": "Justin Murphy"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.9865,
      "slug": "new-jersey-senate-election-winner",
@@ -6496,13 +7976,25 @@
      }
     }
    },
-   "p_dem_now": 0.9845,
+   "p_dem_now": 0.9854,
    "implied_margin_now": 10.27,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
    "margin_from_p_now": 10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.9855,
+     "ticker": "SENATENJ-26",
+     "volume": 448800,
+     "volume_24h": 114773,
+     "candidates": {
+      "D": "Cory Booker",
+      "R": "Justin Murphy"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
      "p_dem": 0.9845,
      "slug": "new-jersey-senate-election-winner",
@@ -6511,24 +8003,38 @@
       "D": "Cory Booker",
       "R": "Justin Murphy"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
    "move": 0.0,
-   "p_dem_move": -0.002
+   "p_dem_move": 0.0049
   },
   "NM-SEN": {
    "tier": "safe",
    "state": "NM",
    "office": "senate",
-   "p_dem": 0.9935,
+   "p_dem": 0.9831,
    "implied_margin": 10.27,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": 10.27,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.981,
+     "ticker": "SENATENM-26",
+     "volume": 172881,
+     "volume_24h": 36084,
+     "candidates": {
+      "D": "Ben Ray Luj\u00e1n",
+      "R": "Larry E. Marker"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.9935,
      "slug": "new-mexico-senate-election-winner",
@@ -6543,39 +8049,65 @@
      }
     }
    },
-   "p_dem_now": 0.988,
+   "p_dem_now": 0.9871,
    "implied_margin_now": 10.27,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
    "margin_from_p_now": 10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.987,
+     "ticker": "SENATENM-26",
+     "volume": 173220,
+     "volume_24h": 36098,
+     "candidates": {
+      "D": "Ben Ray Luj\u00e1n",
+      "R": "Larry E. Marker"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
-     "p_dem": 0.988,
+     "p_dem": 0.9875,
      "slug": "new-mexico-senate-election-winner",
      "volume": 34385,
      "candidates": {
       "D": "Ben Ray Luj\u00e1n",
       "R": "Larry Marker"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
    "move": 0.0,
-   "p_dem_move": -0.0055
+   "p_dem_move": 0.004
   },
   "OK-SEN": {
    "tier": "safe",
    "state": "OK",
    "office": "senate",
-   "p_dem": 0.0135,
-   "implied_margin": -10.27,
+   "p_dem": 0.0205,
+   "implied_margin": -10.21,
    "margin_brackets": null,
    "margin_brackets_source": null,
-   "margin_from_p": -10.27,
+   "margin_from_p": -10.21,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.0224,
+     "ticker": "SENATEOK-26",
+     "volume": 119544,
+     "volume_24h": 30863,
+     "candidates": {
+      "D": "N\u2019Kiyla Thomas",
+      "R": "Kevin Hern"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.0135,
      "slug": "oklahoma-senate-election-winner",
@@ -6590,39 +8122,65 @@
      }
     }
    },
-   "p_dem_now": 0.0135,
+   "p_dem_now": 0.0149,
    "implied_margin_now": -10.27,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
    "margin_from_p_now": -10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.0155,
+     "ticker": "SENATEOK-26",
+     "volume": 122182,
+     "volume_24h": 33584,
+     "candidates": {
+      "D": "N\u2019Kiyla Thomas",
+      "R": "Kevin Hern"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
-     "p_dem": 0.0135,
+     "p_dem": 0.0125,
      "slug": "oklahoma-senate-election-winner",
      "volume": 31878,
      "candidates": {
       "D": "N\u2019Kiyla \u201cJasmine\u201d Thomas",
       "R": "Kevin Hern"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
-   "move": 0.0,
-   "p_dem_move": 0.0
+   "move": -0.06,
+   "p_dem_move": -0.0056
   },
   "OR-SEN": {
    "tier": "safe",
    "state": "OR",
    "office": "senate",
-   "p_dem": 0.988,
+   "p_dem": 0.9859,
    "implied_margin": 10.27,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": 10.27,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.9855,
+     "ticker": "SENATEOR-26",
+     "volume": 53666,
+     "volume_24h": 15400,
+     "candidates": {
+      "D": "Jeff Merkley",
+      "R": "David Brock Smith"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.988,
      "slug": "oregon-senate-election-winner",
@@ -6637,39 +8195,65 @@
      }
     }
    },
-   "p_dem_now": 0.993,
+   "p_dem_now": 0.9919,
    "implied_margin_now": 10.27,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
    "margin_from_p_now": 10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.9915,
+     "ticker": "SENATEOR-26",
+     "volume": 54696,
+     "volume_24h": 16431,
+     "candidates": {
+      "D": "Jeff Merkley",
+      "R": "David Brock Smith"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
-     "p_dem": 0.993,
+     "p_dem": 0.994,
      "slug": "oregon-senate-election-winner",
      "volume": 11280,
      "candidates": {
       "D": "Jeff Merkley",
       "R": "David Brock Smith"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
    "move": 0.0,
-   "p_dem_move": 0.005
+   "p_dem_move": 0.006
   },
   "RI-SEN": {
    "tier": "safe",
    "state": "RI",
    "office": "senate",
-   "p_dem": 0.991,
+   "p_dem": 0.9924,
    "implied_margin": 10.27,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": 10.27,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.993,
+     "ticker": "SENATERI-26",
+     "volume": 71153,
+     "volume_24h": 12970,
+     "candidates": {
+      "D": "Jack Reed",
+      "R": "Raymond McKay"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.991,
      "slug": "rhode-island-senate-election-winner",
@@ -6691,6 +8275,18 @@
    "margin_from_p_now": 10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.9895,
+     "ticker": "SENATERI-26",
+     "volume": 72036,
+     "volume_24h": 13853,
+     "candidates": {
+      "D": "Jack Reed",
+      "R": "Raymond McKay"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
      "p_dem": 0.9895,
      "slug": "rhode-island-senate-election-winner",
@@ -6699,28 +8295,42 @@
       "D": "Jack Reed",
       "R": "Raymond McKay"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
    "move": 0.0,
-   "p_dem_move": -0.0015
+   "p_dem_move": -0.0029
   },
   "SD-SEN": {
    "tier": "safe",
    "state": "SD",
    "office": "senate",
-   "p_dem": 0.0564,
+   "p_dem": 0.0565,
    "implied_margin": -7.93,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": -7.93,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.0565,
+     "ticker": "SENATESD-26",
+     "volume": 413307,
+     "volume_24h": 56823,
+     "candidates": {
+      "D": "Julian Beaudion",
+      "R": "Mike Rounds"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T10:00:00Z",
+      "newest": "2026-11-03T10:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.0564,
      "slug": "south-dakota-senate-election-winner",
-     "volume": 129558,
+     "volume": 130520,
      "candidates": {
       "D": "Democrat",
       "R": "Mike Rounds"
@@ -6731,44 +8341,70 @@
      }
     }
    },
-   "p_dem_now": 0.0524,
-   "implied_margin_now": -8.11,
+   "p_dem_now": 0.0507,
+   "implied_margin_now": -8.19,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
-   "margin_from_p_now": -8.11,
+   "margin_from_p_now": -8.19,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.0505,
+     "ticker": "SENATESD-26",
+     "volume": 413307,
+     "volume_24h": 56532,
+     "candidates": {
+      "D": "Julian Beaudion",
+      "R": "Mike Rounds"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
-     "p_dem": 0.0524,
+     "p_dem": 0.0513,
      "slug": "south-dakota-senate-election-winner",
-     "volume": 129558,
+     "volume": 130520,
      "candidates": {
       "D": "Democrat",
       "R": "Mike Rounds"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
-   "move": -0.18,
-   "p_dem_move": -0.004,
+   "move": -0.26,
+   "p_dem_move": -0.0058,
    "p_dem_meaning": "p(not Republican): an independent, not the Democrat, is the main challenger"
   },
   "TN-SEN": {
    "tier": "safe",
    "state": "TN",
    "office": "senate",
-   "p_dem": 0.017,
+   "p_dem": 0.0199,
    "implied_margin": -10.27,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": -10.27,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.0205,
+     "ticker": "SENATETN-26",
+     "volume": 594614,
+     "volume_24h": 23642,
+     "candidates": {
+      "D": "Marquita Bradshaw",
+      "R": "Bill Hagerty"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.017,
      "slug": "tennessee-senate-election-winner",
-     "volume": 129048,
+     "volume": 129058,
      "candidates": {
       "D": "Marquita Bradshaw",
       "R": "Bill Hagerty"
@@ -6779,39 +8415,65 @@
      }
     }
    },
-   "p_dem_now": 0.018,
+   "p_dem_now": 0.0188,
    "implied_margin_now": -10.27,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
    "margin_from_p_now": -10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
-    "polymarket": {
-     "p_dem": 0.018,
-     "slug": "tennessee-senate-election-winner",
-     "volume": 129048,
+    "kalshi": {
+     "p_dem": 0.019,
+     "ticker": "SENATETN-26",
+     "volume": 594648,
+     "volume_24h": 23998,
      "candidates": {
       "D": "Marquita Bradshaw",
       "R": "Bill Hagerty"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
+    "polymarket": {
+     "p_dem": 0.018,
+     "slug": "tennessee-senate-election-winner",
+     "volume": 129058,
+     "candidates": {
+      "D": "Marquita Bradshaw",
+      "R": "Bill Hagerty"
+     },
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
    "move": 0.0,
-   "p_dem_move": 0.001
+   "p_dem_move": -0.0011
   },
   "WV-SEN": {
    "tier": "safe",
    "state": "WV",
    "office": "senate",
-   "p_dem": 0.013,
+   "p_dem": 0.0098,
    "implied_margin": -10.27,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": -10.27,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.009,
+     "ticker": "SENATEWV-26",
+     "volume": 94661,
+     "volume_24h": 33321,
+     "candidates": {
+      "D": "Rachel Fetty Anderson",
+      "R": "Shelley Moore Capito"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.013,
      "slug": "west-virginia-senate-election-winner",
@@ -6826,39 +8488,65 @@
      }
     }
    },
-   "p_dem_now": 0.0145,
+   "p_dem_now": 0.0144,
    "implied_margin_now": -10.27,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
    "margin_from_p_now": -10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
-    "polymarket": {
+    "kalshi": {
      "p_dem": 0.0145,
+     "ticker": "SENATEWV-26",
+     "volume": 96449,
+     "volume_24h": 35110,
+     "candidates": {
+      "D": "Rachel Fetty Anderson",
+      "R": "Shelley Moore Capito"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
+    "polymarket": {
+     "p_dem": 0.014,
      "slug": "west-virginia-senate-election-winner",
      "volume": 24387,
      "candidates": {
       "D": "Rachel Fetty Anderson",
       "R": "Shelley Moore Capito"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
    "move": 0.0,
-   "p_dem_move": 0.0015
+   "p_dem_move": 0.0046
   },
   "WY-SEN": {
    "tier": "safe",
    "state": "WY",
    "office": "senate",
-   "p_dem": 0.015,
+   "p_dem": 0.0163,
    "implied_margin": -10.27,
    "margin_brackets": null,
    "margin_brackets_source": null,
    "margin_from_p": -10.27,
    "margin_method": "p_dem",
    "sources": {
+    "kalshi": {
+     "p_dem": 0.0169,
+     "ticker": "SENATEWY-26",
+     "volume": 50125,
+     "volume_24h": 13527,
+     "candidates": {
+      "D": "James Byrd",
+      "R": "Harriet Hageman"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
     "polymarket": {
      "p_dem": 0.015,
      "slug": "wyoming-senate-election-winner",
@@ -6873,27 +8561,39 @@
      }
     }
    },
-   "p_dem_now": 0.014,
+   "p_dem_now": 0.013,
    "implied_margin_now": -10.27,
    "margin_brackets_now": null,
    "margin_brackets_source_now": null,
    "margin_from_p_now": -10.27,
    "margin_method_now": "p_dem",
    "sources_now": {
+    "kalshi": {
+     "p_dem": 0.013,
+     "ticker": "SENATEWY-26",
+     "volume": 50125,
+     "volume_24h": 13530,
+     "candidates": {
+      "D": "James Byrd",
+      "R": "Harriet Hageman"
+     },
+     "updated": "2026-11-03T20:52:23Z",
+     "stale": false
+    },
     "polymarket": {
-     "p_dem": 0.014,
+     "p_dem": 0.013,
      "slug": "wyoming-senate-election-winner",
      "volume": 24284,
      "candidates": {
       "D": "James W. Byrd",
       "R": "Harriet Hageman"
      },
-     "updated": "2026-11-03T20:42:54Z",
+     "updated": "2026-11-03T20:52:17Z",
      "stale": false
     }
    },
    "move": 0.0,
-   "p_dem_move": -0.001
+   "p_dem_move": -0.0033
   }
  },
  "national": {
@@ -7167,33 +8867,33 @@
     }
    }
   },
-  "senate_dem_control_now": 0.7395,
+  "senate_dem_control_now": 0.7386,
   "senate_dem_control_sources_now": {
    "kalshi": {
     "p_dem": 0.735,
     "ticker": "CONTROLS-2026",
-    "volume": 38280287
+    "volume": 38610820
    },
    "polymarket": {
-    "p_dem": 0.7475,
+    "p_dem": 0.745,
     "slug": "which-party-will-win-the-senate-in-2026",
-    "volume": 21253772
+    "volume": 21340506
    }
   },
-  "house_dem_control_now": 0.9388,
+  "house_dem_control_now": 0.9348,
   "house_dem_control_sources_now": {
    "kalshi": {
-    "p_dem": 0.9364,
+    "p_dem": 0.9308,
     "ticker": "CONTROLH-2026",
-    "volume": 120147010
+    "volume": 121093442
    },
    "polymarket": {
     "p_dem": 0.945,
     "slug": "which-party-will-win-the-house-in-2026",
-    "volume": 46453022
+    "volume": 46625853
    }
   },
-  "house_popular_vote_margin_now": 10.2,
+  "house_popular_vote_margin_now": 10.21,
   "house_popular_vote_brackets_now": [
    {
     "lo": null,
@@ -7203,7 +8903,7 @@
    {
     "lo": -6.0,
     "hi": -4.0,
-    "p": 0.0019
+    "p": 0.002
    },
    {
     "lo": -4.0,
@@ -7213,52 +8913,52 @@
    {
     "lo": -2.0,
     "hi": 0.0,
-    "p": 0.0204
+    "p": 0.0205
    },
    {
     "lo": 0.0,
     "hi": 2.0,
-    "p": 0.0112
+    "p": 0.0078
    },
    {
     "lo": 2.0,
     "hi": 4.0,
-    "p": 0.0165
+    "p": 0.0166
    },
    {
     "lo": 4.0,
     "hi": 6.0,
-    "p": 0.0535
+    "p": 0.0537
    },
    {
     "lo": 6.0,
     "hi": 8.0,
-    "p": 0.1216
+    "p": 0.122
    },
    {
     "lo": 8.0,
     "hi": 10.0,
-    "p": 0.2578
+    "p": 0.2587
    },
    {
     "lo": 10.0,
     "hi": 12.0,
-    "p": 0.2286
+    "p": 0.2294
    },
    {
     "lo": 12.0,
     "hi": 14.0,
-    "p": 0.1644
+    "p": 0.165
    },
    {
     "lo": 14.0,
     "hi": 16.0,
-    "p": 0.0783
+    "p": 0.0786
    },
    {
     "lo": 16.0,
     "hi": null,
-    "p": 0.0404
+    "p": 0.0405
    }
   ],
   "house_popular_vote_brackets_source_now": "polymarket",
@@ -7266,7 +8966,7 @@
    "kalshi": {
     "ticker": "KXHOUSEPOPVOTEMARGIND-26NOV03",
     "volume": 83709,
-    "implied_margin": 10.41,
+    "implied_margin": 10.38,
     "brackets": [
      {
       "lo": null,
@@ -7331,19 +9031,19 @@
      {
       "lo": 14.0,
       "hi": 16.0,
-      "p": 0.09
+      "p": 0.095
      },
      {
       "lo": 16.0,
       "hi": null,
-      "p": 0.065
+      "p": 0.06
      }
     ]
    },
    "polymarket": {
     "slug": "2026-midterms-house-popular-vote-margin-of-victory-224",
-    "volume": 216376,
-    "implied_margin": 10.12,
+    "volume": 218409,
+    "implied_margin": 10.15,
     "brackets": [
      {
       "lo": null,
@@ -7353,7 +9053,7 @@
      {
       "lo": -6.0,
       "hi": -4.0,
-      "p": 0.0019
+      "p": 0.002
      },
      {
       "lo": -4.0,
@@ -7363,61 +9063,61 @@
      {
       "lo": -2.0,
       "hi": 0.0,
-      "p": 0.0204
+      "p": 0.0205
      },
      {
       "lo": 0.0,
       "hi": 2.0,
-      "p": 0.0112
+      "p": 0.0078
      },
      {
       "lo": 2.0,
       "hi": 4.0,
-      "p": 0.0165
+      "p": 0.0166
      },
      {
       "lo": 4.0,
       "hi": 6.0,
-      "p": 0.0535
+      "p": 0.0537
      },
      {
       "lo": 6.0,
       "hi": 8.0,
-      "p": 0.1216
+      "p": 0.122
      },
      {
       "lo": 8.0,
       "hi": 10.0,
-      "p": 0.2578
+      "p": 0.2587
      },
      {
       "lo": 10.0,
       "hi": 12.0,
-      "p": 0.2286
+      "p": 0.2294
      },
      {
       "lo": 12.0,
       "hi": 14.0,
-      "p": 0.1644
+      "p": 0.165
      },
      {
       "lo": 14.0,
       "hi": 16.0,
-      "p": 0.0783
+      "p": 0.0786
      },
      {
       "lo": 16.0,
       "hi": null,
-      "p": 0.0404
+      "p": 0.0405
      }
     ]
    }
   },
-  "senate_dem_control_move": -0.0143,
-  "house_dem_control_move": -0.0012,
-  "house_popular_vote_margin_move": 0.18
+  "senate_dem_control_move": -0.0152,
+  "house_dem_control_move": -0.0052,
+  "house_popular_vote_margin_move": 0.19
  },
- "as_of": "2026-11-03T20:42:54Z",
+ "as_of": "2026-11-03T20:52:27Z",
  "baseline_ts": "2026-11-03T11:00:00Z",
  "baseline_built_at": "2026-11-03T19:39:34Z",
  "senate_seats": {
@@ -7430,9 +9130,9 @@
     "race_id": "AL-SEN",
     "state": "AL",
     "incumbent_party": "R",
-    "p_dem": 0.01,
-    "p_dem_now": 0.01,
-    "no_market": true,
+    "p_dem": 0.022,
+    "p_dem_now": 0.0225,
+    "no_market": false,
     "tier": "safe",
     "note": "open: Tuberville ran for governor; R nominee Barry Moore"
    },
@@ -7440,8 +9140,8 @@
     "race_id": "AK-SEN",
     "state": "AK",
     "incumbent_party": "R",
-    "p_dem": 0.715,
-    "p_dem_now": 0.698,
+    "p_dem": 0.7007,
+    "p_dem_now": 0.6887,
     "no_market": false,
     "tier": "key",
     "note": "Sullivan v Peltola"
@@ -7450,8 +9150,8 @@
     "race_id": "AR-SEN",
     "state": "AR",
     "incumbent_party": "R",
-    "p_dem": 0.021,
-    "p_dem_now": 0.0394,
+    "p_dem": 0.0231,
+    "p_dem_now": 0.0429,
     "no_market": false,
     "tier": "safe",
     "note": "Cotton"
@@ -7460,8 +9160,8 @@
     "race_id": "CO-SEN",
     "state": "CO",
     "incumbent_party": "D",
-    "p_dem": 0.9895,
-    "p_dem_now": 0.9885,
+    "p_dem": 0.9912,
+    "p_dem_now": 0.9903,
     "no_market": false,
     "tier": "safe",
     "note": "Hickenlooper"
@@ -7470,8 +9170,8 @@
     "race_id": "DE-SEN",
     "state": "DE",
     "incumbent_party": "D",
-    "p_dem": 0.988,
-    "p_dem_now": 0.9885,
+    "p_dem": 0.9893,
+    "p_dem_now": 0.9888,
     "no_market": false,
     "tier": "safe",
     "note": "Coons"
@@ -7481,7 +9181,7 @@
     "state": "FL",
     "incumbent_party": "R",
     "p_dem": 0.1534,
-    "p_dem_now": 0.1236,
+    "p_dem_now": 0.1247,
     "no_market": false,
     "tier": "key",
     "note": "special: Moody (appointed to Rubio's seat)"
@@ -7500,8 +9200,8 @@
     "race_id": "ID-SEN",
     "state": "ID",
     "incumbent_party": "R",
-    "p_dem": 0.0294,
-    "p_dem_now": 0.0361,
+    "p_dem": 0.0314,
+    "p_dem_now": 0.0343,
     "no_market": false,
     "tier": "safe",
     "note": "Risch; independent Achilles",
@@ -7511,8 +9211,8 @@
     "race_id": "IL-SEN",
     "state": "IL",
     "incumbent_party": "D",
-    "p_dem": 0.9935,
-    "p_dem_now": 0.9865,
+    "p_dem": 0.9885,
+    "p_dem_now": 0.986,
     "no_market": false,
     "tier": "safe",
     "note": "open: Durbin retired"
@@ -7521,8 +9221,8 @@
     "race_id": "IA-SEN",
     "state": "IA",
     "incumbent_party": "R",
-    "p_dem": 0.5327,
-    "p_dem_now": 0.5099,
+    "p_dem": 0.522,
+    "p_dem_now": 0.5013,
     "no_market": false,
     "tier": "key",
     "note": "open: Ernst retired; Hinson v Turek"
@@ -7531,8 +9231,8 @@
     "race_id": "KS-SEN",
     "state": "KS",
     "incumbent_party": "R",
-    "p_dem": 0.6219,
-    "p_dem_now": 0.635,
+    "p_dem": 0.6244,
+    "p_dem_now": 0.6386,
     "no_market": false,
     "tier": "key",
     "note": "Marshall v Hamilton"
@@ -7561,8 +9261,8 @@
     "race_id": "ME-SEN",
     "state": "ME",
     "incumbent_party": "R",
-    "p_dem": 0.735,
-    "p_dem_now": 0.705,
+    "p_dem": 0.7269,
+    "p_dem_now": 0.6969,
     "no_market": false,
     "tier": "key",
     "note": "Collins v Jackson"
@@ -7571,8 +9271,8 @@
     "race_id": "MA-SEN",
     "state": "MA",
     "incumbent_party": "D",
-    "p_dem": 0.9905,
-    "p_dem_now": 0.992,
+    "p_dem": 0.9909,
+    "p_dem_now": 0.9911,
     "no_market": false,
     "tier": "safe",
     "note": "Markey"
@@ -7581,8 +9281,8 @@
     "race_id": "MI-SEN",
     "state": "MI",
     "incumbent_party": "D",
-    "p_dem": 0.805,
-    "p_dem_now": 0.7626,
+    "p_dem": 0.799,
+    "p_dem_now": 0.7569,
     "no_market": false,
     "tier": "key",
     "note": "open: Peters retired; El-Sayed v Rogers"
@@ -7591,8 +9291,8 @@
     "race_id": "MN-SEN",
     "state": "MN",
     "incumbent_party": "D",
-    "p_dem": 0.915,
-    "p_dem_now": 0.915,
+    "p_dem": 0.9119,
+    "p_dem_now": 0.9118,
     "no_market": false,
     "tier": "key",
     "note": "open: Smith retired; Flanagan v Tafoya"
@@ -7601,8 +9301,8 @@
     "race_id": "MS-SEN",
     "state": "MS",
     "incumbent_party": "R",
-    "p_dem": 0.135,
-    "p_dem_now": 0.125,
+    "p_dem": 0.142,
+    "p_dem_now": 0.135,
     "no_market": false,
     "tier": "key",
     "note": "Hyde-Smith v Colom"
@@ -7611,8 +9311,8 @@
     "race_id": "MT-SEN",
     "state": "MT",
     "incumbent_party": "R",
-    "p_dem": 0.0964,
-    "p_dem_now": 0.0745,
+    "p_dem": 0.1024,
+    "p_dem_now": 0.0734,
     "no_market": false,
     "tier": "safe",
     "note": "Daines's seat; R nominee Alme; independent on ballot",
@@ -7622,8 +9322,8 @@
     "race_id": "NE-SEN",
     "state": "NE",
     "incumbent_party": "R",
-    "p_dem": 0.3253,
-    "p_dem_now": 0.2912,
+    "p_dem": 0.3314,
+    "p_dem_now": 0.2936,
     "no_market": false,
     "tier": "key",
     "note": "Ricketts v independent Osborn",
@@ -7633,8 +9333,8 @@
     "race_id": "NH-SEN",
     "state": "NH",
     "incumbent_party": "D",
-    "p_dem": 0.945,
-    "p_dem_now": 0.955,
+    "p_dem": 0.9344,
+    "p_dem_now": 0.9439,
     "no_market": false,
     "tier": "key",
     "note": "open: Shaheen retired; Pappas v Sununu"
@@ -7643,8 +9343,8 @@
     "race_id": "NJ-SEN",
     "state": "NJ",
     "incumbent_party": "D",
-    "p_dem": 0.9865,
-    "p_dem_now": 0.9845,
+    "p_dem": 0.9805,
+    "p_dem_now": 0.9854,
     "no_market": false,
     "tier": "safe",
     "note": "Booker"
@@ -7653,8 +9353,8 @@
     "race_id": "NM-SEN",
     "state": "NM",
     "incumbent_party": "D",
-    "p_dem": 0.9935,
-    "p_dem_now": 0.988,
+    "p_dem": 0.9831,
+    "p_dem_now": 0.9871,
     "no_market": false,
     "tier": "safe",
     "note": "Lujan"
@@ -7664,7 +9364,7 @@
     "state": "NC",
     "incumbent_party": "R",
     "p_dem": 0.972,
-    "p_dem_now": 0.9714,
+    "p_dem_now": 0.9732,
     "no_market": false,
     "tier": "key",
     "note": "open: Tillis retired; Cooper v Whatley"
@@ -7674,7 +9374,7 @@
     "state": "OH",
     "incumbent_party": "R",
     "p_dem": 0.7093,
-    "p_dem_now": 0.7114,
+    "p_dem_now": 0.7136,
     "no_market": false,
     "tier": "key",
     "note": "special: Husted (appointed to Vance's seat) v Brown"
@@ -7683,8 +9383,8 @@
     "race_id": "OK-SEN",
     "state": "OK",
     "incumbent_party": "R",
-    "p_dem": 0.0135,
-    "p_dem_now": 0.0135,
+    "p_dem": 0.0205,
+    "p_dem_now": 0.0149,
     "no_market": false,
     "tier": "safe",
     "note": "Mullin's seat; R nominee Hern"
@@ -7693,8 +9393,8 @@
     "race_id": "OR-SEN",
     "state": "OR",
     "incumbent_party": "D",
-    "p_dem": 0.988,
-    "p_dem_now": 0.993,
+    "p_dem": 0.9859,
+    "p_dem_now": 0.9919,
     "no_market": false,
     "tier": "safe",
     "note": "Merkley"
@@ -7703,7 +9403,7 @@
     "race_id": "RI-SEN",
     "state": "RI",
     "incumbent_party": "D",
-    "p_dem": 0.991,
+    "p_dem": 0.9924,
     "p_dem_now": 0.9895,
     "no_market": false,
     "tier": "safe",
@@ -7723,8 +9423,8 @@
     "race_id": "SD-SEN",
     "state": "SD",
     "incumbent_party": "R",
-    "p_dem": 0.0564,
-    "p_dem_now": 0.0524,
+    "p_dem": 0.0565,
+    "p_dem_now": 0.0507,
     "no_market": false,
     "tier": "safe",
     "note": "Rounds; independent Bengs",
@@ -7734,8 +9434,8 @@
     "race_id": "TN-SEN",
     "state": "TN",
     "incumbent_party": "R",
-    "p_dem": 0.017,
-    "p_dem_now": 0.018,
+    "p_dem": 0.0199,
+    "p_dem_now": 0.0188,
     "no_market": false,
     "tier": "safe",
     "note": "Hagerty"
@@ -7744,8 +9444,8 @@
     "race_id": "TX-SEN",
     "state": "TX",
     "incumbent_party": "R",
-    "p_dem": 0.745,
-    "p_dem_now": 0.7475,
+    "p_dem": 0.7364,
+    "p_dem_now": 0.7401,
     "no_market": false,
     "tier": "key",
     "note": "Cornyn's seat; R nominee Paxton v Talarico"
@@ -7755,7 +9455,7 @@
     "state": "VA",
     "incumbent_party": "D",
     "p_dem": 0.9888,
-    "p_dem_now": 0.989,
+    "p_dem_now": 0.9885,
     "no_market": false,
     "tier": "key",
     "note": "Warner"
@@ -7764,8 +9464,8 @@
     "race_id": "WV-SEN",
     "state": "WV",
     "incumbent_party": "R",
-    "p_dem": 0.013,
-    "p_dem_now": 0.0145,
+    "p_dem": 0.0098,
+    "p_dem_now": 0.0144,
     "no_market": false,
     "tier": "safe",
     "note": "Capito"
@@ -7774,8 +9474,8 @@
     "race_id": "WY-SEN",
     "state": "WY",
     "incumbent_party": "R",
-    "p_dem": 0.015,
-    "p_dem_now": 0.014,
+    "p_dem": 0.0163,
+    "p_dem_now": 0.013,
     "no_market": false,
     "tier": "safe",
     "note": "Lummis's seat; R nominee Hageman"
@@ -7786,25 +9486,25 @@
   "dem_not_up": 34,
   "rep_not_up": 31,
   "dem_needed_of_seats_up": 17,
-  "expected_dem_seats": 52.94,
-  "expected_dem_seats_now": 52.79,
+  "expected_dem_seats": 52.9,
+  "expected_dem_seats_now": 52.77,
   "note": "p_dem is p(Democrat or the non-Republican wins); independents King and Sanders are counted as D in current; safe seats without a market are 0.99/0.01"
  },
  "status": {
   "polymarket": {
-   "updated": "2026-11-03T20:42:54Z",
+   "updated": "2026-11-03T20:52:17Z",
    "stale": false,
    "error": null,
    "events": 60
   },
   "kalshi": {
-   "updated": "2026-11-03T20:15:02Z",
-   "stale": true,
-   "error": "Kalshi cool-down after HTTP 429 (554s left)",
-   "markets": 37,
+   "updated": "2026-11-03T20:52:23Z",
+   "stale": false,
+   "error": null,
+   "markets": 93,
    "margin_updated": "2026-11-03T20:12:54Z",
    "margin_stale": true,
-   "margin_error": "Kalshi cool-down after HTTP 429 (554s left)",
+   "margin_error": "GET https://api.elections.kalshi.com/trade-api/v2/events?series_ticker=KXGENERALMOV&status=open&with_nested_markets=true failed after 1 tries: HTTP Error 429: Too Many Requests",
    "margin_events": 15
   }
  },

@@ -82,7 +82,7 @@ SNAPSHOT_PATH = Path(__file__).resolve().parent.parent / "data" / "markets_snaps
 BASELINE_PATH = Path(__file__).resolve().parent.parent / "data" / "markets_baseline.json"
 
 CACHE_SECONDS = 60.0
-KALSHI_CACHE_SECONDS = 120.0
+KALSHI_CACHE_SECONDS = 300.0
 RESOLVE_EVERY = 6 * 3600.0
 SIGMA = 5.0            # state-race forecast error (points) at the end of a campaign
 P_CLAMP = (0.02, 0.98)

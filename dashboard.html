@@ -109,6 +109,11 @@ h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fain
     <div id="detail" style="margin-top:14px"></div>
   </section>
 
+  <section class="card" id="txcard" style="display:none">
+    <div class="head"><h2>Texas Governor · pre-close model</h2><span class="sub">early vote is in; Election Day is the unknown</span></div>
+    <div id="tx_body"></div>
+  </section>
+
   <section class="card">
     <div class="head"><h2>Turnout vs expectations</h2><span class="sub">is the electorate that has shown up more or less Democratic than the expectation implies?</span></div>
     <div class="scroll"><table id="tve"><thead>
@@ -229,7 +234,7 @@ function render(data){const s=data.snapshot;if(!s)return;if(last!==data)scoreBat
       <td class="sep ${cls(r.market_move)}" title="Change in bracket-implied margin since 6 AM ET; win probability now vs 6 AM alongside">${m(r.market_move)}${r.market_p_now!=null&&r.market_p_dem!=null?` <span class="faint">${Math.round(r.market_p_now*100)}% (${r.market_p_now>=r.market_p_dem?"+":""}${Math.round((r.market_p_now-r.market_p_dem)*100)})</span>`:""}</td></tr>`}).join("");
   document.querySelectorAll("#races tbody tr").forEach(tr=>tr.onclick=()=>{sel=sel===tr.dataset.id?null:tr.dataset.id;render(last)});
   renderDetail(s.races.find(r=>r.id===sel));
-  renderChart(data.history||[],s.races);renderCheckins(ck);renderEV(s);renderTVE(s);renderMore(s);}
+  renderChart(data.history||[],s.races);renderCheckins(ck);renderEV(s);renderTVE(s);renderTexas(s);renderMore(s);}
 
 function renderDetail(r){const el=$("#detail");if(!r){el.innerHTML="";return}
   const cp=r.rw_components||{},v=r.vote_type||{};
@@ -308,6 +313,24 @@ function renderCheckins(ck){const ps=ck.panels||[],sp=$("#ci_state"),cp=$("#ci_c
 $("#ci_state").onchange=()=>{ciState=$("#ci_state").value;ciCty="";last&&render(last)};
 $("#ci_cty").onchange=()=>{ciCty=$("#ci_cty").value;last&&render(last)};
 
+function renderTexas(s){const tx=s.texas,card=$("#txcard");if(!tx||!tx.model||!tx.model["TX-GOV"]){card.style.display="none";return}card.style.display="";
+  const g=tx.model["TX-GOV"],sn=tx.model["TX-SEN"],pc=x=>x==null?"—":Math.round(x*100)+"%";
+  const geo=tx.geo||{},ph=(tx.primary_history||{}).comp||{},c22=ph["2022"]||ph[2022];
+  const scen=g.scenarios.map(r=>`<tr><td>${m(r.m_eday,0)}</td>${["early low","early mid","early high"].map(k=>`<td class="${cls(r[k])}">${m(r[k])}</td>`).join("")}</tr>`).join("");
+  $("#tx_body").innerHTML=`
+  <div class="primary" style="grid-template-columns:auto auto auto 1fr">
+    <div><div class="sub">Going in: polls · market 6 AM</div><div class="mid"><span class="${cls(g.prior_polls)}">${m(g.prior_polls)}</span> · <span class="${cls(g.prior_market)}">${m(g.prior_market)}</span></div><div class="sub">Hinojosa ${pc(g.p_dem_market)} on the market</div></div>
+    <div><div class="sub">Model median (10th–90th)</div><div class="mid ${cls(g.median)}">${m(g.median)}</div><div class="sub">${m(g.p10)} to ${m(g.p90)}</div></div>
+    <div><div class="sub">P(Hinojosa wins)</div><div class="big ${g.p_dem>=g.p_dem_market?"d":"r"}" style="font-size:34px">${pc(g.p_dem)}</div><div class="sub">market ${pc(g.p_dem_market)}</div></div>
+    <div class="sub"><b>Early vote (7.71M, ~${Math.round(g.early_share*100)}% of the total):</b> by primary history Democrats are at parity with Republicans (2022: R+11, 2024: R+10); early-electorate vote models say D+1 to D+6.6; county mix ${m((geo["2022"]||geo[2022]||{}).shift)} more Democratic than 2022.<br>
+    <b>Election Day (the unknown):</b> prior ${m(g.ed.mean,0)} ± ${g.ed.sd} — the poll/market prior implies ${m(g.ed.implied_by_prior,0)} given that early vote; the unvoted pool (2.1M recent GOP-primary voters) points to ~${m(g.ed.pool,0)}; in 2022 Election Day was only a few points more Republican than the early vote (early-only R+10, final R+10.9).</div>
+  </div>
+  <div class="grid2" style="margin-top:10px">
+    <div><h3>Final margin by scenario</h3><div class="scroll"><table><thead><tr><th>Election Day margin</th><th>early D+1</th><th>early D+3.8</th><th>early D+6.6</th></tr></thead><tbody>${scen}</tbody></table></div></div>
+    <div><h3>Benchmark for the 8 PM ET early-vote dump</h3><div class="sub">2022's early-only count was <b>R+10</b> (final R+10.9).<br>For the poll/market prior to hold, tonight's early-only statewide margin should be about <b class="${cls(g.early_needed.for_prior)}">${m(g.early_needed.for_prior)}</b>.<br>For a Hinojosa win it needs at least: ${Object.entries(g.early_needed.for_tie_if_ED).map(([k,v])=>`${m(v)} if Election Day is ${m(+k,0)}`).join(" · ")}.<br>If Abbott leads the early vote, the polls and market are badly off.</div>
+    ${sn?`<h3 style="margin-top:12px">Senate (Talarico v Paxton)</h3><div class="sub">Same model plus the ${m(sn.split)} ticket split polls and markets expect: median <b class="${cls(sn.median)}">${m(sn.median)}</b>, P(Talarico) <b>${pc(sn.p_dem)}</b> (market ${pc(sn.p_dem_market)}).</div>`:""}</div>
+  </div>
+  <p class="note">The model is explicit about its one big assumption, the Election Day margin; the scenario table shows the result under each. Once Texas counties report (early votes post first, right after 8 PM ET), observed early and Election Day margins replace the priors.</p>`}
 function renderTVE(s){const rows=[];s.races.forEach(r=>{const ts=r.turnout_split;if(!ts)return;
   ["full","early"].forEach(k=>{const v=ts[k];if(!v)return;[2022,2024].forEach(y=>{const x=v.years[y];if(!x||x.vs_polls==null)return;const pi=s.overall.turnout_pi||1/3;
     rows.push(`<tr><td><b>${r.label}</b></td><td class="faint">${v.label}</td><td>${y}</td><td>${m(x.expected)}${x.market_expected==null?"":` <span class="faint">${m(x.market_expected)}</span>`}</td>
