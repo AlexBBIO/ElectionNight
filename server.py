@@ -51,7 +51,11 @@ class DemoFeed:
         key = (race["id"], fips)
         if key not in self.plan:
             r = random.Random(f"{self.seed}|{race['id']}|{fips}")  # deterministic per county
-            true_m = expected + self.shift + r.gauss(0, 2.5)
+            # type-specific true over-performance (suburbs move more than rural areas) so the
+            # county-type reweighting has something to correct in the demo
+            tshift = {"Rural": -1.5, "Exurban / working metro": 1.5, "College suburbs": 5.0,
+                      "Urban core": 3.0, "Black": 2.0, "Hispanic": 3.0}.get(self.b.types.get(fips), 0.0)
+            true_m = expected + self.shift + tshift + r.gauss(0, 2.5)
             self.plan[key] = {
                 "start": order * 20 + r.uniform(0, self.span * 0.5),
                 "dur": r.uniform(self.span * 0.2, self.span * 0.6),
@@ -131,7 +135,7 @@ def history_row(snap: dict) -> dict:
                                                        "projected_vs_forecast", "est_in", "votes",
                                                        "swing24", "swing22", "current_margin",
                                                        "adj_vs_expect", "adj_firm_vs_expect", "adj_projected",
-                                                       "adj_est_in", "implied_turnout_vs_2022")}
+                                                       "adj_est_in", "implied_turnout_vs_2022", "rw_vs_expect")}
                       for r in snap["races"]}}
 
 

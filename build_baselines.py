@@ -158,7 +158,66 @@ def patch_indiana() -> None:
     _write(path, rows, cols)
 
 
+RUCC_URL = "https://ers.usda.gov/sites/default/files/_laserfiche/DataFiles/53251/Ruralurbancontinuumcodes2023.csv"
+EDU_URL = "https://ers.usda.gov/sites/default/files/_laserfiche/DataFiles/48747/Education2023.csv"
+RACE_URL = ("https://www2.census.gov/programs-surveys/popest/datasets/2020-2023/counties/asrh/"
+            "cc-est2023-alldata.csv")
+TYPE_ORDER = ["Hispanic", "Black", "Urban core", "College suburbs", "Exurban / working metro", "Rural"]
+
+
+def county_type(c: dict) -> str:
+    """Precedence: Hispanic >= 30%; large urban core (RUCC 1, pop >= 750k); Black >= 35%;
+    metro with >= 35% bachelor's; other metro; nonmetro (RUCC >= 4)."""
+    if c["hisp"] >= 30:
+        return "Hispanic"
+    if c["rucc"] == 1 and c["pop"] >= 750_000:
+        return "Urban core"
+    if c["black"] >= 35:
+        return "Black"
+    if c["rucc"] <= 3 and c["college"] >= 35:
+        return "College suburbs"
+    if c["rucc"] <= 3:
+        return "Exurban / working metro"
+    return "Rural"
+
+
+def build_county_types() -> int:
+    rucc = _get(RUCC_URL, CACHE / "rucc2023.csv")
+    edu = _get(EDU_URL, CACHE / "education2023.csv")
+    race = _get(RACE_URL, CACHE / "cc-est2023-alldata.csv")
+    c: dict[str, dict] = collections.defaultdict(dict)
+    with open(rucc, newline="", encoding="latin-1") as fh:
+        for r in csv.DictReader(fh):
+            f = r["FIPS"].zfill(5)
+            if r["Attribute"] == "RUCC_2023" and r["Value"]:
+                c[f]["rucc"] = int(r["Value"])
+            elif r["Attribute"] == "Population_2020" and r["Value"]:
+                c[f]["pop"] = int(float(r["Value"]))
+    with open(edu, newline="", encoding="latin-1") as fh:
+        for r in csv.DictReader(fh):
+            if r["Attribute"] == "Percent of adults with a bachelor's degree or higher, 2019-23":
+                c[r["FIPS Code"].zfill(5)]["college"] = float(r["Value"] or 0)
+    with open(race, newline="", encoding="latin-1") as fh:
+        for r in csv.DictReader(fh):
+            if r["YEAR"] != "5" or r["AGEGRP"] != "0":
+                continue
+            f = r["STATE"].zfill(2) + r["COUNTY"].zfill(3)
+            tot = int(r["TOT_POP"]) or 1
+            c[f]["pop"] = tot
+            c[f]["black"] = 100 * (int(r["BA_MALE"]) + int(r["BA_FEMALE"])) / tot
+            c[f]["hisp"] = 100 * (int(r["H_MALE"]) + int(r["H_FEMALE"])) / tot
+    rows = []
+    for f, x in sorted(c.items()):
+        if not all(k in x for k in ("rucc", "college", "black", "hisp", "pop")):
+            continue
+        rows.append({"fips": f, "type": county_type(x), "pop": x["pop"], "rucc": x["rucc"],
+                     "college": round(x["college"], 1), "black": round(x["black"], 1), "hisp": round(x["hisp"], 1)})
+    _write(DATA / "county_types.csv", rows, ["fips", "type", "pop", "rucc", "college", "black", "hisp"])
+    return len(rows)
+
+
 if __name__ == "__main__":
     build_pres_2024()
     build_2022()
     patch_indiana()
+    build_county_types()

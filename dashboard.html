@@ -58,11 +58,31 @@ td.err{color:var(--warn)}
       <th title="Expected vote ÷ 2022 votes, counties ≥30% in">Turnout vs '22</th>
       <th title="Vote-weighted (estimated final county margin − expected margin)">Adj vs expect</th>
       <th title="Same, counties ≥ firm threshold of expected vote">Adj firm</th>
+      <th title="Adjusted, with county types weighted to the state's expected vote (missing types borrowed from other states)">Reweighted</th>
       <th>Adj projected</th><th>Forecast</th><th>Adj proj − fcst</th>
       <th title="How each county was adjusted">Method</th>
       <th title="Reporting order · 2026 pre-Election-Day share · lean of pre vs Election Day votes (D−R pts) · source">Vote-type model</th>
     </tr></thead><tbody></tbody></table></div>
     <p class="note">Each county's final margin is estimated by filling in the vote types not yet counted: their volume from the expected early/mail share, their margin from the counted type ± the typical early-vs-Election-Day gap (2022 county vote-type data where available, otherwise state research). Feed vote-type splits are used where the state publishes them (GA, NC, SC, VA, KY); elsewhere the split is inferred from precincts reporting. "none" = no vote-type information for that state, so it is unadjusted.</p>
+  </section>
+
+  <section class="panel">
+    <h2>By county type (all reporting races pooled)</h2>
+    <div class="scroll"><table id="types"><thead><tr><th>Type</th><th>Counties reporting</th><th>Races</th><th>Votes</th>
+      <th>Adj vs expect</th><th>Raw vs expect</th><th id="typerace">Selected race: weight · counted · adj · used</th></tr></thead><tbody></tbody></table></div>
+    <p class="note">Types: Hispanic ≥30%; urban core (large central county, pop ≥750k); Black ≥35%; college suburbs (metro, ≥35% bachelor's); exurban / working metro; rural (non-metro). Sources: Census 2023 estimates, USDA education and rural-urban codes. If suburbs and rural areas are moving differently, the reweighted read corrects for whichever reports first.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Latest batches · scored against what that vote type should look like</h2>
+    <div class="controls"><span id="batchsum" class="muted"></span>
+      <label>min votes <input id="batchmin" type="number" value="200" style="width:70px"></label>
+      <label><input type="checkbox" id="batchsel"> selected race only</label>
+      <button id="batchclear">clear log</button></div>
+    <div class="scroll" style="max-height:420px;overflow-y:auto"><table id="batches"><thead><tr>
+      <th>Time</th><th>Race</th><th>County</th><th>Type</th><th>Vote type</th><th>Votes</th><th>Batch margin</th>
+      <th title="County expected margin shifted for this vote type: early/mail + (1−s)·lean, Election Day − s·lean">Expected for type</th><th>Batch vs exp</th></tr></thead><tbody></tbody></table></div>
+    <p class="note">Each poll is diffed against the previous one, county by county. Vote type comes from the feed's split where it has one, otherwise from precincts reporting (new precincts = Election Day, votes without new precincts = early/mail). Logged in this browser.</p>
   </section>
 
   <section class="tiles" id="rawtiles"></section>
@@ -90,7 +110,7 @@ td.err{color:var(--warn)}
     <div class="controls"><h2 id="ctitle" style="margin:0">Counties</h2>
       <label><input type="checkbox" id="onlyrep" checked> reporting only</label></div>
     <div class="scroll" style="max-height:520px;overflow-y:auto"><table id="counties"><thead><tr>
-      <th data-k="county">County</th><th data-k="est_in_adj">Counted (of exp.)</th><th data-k="votes">Votes</th><th data-k="exp_vote">Exp. vote</th>
+      <th data-k="county">County</th><th data-k="type">Type</th><th data-k="est_in_adj">Counted (of exp.)</th><th data-k="votes">Votes</th><th data-k="exp_vote">Exp. vote</th>
       <th data-k="pre_votes">Pre-ED</th><th data-k="eday_votes">Elec. Day</th><th data-k="actual">Actual</th>
       <th data-k="adj_margin">Adj. final</th><th data-k="expected">Expected</th><th data-k="adj_vs_expect">Adj vs exp</th>
       <th data-k="vs_expect">Raw vs exp</th><th data-k="base24">2024 pres</th>
@@ -108,14 +128,15 @@ const pct=x=>x==null?"—":(x*100).toFixed(0)+"%";
 const n=x=>x==null?"—":Math.round(x).toLocaleString();
 function tile(k,v,s,hero){return `<div class="tile${hero?" hero":""}"><div class="k">${k}</div><div class="v ${cls(v)}">${m(v)}</div><div class="s">${s||""}</div></div>`}
 function render(data){
-  const s=data.snapshot; if(!s) return; last=data;
+  const s=data.snapshot; if(!s) return; if(last!==data) scoreBatches(s); last=data;
   $("#mode").textContent=s.demo?"DEMO":"LIVE"; $("#mode").className="badge "+(s.demo?"demo":"live");
   $("#ts").textContent="updated "+new Date(s.ts).toLocaleTimeString()+" · "+s.overall.races_reporting+" races reporting · "+n(s.overall.votes)+" votes";
   const o=s.overall;
   $("#tiles").innerHTML=
-    tile("Dems vs expectations — vote-type adjusted",o.adj_vs_expect,"estimated final county margins vs poll-implied expectation; positive = Dems beating polls",true)+
+    tile("Dems vs expectations — adjusted &amp; reweighted",o.rw_vs_expect,`vote-type adjusted, county types weighted to each state's electorate · adjusted only: ${m(o.adj_vs_expect)}`,true)+
     tile("Adjusted, firm counties only",o.adj_firm_vs_expect,`counties ≥ ${Math.round(s.firm_threshold*100)}% of their expected vote counted`)+
-    tile("Implied national environment (adjusted)",o.adj_implied_generic,`polls: ${m(o.generic_ballot)} generic ballot · firm: ${m(o.adj_implied_generic_firm)}`)+
+    tile("Implied national environment",o.rw_implied_generic,`polls: ${m(o.generic_ballot)} generic ballot · adjusted only: ${m(o.adj_implied_generic)}`)+
+    tile("Recent batches vs expected (15 min)",batchAgg(15).v,batchAgg(15).s)+
     `<div class="tile"><div class="k">Implied turnout vs 2022</div><div class="v">${o.implied_turnout_vs_2022==null?"—":(o.implied_turnout_vs_2022*100).toFixed(0)+"%"}</div><div class="s">from estimated expected vote in counties ≥30% in</div></div>`;
   $("#rawtiles").innerHTML=
     tile("Unadjusted vs expectations",o.vs_expect,"raw counted votes — biased by which vote types report first")+
@@ -142,6 +163,7 @@ function render(data){
     tr.onclick=()=>{sel=r.id;render(last)}; tb.appendChild(tr);
   });
   renderCounties(s.races.find(r=>r.id===sel));
+  renderTypes(s); renderBatches();
   renderChart(data.history,s.races);
 }
 function renderAdj(s){
@@ -150,17 +172,57 @@ function renderAdj(s){
     return `<tr><td><b>${r.label}</b></td><td>${r.votes?n(r.exp_vote_total):"—"}</td><td>${pct(r.adj_est_in)}</td>
     <td>${r.implied_turnout_vs_2022==null?"—":(r.implied_turnout_vs_2022*100).toFixed(0)+"%"}</td>
     <td class="${cls(r.adj_vs_expect)}"><b>${m(r.adj_vs_expect)}</b></td><td class="${cls(r.adj_firm_vs_expect)} firm">${m(r.adj_firm_vs_expect)}</td>
+    <td class="${cls(r.rw_vs_expect)}"><b>${m(r.rw_vs_expect)}</b></td>
     <td class="${cls(r.adj_projected)}">${m(r.adj_projected)}</td><td class="${cls(r.forecast)}">${m(r.forecast)}</td>
     <td class="${cls(r.adj_projected_vs_forecast)}">${m(r.adj_projected_vs_forecast)}</td>
     <td class="status">${meth}</td>
     <td class="status" title="${(v.notes||"").replace(/"/g,"'")}">${v.order||""} · pre ${v.pre_share==null?"?":Math.round(v.pre_share*100)+"%"} · lean ${v.delta==null?"none":m(v.delta,0)} · ${v.source||""}</td></tr>`}).join("");
 }
+const TYPES=["Rural","Exurban / working metro","College suburbs","Urban core","Black","Hispanic"];
+function renderTypes(s){
+  const o=s.overall, t=o.types||{}, r=s.races.find(x=>x.id===sel)||{}, g=r.groups||{};
+  $("#typerace").textContent=(r.label||"Selected race")+": weight · counted · adj · used";
+  $("#types tbody").innerHTML=TYPES.map(k=>{const x=t[k]||{}, y=g[k];
+    return `<tr><td><b>${k}</b></td><td>${x.counties_reporting||0}</td><td>${x.races||0}</td><td>${n(x.votes||0)}</td>
+      <td class="${cls(x.adj_vs_expect)}"><b>${m(x.adj_vs_expect)}</b></td><td class="${cls(x.vs_expect)}">${m(x.vs_expect)}</td>
+      <td>${y?`${pct(y.weight)} · ${pct(y.counted)} · <span class="${cls(y.adj_vs_expect)}">${m(y.adj_vs_expect)}</span> · <span class="${cls(y.est)}">${m(y.est)}</span>`:"—"}</td></tr>`}).join("");
+}
+// ---- batch scoring (client-side diff of consecutive snapshots) ----
+const BKEY="en_batches"+location.search, PKEY="en_prev"+location.search;
+let batches=[],prev=null;try{batches=JSON.parse(localStorage.getItem(BKEY)||"[]");prev=JSON.parse(localStorage.getItem(PKEY)||"null")}catch(e){}
+function snapCounties(s){const out={};s.races.forEach(r=>r.counties.forEach(c=>{if(c.votes) out[r.id+"|"+c.fips]={v:c.votes,d:c.dem,r:c.rep,p:c.prec_in,lm:c.lm}}));return {ts:s.ts,c:out}}
+function scoreBatches(s){
+  const cur=snapCounties(s); if(prev&&prev.ts===cur.ts) return; const t=s.ts;
+  if(prev){ s.races.forEach(r=>r.counties.forEach(c=>{const k=r.id+"|"+c.fips,a=cur.c[k],b=prev.c[k]||{v:0,d:0,r:0,p:0,lm:null};
+    if(!a||a.v<=b.v) return;
+    const dl=c.delta||0,sh=c.s||0.5,ePre=c.expected+(1-sh)*dl,eDay=c.expected-sh*dl;
+    const parts=[];
+    if(a.lm){const bl=b.lm||{};["pre","eday","other"].forEach(mk=>{const x=a.lm[mk],y=bl[mk]||[0,0,0]; if(x&&x[2]>y[2]) parts.push({vt:mk==="pre"?"early/mail":mk==="eday"?"Election Day":"other",v:x[2]-y[2],dm:(x[0]-y[0])-(x[1]-y[1]),e:mk==="pre"?ePre:eDay})})}
+    else{const dv=a.v-b.v,dm=(a.d-b.d)-(a.r-b.r),dp=(a.p||0)-(b.p||0);let ve=0;
+      if(dp>0&&c.prec_tot) ve=Math.min(dv,dp/c.prec_tot*(1-sh)*c.exp_vote);
+      const vp=dv-ve, e=(vp*ePre+ve*eDay)/dv, vt=ve>0.8*dv?"Election Day*":vp>0.8*dv?"early/mail*":"mixed*";
+      parts.push({vt,v:dv,dm,e})}
+    parts.forEach(p=>{if(p.v<=0)return; const mg=p.dm/p.v*100; batches.push({t,race:r.id,county:c.county,type:c.type,vt:p.vt,v:p.v,mg,e:p.e,diff:mg-p.e})});
+  }));
+  batches=batches.slice(-800); try{localStorage.setItem(BKEY,JSON.stringify(batches))}catch(e){} }
+  prev=cur; try{localStorage.setItem(PKEY,JSON.stringify(prev))}catch(e){}
+}
+function batchAgg(min){const cut=Date.now()-min*60000;let nm=0,dn=0,k=0;batches.forEach(b=>{if(new Date(b.t).getTime()>=cut){nm+=b.diff*b.v;dn+=b.v;k++}});
+  return {v:dn?nm/dn:null,s:dn?`${k} batches · ${n(dn)} votes · 60 min: ${m(batchAgg60())}`:"no new votes in the last 15 min"}}
+function batchAgg60(){const cut=Date.now()-3600000;let nm=0,dn=0;batches.forEach(b=>{if(new Date(b.t).getTime()>=cut){nm+=b.diff*b.v;dn+=b.v}});return dn?nm/dn:null}
+function renderBatches(){const mn=+$("#batchmin").value||0, only=$("#batchsel").checked;
+  const rows=batches.filter(b=>b.v>=mn&&(!only||b.race===sel)).slice(-150).reverse();
+  $("#batchsum").textContent=`${batches.length} batches logged`;
+  $("#batches tbody").innerHTML=rows.map(b=>`<tr><td>${new Date(b.t).toLocaleTimeString()}</td><td>${b.race}</td><td>${b.county}</td><td class="status">${b.type||""}</td>
+    <td>${b.vt}</td><td>${n(b.v)}</td><td class="${cls(b.mg)}">${m(b.mg)}</td><td class="${cls(b.e)}">${m(b.e)}</td><td class="${cls(b.diff)}"><b>${m(b.diff)}</b></td></tr>`).join("");}
+$("#batchmin").onchange=renderBatches;$("#batchsel").onchange=renderBatches;
+$("#batchclear").onclick=()=>{batches=[];try{localStorage.removeItem(BKEY)}catch(e){};renderBatches();last&&render(last)};
 function renderCounties(r){
   if(!r) return; $("#ctitle").textContent="Counties — "+r.label+` (2022 baseline: ${r.baseline_2022_office})`;
   let cs=r.counties.slice(); if($("#onlyrep").checked) cs=cs.filter(c=>c.votes>0);
   cs.sort((a,b)=>{const x=a[sortK],y=b[sortK]; if(x==null) return 1; if(y==null) return -1; return (x>y?1:x<y?-1:0)*sortDir});
   const thr=last.snapshot.firm_threshold;
-  $("#counties tbody").innerHTML=cs.map(c=>`<tr><td${c.est_in_adj>=thr?' class="firm"':""} title="${c.method}">${c.county}</td><td>${pct(c.est_in_adj)}</td><td>${n(c.votes)}</td>
+  $("#counties tbody").innerHTML=cs.map(c=>`<tr><td${c.est_in_adj>=thr?' class="firm"':""} title="${c.method}">${c.county}</td><td class="status">${c.type||""}</td><td>${pct(c.est_in_adj)}</td><td>${n(c.votes)}</td>
     <td>${n(c.exp_vote)}</td><td>${n(c.pre_votes)}</td><td>${n(c.eday_votes)}</td>
     <td class="${cls(c.actual)}">${m(c.actual)}</td><td class="${cls(c.adj_margin)}">${m(c.adj_margin)}</td><td class="${cls(c.expected)}">${m(c.expected)}</td>
     <td class="${cls(c.adj_vs_expect)}"><b>${m(c.adj_vs_expect)}</b></td>
@@ -172,7 +234,8 @@ document.querySelectorAll("#counties th").forEach(th=>th.onclick=()=>{const k=th
 $("#onlyrep").onchange=()=>last&&render(last);
 function renderChart(hist,races){
   const svg=$("#chart"); const W=svg.clientWidth||800,H=260,L=48,R=10,T=10,B=24;
-  const series=[{id:"__adj",label:"All races, adjusted",color:"var(--ink)",w:3,get:h=>h.overall.adj_vs_expect},
+  const series=[{id:"__rw",label:"Adjusted + reweighted",color:"var(--ink)",w:3,get:h=>h.overall.rw_vs_expect},
+    {id:"__adj",label:"Adjusted",color:"#7b61ff",w:2,get:h=>h.overall.adj_vs_expect},
     {id:"__adjfirm",label:"Adjusted, firm",color:"var(--ink)",w:1.5,dash:"2 3",get:h=>h.overall.adj_firm_vs_expect},
     {id:"__raw",label:"Unadjusted",color:"var(--muted)",w:2,dash:"6 4",get:h=>h.overall.vs_expect}];
   races.forEach((r,i)=>series.push({id:r.id,label:r.id+" adj",color:COLORS[i%COLORS.length],w:1.5,get:h=>{const x=h.races[r.id]||{};return x.adj_vs_expect!==undefined?x.adj_vs_expect:x.vs_expect}}));
@@ -195,7 +258,7 @@ function renderChart(hist,races){
 // Serverless deploys return history:null -> keep the running history in the browser.
 const HKEY="en_hist"+location.search;
 let localHist=[];try{localHist=JSON.parse(localStorage.getItem(HKEY)||"[]")}catch(e){}
-function histRow(s){const races={};s.races.forEach(r=>{races[r.id]={adj_vs_expect:r.adj_vs_expect,vs_expect:r.vs_expect,firm_vs_expect:r.firm_vs_expect,projected:r.projected,projected_vs_forecast:r.projected_vs_forecast,est_in:r.est_in,votes:r.votes}});return {ts:s.ts,overall:s.overall,races}}
+function histRow(s){const races={};s.races.forEach(r=>{races[r.id]={rw_vs_expect:r.rw_vs_expect,adj_vs_expect:r.adj_vs_expect,vs_expect:r.vs_expect,firm_vs_expect:r.firm_vs_expect,projected:r.projected,projected_vs_forecast:r.projected_vs_forecast,est_in:r.est_in,votes:r.votes}});return {ts:s.ts,overall:s.overall,races}}
 async function tick(){try{const r=await fetch("/api/state"+location.search,{cache:"no-store"}); const data=await r.json();
   if(data.error) throw new Error(data.error);
   if(data.history==null&&data.snapshot){const h=histRow(data.snapshot); if(!localHist.length||localHist[localHist.length-1].ts!==h.ts){localHist.push(h); localHist=localHist.slice(-1500); try{localStorage.setItem(HKEY,JSON.stringify(localHist))}catch(e){}} data.history=localHist}

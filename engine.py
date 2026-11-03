@@ -60,6 +60,7 @@ class Baselines:
     pres24: dict[str, dict] = field(default_factory=dict)            # fips -> row
     c22: dict[tuple, list[int]] = field(default_factory=dict)        # (fips, office) -> [d, r, t]
     c22_modes: dict[tuple, dict] = field(default_factory=dict)       # (fips, office) -> {pre|eday|other: [d,r,t]}
+    types: dict[str, str] = field(default_factory=dict)              # fips -> county type
 
     @classmethod
     def load(cls) -> "Baselines":
@@ -86,6 +87,10 @@ class Baselines:
             a = agg[(fips, office)]
             a[0] += src[0]; a[1] += src[1]; a[2] += src[2]
         b.c22 = dict(agg)
+        tp = DATA / "county_types.csv"
+        if tp.exists():
+            with open(tp, newline="") as fh:
+                b.types = {r["fips"]: r["type"] for r in csv.DictReader(fh)}
 
         # 2022 by vote type (pre = early + mail, eday, other), where the breakdown is complete.
         modes: dict[tuple, dict] = collections.defaultdict(lambda: collections.defaultdict(lambda: [0, 0, 0]))
@@ -176,6 +181,8 @@ def analyze_race(race: dict, rows: list[dict], b: Baselines, cfg: dict) -> dict:
             "swing24": None if actual is None else actual - base24,
             "swing22": None if actual is None or base22 is None else actual - base22,
             "turnout_exp": turnout, "turnout22": turnout / tfac if tfac else turnout,
+            "type": b.types.get(f, "Exurban / working metro"),
+            "lm": {k: v for k, v in lv["modes"].items() if v[2]} if lv.get("modes") else None,
         })
         counties[-1].update(adjust_county(lv, b.c22_modes.get((f, office)), vt, turnout, expected))
     rep_ = [c for c in counties if c["votes"]]
@@ -198,6 +205,7 @@ def analyze_race(race: dict, rows: list[dict], b: Baselines, cfg: dict) -> dict:
             num += c["turnout_exp"] * m
         proj = num / exp_tot if exp_tot else None
     adj = adjusted_race(counties, forecast, firm_thr, tfac)
+    adj["groups"] = race_groups(counties, adj.get("implied_turnout_vs_2022") or tfac)
     names = next(((v.get("dem_name"), v.get("rep_name")) for v in live.values() if v.get("dem_name")), (None, None))
     return {
         "id": race["id"], "label": race["label"], "state": st, "polls_close_et": race.get("polls_close_et"),
@@ -231,6 +239,7 @@ def overall(results: list[dict], cfg: dict) -> dict:
         "implied_generic_firm": None if fve is None else gb + fve,
         "generic_ballot": gb, "races_reporting": len(live), "votes": sum(r["votes"] for r in live),
         **overall_adjusted(live, gb),
+        **reweight_by_type(results, gb),
     }
 
 
@@ -448,3 +457,76 @@ def overall_adjusted(live: list[dict], gb: float) -> dict:
         "adj_implied_generic_firm": None if fve is None else gb + fve,
         "implied_turnout_vs_2022": _wmean((r["implied_turnout_vs_2022"], r["votes"]) for r in tr),
     }
+
+
+# ======================================================================================
+# County-type reweighting
+#
+# Early returns over-represent whatever reports first (tonight: small rural KY/IN counties).
+# Each county has a type (data/county_types.csv: Hispanic, Urban core, Black, College suburbs,
+# Exurban / working metro, Rural). Per race, each type's weight W_g is its share of the race's
+# expected final vote. The type's estimate blends the race's own adjusted read for that type
+# with the same type's pooled read across all races (shrinkage KAPPA), falling back to the
+# pooled read when the race has no votes of that type yet:
+#   est_g = (c_g * race_g + KAPPA * pooled_g) / (c_g + KAPPA),   c_g = share of type counted
+#   reweighted race read = sum_g W_g * est_g  (over types with an estimate, renormalised)
+# ======================================================================================
+KAPPA = 0.15
+
+
+def race_groups(counties: list[dict], ratio: float) -> dict:
+    g: dict[str, dict] = {}
+    for c in counties:
+        x = g.setdefault(c["type"], {"exp": 0.0, "votes": 0, "n": 0, "n_rep": 0, "num": 0.0, "raw_num": 0.0})
+        reporting = c["votes"] and c.get("adj_margin") is not None
+        x["exp"] += c["exp_vote"] if reporting else c["turnout22"] * ratio
+        x["n"] += 1
+        if reporting:
+            x["votes"] += c["votes"]; x["n_rep"] += 1
+            x["num"] += c["adj_vs_expect"] * c["votes"]
+            x["raw_num"] += (c["vs_expect"] or 0.0) * c["votes"]
+    tot = sum(x["exp"] for x in g.values()) or 1.0
+    out = {}
+    for k, x in g.items():
+        out[k] = {"weight": x["exp"] / tot, "counted": x["votes"] / x["exp"] if x["exp"] else 0.0,
+                  "votes": x["votes"], "n": x["n"], "n_rep": x["n_rep"],
+                  "adj_vs_expect": x["num"] / x["votes"] if x["votes"] else None,
+                  "vs_expect": x["raw_num"] / x["votes"] if x["votes"] else None}
+    return out
+
+
+def reweight_by_type(results: list[dict], gb: float) -> dict:
+    pooled: dict[str, dict] = {}
+    for r in results:
+        for k, x in (r.get("groups") or {}).items():
+            p = pooled.setdefault(k, {"votes": 0, "num": 0.0, "raw": 0.0, "n_rep": 0, "exp": 0.0, "races": 0})
+            p["exp"] += x["votes"] / x["counted"] if x["counted"] else 0.0
+            if x["votes"]:
+                p["votes"] += x["votes"]; p["n_rep"] += x["n_rep"]; p["races"] += 1
+                p["num"] += x["adj_vs_expect"] * x["votes"]; p["raw"] += (x["vs_expect"] or 0.0) * x["votes"]
+    types = {k: {"adj_vs_expect": p["num"] / p["votes"] if p["votes"] else None,
+                 "vs_expect": p["raw"] / p["votes"] if p["votes"] else None,
+                 "votes": p["votes"], "counties_reporting": p["n_rep"], "races": p["races"]}
+             for k, p in pooled.items()}
+    num = den = 0.0
+    for r in results:
+        r["rw_vs_expect"] = r["rw_projected"] = None
+        if not r.get("votes"):
+            continue
+        rn = rd = 0.0
+        for k, x in (r.get("groups") or {}).items():
+            pg = types.get(k, {}).get("adj_vs_expect")
+            rg = x["adj_vs_expect"]
+            if rg is not None and pg is not None:
+                est = (x["counted"] * rg + KAPPA * pg) / (x["counted"] + KAPPA)
+            else:
+                est = rg if rg is not None else pg
+            x["est"] = est
+            if est is not None:
+                rn += x["weight"] * est; rd += x["weight"]
+        if rd:
+            r["rw_vs_expect"] = rn / rd
+            r["rw_projected"] = r["forecast"] + r["rw_vs_expect"]
+            num += r["rw_vs_expect"] * r["votes"]; den += r["votes"]
+    rw = num / den if den else None
+    return {"rw_vs_expect": rw, "rw_implied_generic": None if rw is None else gb + rw, "types": types}
