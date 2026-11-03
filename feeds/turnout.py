@@ -379,7 +379,7 @@ def main() -> None:
         print("  " + _split(D4, R4, O4, T4))
         if T and T4:
             print(f"  2026 / 2024 = {T / T4:.3f}")
-    hdr =f"{'county':<20}{'fips':>6}{'2026 pre':>11}{'2022 pre':>11}{'ratio':>7}{'D%':>7}{'R%':>7}{'D% 22':>7}{'R% 22':>7}"
+    hdr = f"{'county':<20}{'fips':>6}{'2026 pre':>11}{'2022 pre':>11}{'ratio':>7}{'D%':>7}{'R%':>7}{'D% 22':>7}{'R% 22':>7}"
     print(hdr)
     print("-" * len(hdr))
     rows_sorted = sorted(rows, key=lambda r: -(r["pre_ballots"] or 0))
