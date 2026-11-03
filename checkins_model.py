@@ -168,7 +168,11 @@ def summary(live: bool = True, save: bool = True) -> dict:
     for st, ps in by_state.items():
         if len(ps) < 5:
             continue
-        times = sorted({round(pt[0] * 2) / 2 for p in ps for pt in p["series_et"][2026]})
+        # start the state line only once ~90% of counties have posted a first snapshot, so a few
+        # early uploads don't show up as a near-zero statewide total
+        firsts = sorted(p["series_et"][2026][0][0] for p in ps)
+        t_start = firsts[int(0.9 * (len(firsts) - 1))]
+        times = sorted({round(pt[0] * 2) / 2 for p in ps for pt in p["series_et"][2026] if pt[0] >= t_start - 0.01})
         ser = []
         for t in times:
             tot = [0.0, 0.0, 0.0]

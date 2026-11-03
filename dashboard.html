@@ -6,8 +6,8 @@
 <title>Election Night Tracker</title>
 <style>
 :root{--bg:#f6f6f4;--panel:#fff;--ink:#14161b;--muted:#6b7080;--faint:#9aa0ad;--line:#e4e5e9;--dem:#1f5fbf;--rep:#c8322b;--warn:#a86a00;--ok:#1d7a3a;--dem-bg:#eaf1fc;--rep-bg:#fcebea;--sel:#f0f4fb;
-  --y22:#9aa0ad;--y24:#c9a227;--y26:#14161b}
-@media (prefers-color-scheme:dark){:root{--bg:#101216;--panel:#181b21;--ink:#e9eaee;--muted:#9097a6;--faint:#6b7180;--line:#2a2e37;--dem:#6ea3ff;--rep:#ff7a70;--warn:#e0a640;--ok:#4cc27a;--dem-bg:#172540;--rep-bg:#391b1a;--sel:#1d2533;--y22:#6b7180;--y24:#d9b13a;--y26:#e9eaee}}
+  --y22:#0f8f80;--y24:#c77700;--y26:#14161b;--oth:#6d5bd0}
+@media (prefers-color-scheme:dark){:root{--bg:#101216;--panel:#181b21;--ink:#e9eaee;--muted:#9097a6;--faint:#6b7180;--line:#2a2e37;--dem:#6ea3ff;--rep:#ff7a70;--warn:#e0a640;--ok:#4cc27a;--dem-bg:#172540;--rep-bg:#391b1a;--sel:#1d2533;--y22:#3cc6b3;--y24:#f0a73a;--y26:#e9eaee;--oth:#a896ff}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5}
@@ -70,7 +70,7 @@ details .card{margin-top:10px}
   </section>
 
   <section class="card">
-    <div class="head"><h2>Through the night</h2><span class="sub">Democrats vs expectations · shaded = expected error at that share counted</span>
+    <div class="head"><h2>Through the night</h2><span class="sub" id="chartlegend"></span>
       <button class="btn" id="tg_races" style="margin-left:auto">Show races</button></div>
     <svg id="chart" width="100%" height="240"></svg>
   </section>
@@ -87,7 +87,7 @@ details .card{margin-top:10px}
       <select id="ci_state"></select><select id="ci_cty"></select></div>
     <div class="sub" id="ci_sum" style="margin-bottom:6px"></div>
     <div id="ci_chart"></div>
-    <p class="note">Cumulative in-person Election Day check-ins by party registration. Dashed horizontal lines = that year's final Election Day total; dots = snapshots (saved every 30 min today; same-hour figures for past years where known); the thin dashed lead-in from 6 AM is not data. Registration isn't vote choice, and Election Day's share keeps shrinking as voters (lately more Republicans) vote early, so read this with the early-vote mix below.</p>
+    <p class="note">Cumulative in-person Election Day check-ins by party registration. Horizontal lines = that year's final Election Day total; dots = snapshots saved through the day. Registration isn't vote choice, and Election Day's share keeps shrinking as voters (lately more Republicans) vote early, so read this with the early-vote mix below.</p>
   </section>
 
   <section class="card">
@@ -186,7 +186,9 @@ function renderDetail(r){const el=$("#detail");if(!r){el.innerHTML="";return}
 function renderChart(hist,races){const svg=$("#chart"),W=svg.clientWidth||900,H=240,L=46,R=12,T=10,B=24;
   const pts=hist.map(h=>({t:new Date(h.ts).getTime(),h})).filter(p=>p.h.overall);
   if(!pts.some(p=>p.h.overall.rw_vs_expect!=null)){svg.innerHTML=`<text x="${W/2}" y="${H/2}" text-anchor="middle">The line starts when the first votes are counted.</text>`;return}
-  const ser=[{c:"var(--ink)",w:3,g:h=>h.overall.rw_vs_expect,band:true},{c:"var(--faint)",w:1.5,dash:"5 4",g:h=>h.overall.vs_expect,lab:"raw count"}];
+  const ser=[{c:"var(--ink)",w:3,g:h=>h.overall.rw_vs_expect,band:true,lab:"adjusted"},{c:"var(--faint)",w:1.5,dash:"5 4",g:h=>h.overall.vs_expect,lab:"raw count"}];
+  const sw=(c,d,w)=>`<svg width="26" height="10" style="vertical-align:middle;margin:0 4px 0 10px"><line x1="1" x2="25" y1="5" y2="5" stroke="${c}" stroke-width="${w}" ${d?`stroke-dasharray="${d}"`:""}/></svg>`;
+  $("#chartlegend").innerHTML=`Democrats vs expectations ${sw("var(--ink)","",3)}adjusted (headline) ${sw("var(--faint)","5 4",1.5)}raw count <span style="display:inline-block;width:18px;height:10px;background:var(--ink);opacity:.12;vertical-align:middle;margin:0 4px 0 10px"></span>expected error`+(showRaces?" · coloured = individual races":"");
   if(showRaces)races.forEach((r,i)=>ser.push({c:RACECOL[i%RACECOL.length],w:1.3,g:h=>(h.races[r.id]||{}).rw_vs_expect,lab:r.id}));
   let lo=-2,hi=2;ser.forEach(s=>pts.forEach(p=>{const v=s.g(p.h);if(v!=null){const e=s.band?errAt(p.h.overall.counted||0):0;lo=Math.min(lo,v-e);hi=Math.max(hi,v+e)}}));lo=Math.floor(lo-.5);hi=Math.ceil(hi+.5);
   const t0=pts[0].t,t1=pts[pts.length-1].t,X=t=>L+(W-L-R)*(t1>t0?(t-t0)/(t1-t0):1),Y=v=>T+(H-T-B)*(hi-v)/(hi-lo);
@@ -221,24 +223,26 @@ function renderCheckins(ck){const ps=ck.panels||[],sp=$("#ci_state"),cp=$("#ci_c
       [2024,2022].map(y=>cb["proj_mix_"+(y%100)]!=null?` vs ${y}: <b class="${cls(cb["proj_mix_"+(y%100)])}">${m(cb["proj_mix_"+(y%100)])}</b> (Δ <b class="${cls(cb["proj_d_"+(y%100)])}">${m(cb["proj_d_"+(y%100)])}</b>)`:"").join(" ·")+
       ` <span class="faint">(party registration, not votes)</span>`:"")+
     (!p.series["2026"]||p.series["2026"].length<2?`<br><span class="faint">Hourly history is being collected from ${hh(p.series["2026"]?p.series["2026"][0][0]:14)}: a new point about every hour. Earlier hours aren't published anywhere we can reach; past years only have final totals.</span>`:"");
-  const parties=[["Republicans",1],["Democrats",2],["Independents & others",3]];
-  const yrs={"2022":"var(--y22)","2024":"var(--y24)","2026":"var(--y26)"};
+  const parties=[["Republicans",1,"var(--rep)"],["Democrats",2,"var(--dem)"],["Independents & others",3,"var(--oth)"]];
+  const yrs={"2022":"var(--y22)","2024":"var(--y24)"},dash={"2022":"2 4","2024":"9 5"};
   const W=Math.max(340,$("#ci_chart").clientWidth||900);
-  $("#ci_chart").innerHTML=`<div style="display:flex;gap:14px;font-size:12px;margin-bottom:4px">${Object.entries(yrs).map(([y,c])=>`<span><span style="display:inline-block;width:18px;height:3px;background:${c};vertical-align:middle;margin-right:4px"></span>${y}</span>`).join("")}</div>`+
-    parties.map(([name,idx])=>{const H=150,L=50,R=Math.min(170,W*0.3),T=20,B=22,x0=6,x1=20;
+  const sw=(c,d,w)=>`<svg width="30" height="10" style="vertical-align:middle;margin-right:5px"><line x1="1" x2="29" y1="5" y2="5" stroke="${c}" stroke-width="${w}" ${d?`stroke-dasharray="${d}"`:""}/></svg>`;
+  $("#ci_chart").innerHTML=`<div style="display:flex;flex-wrap:wrap;gap:16px;font-size:12px;margin-bottom:6px">
+      <span>${sw("var(--ink)","",3.5)}<b>2026 so far</b> (in each party's colour)</span><span>${sw("var(--y24)",dash["2024"],2)}2024 final</span><span>${sw("var(--y22)",dash["2022"],2)}2022 final</span>
+      <span class="faint">● = snapshot · thin dotted lead-in from 6 AM is not data</span></div>`+
+    parties.map(([name,idx,pc])=>{const H=150,L=50,R=Math.min(170,W*0.3),T=20,B=22,x0=6,x1=20;
       let hi=0;Object.values(p.series).forEach(a=>a.forEach(q=>hi=Math.max(hi,q[idx])));Object.values(p.finals).forEach(f=>hi=Math.max(hi,f[idx-1]));hi=niceMax(hi*1.05);
       const X=h=>L+(W-L-R)*(h-x0)/(x1-x0),Y=v=>T+(H-T-B)*(1-v/hi);
-      let g=`<text x="0" y="13" style="fill:var(--ink);font-weight:700;font-size:13px">${name}</text>`;
+      let g=`<text x="0" y="13" style="fill:${pc};font-weight:700;font-size:13px">${name}</text>`;
       for(let i=0;i<=4;i++){const v=hi*i/4;g+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${kfmt(v)}</text>`}
       [6,8,10,12,14,16,18,20].forEach(h=>g+=`<text x="${X(h)}" y="${H-6}" text-anchor="middle">${hh(h).replace(":00","")}</text>`);
       const labels=[];
-      Object.entries(p.finals).forEach(([y,f])=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(f[idx-1])}" y2="${Y(f[idx-1])}" stroke="${yrs[y]}" stroke-dasharray="5 4" stroke-width="1.5"/>`;labels.push([Y(f[idx-1]),`${y} final ${kfmt(f[idx-1])}`,yrs[y],false])});
-      Object.entries(p.series).forEach(([y,a])=>{if(!a.length)return;
-        g+=`<path d="M${X(x0)},${Y(0)}L${X(a[0][0])},${Y(a[0][idx])}" fill="none" stroke="${yrs[y]}" stroke-width="1.2" stroke-dasharray="3 4" opacity=".7"/>`;
-        if(a.length>1)g+=`<path d="${a.map((q,i)=>(i?"L":"M")+X(q[0]).toFixed(1)+","+Y(q[idx]).toFixed(1)).join("")}" fill="none" stroke="${yrs[y]}" stroke-width="${y==="2026"?3:2}"/>`;
-        g+=``+
-          a.map(q=>`<circle cx="${X(q[0])}" cy="${Y(q[idx])}" r="${y==="2026"?3.5:3}" fill="${yrs[y]}"/>`).join("");
-        const lq=a[a.length-1];labels.push([Y(lq[idx]),`${y} ${n(lq[idx])}`,yrs[y],y==="2026"])});
+      Object.entries(p.finals).forEach(([y,f])=>{g+=`<line x1="${L}" x2="${W-R}" y1="${Y(f[idx-1])}" y2="${Y(f[idx-1])}" stroke="${yrs[y]}" stroke-dasharray="${dash[y]}" stroke-width="2"/>`;labels.push([Y(f[idx-1]),`${y} final ${kfmt(f[idx-1])}`,yrs[y],false])});
+      Object.entries(p.series).forEach(([y,a])=>{if(!a.length)return;const c=y==="2026"?pc:yrs[y];
+        g+=`<path d="M${X(x0)},${Y(0)}L${X(a[0][0])},${Y(a[0][idx])}" fill="none" stroke="${c}" stroke-width="1" stroke-dasharray="1 4" opacity=".6"/>`;
+        if(a.length>1)g+=`<path d="${a.map((q,i)=>(i?"L":"M")+X(q[0]).toFixed(1)+","+Y(q[idx]).toFixed(1)).join("")}" fill="none" stroke="${c}" stroke-width="${y==="2026"?3.5:2}" ${y==="2026"?"":`stroke-dasharray="${dash[y]}"`}/>`;
+        g+=a.map(q=>`<circle cx="${X(q[0])}" cy="${Y(q[idx])}" r="${y==="2026"?4:3}" fill="${c}"/>`).join("");
+        const lq=a[a.length-1];labels.push([Y(lq[idx]),`${y==="2026"?"2026 now":y+" same hour"} ${n(lq[idx])}`,c,y==="2026"])});
       labels.sort((a,b)=>a[0]-b[0]);for(let i=1;i<labels.length;i++)if(labels[i][0]-labels[i-1][0]<14)labels[i][0]=labels[i-1][0]+14;
       labels.forEach(([yy,t,c,b])=>g+=`<text x="${W-R+8}" y="${yy+4}" style="fill:${c};${b?"font-weight:700;":""}font-size:12px">${t}</text>`);
       return `<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;margin-bottom:8px">${g}</svg>`}).join("");}
