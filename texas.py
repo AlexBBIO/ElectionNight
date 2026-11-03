@@ -192,8 +192,19 @@ BENCH_2022 = {"early_only_margin": -10.0, "final": -10.9,
               "note": "2022: Abbott 54-44 with all early votes and ~30% of Election Day precincts (Texas Tribune)"}
 
 
+# Total turnout prior from the early-vote pace and live Election Day counts (see ED_SIZE notes):
+#   Harris live Election Day pace (143k at 1:15 PM CT vs 153.5k at 1 PM in 2024) -> ~0.91 x 2024's
+#   326k Election Day = ~300k, i.e. ~0.72 x its 2022 Election Day: the record early vote cannibalised
+#   Election Day. Scaled statewide that gives ~2.1M Election Day votes. Republican counties' late
+#   early-vote pace held up better than Democratic ones (Tarrant x1.35, Travis x1.08 vs 2022), so
+#   statewide Election Day is probably larger than the Harris scaling: prior 2.5M +/- 0.45M.
+ED_SIZE = {"mean": 2.5e6, "sd": 0.45e6,
+           "estimates": {"2024 ED x Harris live pace": 2.13e6, "2022 ED x Harris 2026/2022": 2.08e6,
+                         "late early-vote pace x 2022 ED (fails the Harris check)": 3.59e6}}
+
+
 def pre_close(cfg: dict, markets: dict | None, early_votes: float = 7_711_462, m_early=(3.8, 3.0),
-              total=(11.0e6, 0.4e6), ed=None, n: int = 40000, seed: int = 5, rid: str = "TX-GOV",
+              total=(7_711_462 + ED_SIZE["mean"], ED_SIZE["sd"]), ed=None, n: int = 40000, seed: int = 5, rid: str = "TX-GOV",
               observed: dict | None = None) -> dict:
     rng = _random.Random(seed)
     E_poll = cfg_forecast(cfg, rid)
@@ -242,7 +253,7 @@ def pre_close(cfg: dict, markets: dict | None, early_votes: float = 7_711_462, m
     return {"race": rid, "prior_polls": E_poll, "prior_market": E_mkt, "p_dem_market": p_mkt, "prior": prior,
             "early_votes": early_votes, "early_share": s0, "m_early": m_early, "total": total, "ed": ed,
             "median": q(0.5), "p10": q(0.1), "p90": q(0.9), "p_dem": p_d,
-            "scenarios": table, "observed": obs, "n": n, "bench_2022": BENCH_2022, "split": split,
+            "scenarios": table, "observed": obs, "n": n, "bench_2022": BENCH_2022, "split": split, "ed_size": ED_SIZE,
             # what the 8 PM early-vote dump has to show for the race to be on track
             "early_needed": {"for_prior": (prior - (1 - s0) * ed["mean"]) / s0,
                              "for_tie_if_ED": {str(md): (0 - (1 - s0) * md) / s0 for md in (-10, -15, -20, -25)}}}
