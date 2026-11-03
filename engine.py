@@ -633,19 +633,23 @@ def reweight_by_type(results: list[dict], gb: float) -> dict:
 # votes, and the share of pre-ED ballots already counted = counted early/mail / pre ballots.
 # ======================================================================================
 _TURNOUT_CACHE: dict[str, tuple[float, dict]] = {}
-_T22 = None
+_TBASE: dict[int, dict] = {}
 
 
-def turnout_2022() -> dict:
-    global _T22
-    if _T22 is None:
-        _T22 = {}
-        p = DATA / "turnout_2022_pre.csv"
+def turnout_base(year: int) -> dict:
+    """fips -> row of data/turnout_{year}_pre.csv (final pre-Election-Day ballots that year)."""
+    if year not in _TBASE:
+        _TBASE[year] = {}
+        p = DATA / f"turnout_{year}_pre.csv"
         if p.exists():
             with open(p, newline="") as fh:
                 for r in csv.DictReader(fh):
-                    _T22[r["fips"].zfill(5)] = r
-    return _T22
+                    _TBASE[year][r["fips"].zfill(5)] = r
+    return _TBASE[year]
+
+
+def turnout_2022() -> dict:
+    return turnout_base(2022)
 
 
 def turnout_2026(st: str, cfg: dict) -> dict:
@@ -677,63 +681,91 @@ def _n(x):
         return None
 
 
-def turnout_signals(st: str, office: str, b: Baselines, t26: dict) -> dict | None:
-    if not t26:
-        return None
-    t22 = turnout_2022()
-    P26 = P22 = 0.0
+def _turnout_vs(st, office, b, t26, base, year):
+    P26 = P0 = 0.0
     pairs = []
-    party26 = [0.0, 0.0, 0.0]; party22 = [0.0, 0.0, 0.0]; have_party = True
-    ed = 0.0; ed_any = False; as_of = None
+    party26 = [0.0, 0.0, 0.0]; party0 = [0.0, 0.0, 0.0]; have_party = True
     for f in b.state_counties(st):
-        a = t26.get(f); z = t22.get(f)
-        if not a:
+        a = t26.get(f); z = base.get(f)
+        if not a or not z:
             continue
-        as_of = as_of or a.get("as_of")
-        p26 = _n(a.get("pre_ballots")); p22 = _n(z.get("pre_ballots")) if z else None
-        if _n(a.get("eday_checkins")) is not None:
-            ed += _n(a.get("eday_checkins")); ed_any = True
-        if p26 is None:
+        p26, p0 = _n(a.get("pre_ballots")), _n(z.get("pre_ballots"))
+        if not p26 or not p0:
             continue
-        P26 += p26
-        if p22:
-            P22 += p22
+        P26 += p26; P0 += p0
+        if year == 2022:
             m = b.c22_modes.get((f, office))
             mm = margin(*m["pre"]) if m and m.get("pre") and m["pre"][2] else (margin(*b.c22[(f, office)]) if b.c22.get((f, office)) else None)
-            if mm is not None:
-                pairs.append((p26, p22, mm))
+        else:
+            pr = b.pres24.get(f)
+            mm = margin(pr["dem"], pr["rep"], pr["total"]) if pr else None
+        if mm is not None:
+            pairs.append((p26, p0, mm))
         d26, r26, o26 = _n(a.get("pre_dem")), _n(a.get("pre_rep")), _n(a.get("pre_oth"))
-        d22, r22, o22 = (_n(z.get("pre_dem")), _n(z.get("pre_rep")), _n(z.get("pre_oth"))) if z else (None, None, None)
-        if None in (d26, r26, d22, r22):
+        d0, r0, o0 = _n(z.get("pre_dem")), _n(z.get("pre_rep")), _n(z.get("pre_oth"))
+        if None in (d26, r26, d0, r0):
             have_party = False
         else:
             party26 = [party26[0] + d26, party26[1] + r26, party26[2] + (o26 or 0)]
-            party22 = [party22[0] + d22, party22[1] + r22, party22[2] + (o22 or 0)]
+            party0 = [party0[0] + d0, party0[1] + r0, party0[2] + (o0 or 0)]
+    if not P0:
+        return None
+    S26 = sum(p[0] for p in pairs); S0 = sum(p[1] for p in pairs)
+    gap = lambda x: 100 * (x[0] - x[1]) / sum(x) if sum(x) else None
+    ok = have_party and sum(party26) and sum(party0)
+    return {"ballots": P0, "ratio": P26 / P0,
+            "geo_shift": sum((a / S26 - c / S0) * mm for a, c, mm in pairs) if S26 and S0 else None,
+            "party_gap": gap(party0) if ok else None,
+            "party_shift": (gap(party26) - gap(party0)) if ok else None,
+            "party": party0 if ok else None}
+
+
+def turnout_signals(st: str, office: str, b: Baselines, t26: dict) -> dict | None:
+    if not t26:
+        return None
+    rows = [t26[f] for f in b.state_counties(st) if f in t26]
+    P26 = sum(_n(r.get("pre_ballots")) or 0 for r in rows)
     if not P26:
         return None
-    S26 = sum(p[0] for p in pairs); S22 = sum(p[1] for p in pairs)
-    geo = sum((p26 / S26 - p22 / S22) * mm for p26, p22, mm in pairs) if S26 and S22 else None
-    ps = None
-    if have_party and sum(party26) and sum(party22):
-        ps = 100 * ((party26[0] - party26[1]) / sum(party26) - (party22[0] - party22[1]) / sum(party22))
-    return {"pre_ballots": P26, "pre_ballots_2022": P22 or None, "pre_ratio": (P26 / P22) if P22 else None,
-            "geo_shift": geo, "party_shift": ps,
-            "party_gap_2026": 100 * (party26[0] - party26[1]) / sum(party26) if have_party and sum(party26) else None,
-            "party_gap_2022": 100 * (party22[0] - party22[1]) / sum(party22) if have_party and sum(party22) else None,
-            "eday_checkins": ed if ed_any else None, "as_of": as_of, "counties": len(pairs)}
+    pd_ = [sum(_n(r.get(k)) or 0 for r in rows) for k in ("pre_dem", "pre_rep", "pre_oth")]
+    has_party = all(_n(r.get("pre_dem")) is not None for r in rows)
+    ed = [_n(r.get("eday_checkins")) for r in rows]
+    v22 = _turnout_vs(st, office, b, t26, turnout_base(2022), 2022)
+    v24 = _turnout_vs(st, office, b, t26, turnout_base(2024), 2024)
+    try:
+        import importlib
+        src = (getattr(importlib.import_module("election_night.feeds.turnout"), "SOURCES", {}) or {}).get(st)
+    except Exception:  # noqa: BLE001
+        src = None
+    out = {"pre_ballots": P26, "as_of": rows[0].get("as_of"), "source": src,
+           "party_2026": pd_ if has_party else None,
+           "party_gap_2026": 100 * (pd_[0] - pd_[1]) / sum(pd_) if has_party and sum(pd_) else None,
+           "eday_checkins": sum(x for x in ed if x is not None) if any(x is not None for x in ed) else None}
+    for y, v in ((2022, v22), (2024, v24)):
+        k = str(y)[2:]
+        out[f"pre_ballots_{y}"] = v["ballots"] if v else None
+        out[f"pre_ratio_{k}"] = v["ratio"] if v else None
+        out[f"geo_shift_{k}"] = v["geo_shift"] if v else None
+        out[f"party_gap_{y}"] = v["party_gap"] if v else None
+        out[f"party_shift_{k}"] = v["party_shift"] if v else None
+        out[f"party_{y}"] = v["party"] if v else None
+    # backwards-compatible names (vs 2022)
+    out.update({"pre_ratio": out["pre_ratio_22"], "geo_shift": out["geo_shift_22"], "party_shift": out["party_shift_22"]})
+    return out
 
 
 def overall_turnout(results: list[dict]) -> dict:
-    seen, g, p = set(), [0.0, 0.0], [0.0, 0.0]
+    seen, acc = set(), {k: [0.0, 0.0] for k in ("geo_shift_22", "party_shift_22", "geo_shift_24", "party_shift_24")}
     for r in results:
         t = r.get("turnout")
         if not t or r["state"] in seen:
             continue
         seen.add(r["state"])
         w = t.get("pre_ballots") or 0
-        if t.get("geo_shift") is not None:
-            g[0] += t["geo_shift"] * w; g[1] += w
-        if t.get("party_shift") is not None:
-            p[0] += t["party_shift"] * w; p[1] += w
-    return {"turnout_geo_shift": g[0] / g[1] if g[1] else None,
-            "turnout_party_shift": p[0] / p[1] if p[1] else None, "turnout_states": len(seen)}
+        for k in acc:
+            if t.get(k) is not None:
+                acc[k][0] += t[k] * w; acc[k][1] += w
+    val = {k: (a / b if b else None) for k, (a, b) in acc.items()}
+    return {"turnout_geo_shift": val["geo_shift_22"], "turnout_party_shift": val["party_shift_22"],
+            "turnout_geo_shift_24": val["geo_shift_24"], "turnout_party_shift_24": val["party_shift_24"],
+            "turnout_states": len(seen)}

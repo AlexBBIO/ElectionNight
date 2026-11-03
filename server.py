@@ -131,6 +131,29 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
                                                   save=cfg.get("checkins_save", True))
     except Exception as exc:  # noqa: BLE001
         snap["checkins"] = {"error": str(exc), "jurisdictions": []}
+    # state view: early vote + Election Day so far, by party, vs 2022 early + 2022 final ED
+    for pnl in (snap["checkins"].get("panels") or []):
+        if not pnl.get("is_state"):
+            continue
+        t = next((r["turnout"] for r in results if r["state"] == pnl["state"] and r.get("turnout")), None)
+        if not t or not t.get("party_2026"):
+            continue
+        l, e26 = pnl["latest"], t["party_2026"]  # e*: [dem, rep, oth]; finals: [rep, dem, oth]
+        g = lambda x: 100 * (x[0] - x[1]) / sum(x) if sum(x) else None
+        c26 = [e26[0] + l["dem"], e26[1] + l["rep"], e26[2] + l["oth"]]
+        comb = {"mix_2026": g(c26), "votes_2026": sum(c26), "early_mix_2026": g(e26)}
+        for y in (2022, 2024):
+            fin, ey = pnl["finals"].get(str(y)), t.get(f"party_{y}")
+            if not fin or not ey:
+                continue
+            cy = [ey[0] + fin[1], ey[1] + fin[0], ey[2] + fin[2]]
+            # projection: rest of Election Day at that year's final ED volume, with today's ED mix
+            k = max(1.0, sum(fin) / l["total"]) if l["total"] else 1.0
+            p26 = [e26[0] + l["dem"] * k, e26[1] + l["rep"] * k, e26[2] + l["oth"] * k]
+            comb[f"mix_{y}_final"] = g(cy); comb[f"votes_{y}"] = sum(cy)
+            comb[f"d_{y % 100}"] = g(c26) - g(cy)
+            comb[f"proj_mix_{y % 100}"] = g(p26); comb[f"proj_d_{y % 100}"] = g(p26) - g(cy)
+        pnl["combined"] = comb
     return snap
 
 

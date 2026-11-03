@@ -39,6 +39,7 @@ from . import common
 CACHE_SECONDS = 600.0
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 BASELINE_CSV = DATA_DIR / "turnout_2022_pre.csv"
+BASELINE_2024_CSV = DATA_DIR / "turnout_2024_pre.csv"
 SNAPSHOT_CSV = DATA_DIR / "turnout_2026_pre_snapshot.csv"
 FIELDS = ["state", "fips", "county", "pre_ballots", "pre_dem", "pre_rep", "pre_oth",
           "eday_checkins", "as_of"]
@@ -61,6 +62,34 @@ BASELINE_NOTES = {
     "KY": "KY SBE https://elect.ky.gov/Documents/Absentee_Public_110422.xlsx (mail returned + excused & "
           "no-excuse in-person + FPCA; D/R from the file, oth = total - D - R). Total 337,975 = SBE's final "
           "2022 pre-ED figure. Marked unofficial by SBE.",
+}
+
+
+BASELINE_2024_NOTES = {
+    "FL": "FL DOS EV/VBM archive report, 2024 General (election 43888), https://files.floridados.gov/media/708588/"
+          "2024-general-election-43888.pdf; Voted VBM + Voted Early by county x party (statewide NPA cell "
+          "overflowed as #### in the PDF -> total - R - D - other). Final archive: mail may include ED drop-offs.",
+    "NC": "NCSBE absentee_20241105.zip, ACCEPTED/ACCEPTED - CURED returned before 11/05/2024 (early + mail); "
+          "excludes 25k ballots returned on/after ED.",
+    "KY": "KY SBE https://elect.ky.gov/Documents/Absentee_Public_110524.xlsx (ED-morning file: mail returned "
+          "through Nov 4). The widely quoted 792,476 is the 11/03 file (before the last mail day).",
+    "GA": "2024 official results (GA SOS Enhanced Voting, President): advance in-person + absentee-by-mail votes "
+          "by county via feeds/ga.py - votes, not ballots; no party registration.",
+    "SC": "2024 official results (SC Clarity detail XML, election 122436, President): Early Voting + Absentee By "
+          "Mail votes by county - votes, not ballots.",
+}
+
+# Short source labels for the dashboard (2026 live data): name, link, and "data through".
+SOURCES = {
+    "FL": {"name": "Florida Division of Elections",
+           "url": FL_STATS_URL, "through": "Nov 2"},
+    "NC": {"name": "NC State Board of Elections",
+           "url": f"{NC_BUCKET}/index.html?prefix=ENRS/{NC_ELECTION}/", "through": "Nov 2"},
+    "KY": {"name": "KY State Board of Elections",
+           "url": "https://elect.ky.gov/Documents/Absentee_Public_103126.xlsx", "through": "Oct 31"},
+    "SC": {"name": "SC Election Commission",
+           "url": "https://scvotes.gov/wp-content/uploads/2026/11/EV-Totals-10-31-26.csv",
+           "through": "Oct 31 (in-person only)"},
 }
 
 
@@ -290,13 +319,21 @@ def fetch(state: str) -> list[dict]:
     raise common.FeedError(f"turnout {state}: " + (str(err) if err else "no live source or snapshot"))
 
 
-def baseline_2022(state: str) -> dict[str, dict]:
+def baseline(state: str, year: int = 2022) -> dict[str, dict]:
+    """{fips: row} from data/turnout_<year>_pre.csv (2022 or 2024); {} if the file/state is missing."""
+    path = BASELINE_CSV if year == 2022 else DATA_DIR / f"turnout_{year}_pre.csv"
+    if not path.exists():
+        return {}
     out = {}
-    with BASELINE_CSV.open(newline="") as fh:
+    with path.open(newline="") as fh:
         for r in csv.DictReader(fh):
             if r["state"] == state.upper():
                 out[r["fips"]] = {k: (_opt(r[k]) if k.startswith("pre_") else r[k]) for k in r}
     return out
+
+
+def baseline_2022(state: str) -> dict[str, dict]:
+    return baseline(state, 2022)
 
 
 # ------------------------------------------------------------------ CLI
@@ -316,7 +353,8 @@ def main() -> None:
         rows = fetch(st)
     except common.FeedError as e:
         raise SystemExit(str(e))
-    base = baseline_2022(st) if BASELINE_CSV.exists() else {}
+    base = baseline(st, 2022)
+    base24 = baseline(st, 2024)
     tot = lambda rs, k: sum((r.get(k) or 0) for r in rs) if any(r.get(k) is not None for r in rs) else None
     T, D, R, O = (tot(rows, k) for k in ("pre_ballots", "pre_dem", "pre_rep", "pre_oth"))
     E = tot(rows, "eday_checkins")
@@ -334,7 +372,14 @@ def main() -> None:
             for k, n1, n2 in (("D", D, D2), ("R", R, R2), ("oth", O, O2)):
                 if n1 is not None and n2:
                     print(f"     {k:>3}: {n1 / n2:.3f}")
-    hdr = f"{'county':<20}{'fips':>6}{'2026 pre':>11}{'2022 pre':>11}{'ratio':>7}{'D%':>7}{'R%':>7}{'D% 22':>7}{'R% 22':>7}"
+    if base24:
+        bl = list(base24.values())
+        T4, D4, R4, O4 = (tot(bl, k) for k in ("pre_ballots", "pre_dem", "pre_rep", "pre_oth"))
+        print(f"{st} 2024 pre-ED ballots: {T4 or 0:,}   ({BASELINE_2024_NOTES.get(st, 'see data/turnout_2024_pre.csv')})")
+        print("  " + _split(D4, R4, O4, T4))
+        if T and T4:
+            print(f"  2026 / 2024 = {T / T4:.3f}")
+    hdr =f"{'county':<20}{'fips':>6}{'2026 pre':>11}{'2022 pre':>11}{'ratio':>7}{'D%':>7}{'R%':>7}{'D% 22':>7}{'R% 22':>7}"
     print(hdr)
     print("-" * len(hdr))
     rows_sorted = sorted(rows, key=lambda r: -(r["pre_ballots"] or 0))

@@ -60,9 +60,11 @@ details .card{margin-top:10px}
       <div class="sub" id="h_main_sub">waiting for votes</div>
       <div class="row2"><div><div class="k">Implied national environment</div><div class="mid" id="h_nat">—</div><div class="sub" id="h_nat_sub"></div></div>
         <div><div class="k">Expected vote counted</div><div class="mid" id="h_cnt">—</div><div class="sub">reporting races</div></div></div></div>
-    <div class="card"><div class="k">TURNOUT VS 2022</div>
-      <div style="margin-top:6px"><div class="sub">Early vote · party mix</div><div class="mid" id="h_ev">—</div><div class="sub" id="h_ev_sub"></div></div>
-      <div style="margin-top:8px"><div class="sub">Election Day check-ins · party mix</div><div class="mid" id="h_ed">—</div><div class="sub" id="h_ed_sub"></div></div></div>
+    <div class="card"><div class="k">TURNOUT · PARTY MIX SHIFT</div>
+      <table style="margin-top:4px"><thead><tr><th></th><th>vs 2024</th><th>vs 2022</th></tr></thead><tbody>
+        <tr><td class="sub">Early vote</td><td><span class="mid" id="h_ev24">—</span></td><td><span class="mid" id="h_ev">—</span></td></tr>
+        <tr><td class="sub">Election Day check-ins</td><td><span class="mid" id="h_ed24">—</span></td><td><span class="mid" id="h_ed">—</span></td></tr></tbody></table>
+      <div class="sub" id="h_ev_sub" style="margin-top:4px"></div></div>
     <div class="card"><div class="k">LATEST BATCHES VS EXPECTED</div><div class="big" id="h_b">—</div><div class="sub" id="h_b_sub">no batches yet</div>
       <div class="sub" style="margin-top:8px">Each new upload compared with what that vote type (early/mail or Election Day) should look like in that county.</div></div>
   </section>
@@ -82,14 +84,16 @@ details .card{margin-top:10px}
 
   <section class="card">
     <div class="head"><h2>Election Day check-ins by party</h2>
-      <select id="ci_pick"></select><span class="sub" id="ci_sum"></span></div>
+      <select id="ci_state"></select><select id="ci_cty"></select></div>
+    <div class="sub" id="ci_sum" style="margin-bottom:6px"></div>
     <div id="ci_chart"></div>
     <p class="note">Cumulative in-person Election Day check-ins by party registration. Dashed horizontal lines = that year's final Election Day total; dots = snapshots (saved every 30 min today; same-hour figures for past years where known); the thin dashed lead-in from 6 AM is not data. Registration isn't vote choice, and Election Day's share keeps shrinking as voters (lately more Republicans) vote early, so read this with the early-vote mix below.</p>
   </section>
 
   <section class="card">
     <div class="head"><h2>Early vote vs 2022</h2><span class="sub">ballots cast before Election Day, by county</span></div>
-    <div class="scroll"><table id="ev"><thead><tr><th>State</th><th>Ballots</th><th>vs 2022</th><th title="(D−R) share of early voters by party registration">Party mix 2026 · 2022</th><th>Party shift</th><th title="Turnout up more in D or R counties (2022 county early-vote margins)">County-mix shift</th><th>As of</th></tr></thead><tbody></tbody></table></div>
+    <div class="scroll"><table id="ev"><thead><tr><th>State</th><th>Ballots</th><th>vs '24</th><th>vs '22</th><th title="(D−R) share of early voters by party registration">Party mix 2026</th><th>2024</th><th>2022</th>
+      <th title="Party mix 2026 minus 2024">Shift vs '24</th><th>vs '22</th><th title="Turnout up more in D or R counties (county margins)">County-mix vs '24</th><th>vs '22</th><th>Source</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <details>
@@ -123,7 +127,7 @@ const kfmt=x=>x==null?"—":x>=1e6?(x/1e6).toFixed(2)+"M":x>=1e3?(x/1e3).toFixed
 const RACECOL=["#7b61ff","#00a3a3","#e07a00","#d6336c","#2f9e44","#1c7ed6","#ae3ec9","#f08c00","#868e96","#0ca678","#5c7cfa","#e8590c"];
 const ERR=[[0,2.6],[0.05,1.8],[0.10,1.2],[0.25,0.6],[0.5,0.3],[1,0.15]];
 function errAt(c){for(let i=1;i<ERR.length;i++){if(c<=ERR[i][0]){const[a,ea]=ERR[i-1],[b,eb]=ERR[i];return ea+(eb-ea)*(c-a)/(b-a)}}return 0.15}
-let last=null,sel=null,showRaces=false,ciKey=null;
+let last=null,sel=null,showRaces=false,ciState=null,ciCty="";
 function set(id,v,big){const el=$(id);el.textContent=m(v);el.className=(big?"big ":"mid ")+cls(v)}
 function closeFmt(x){const mt=(x||"").match(/^(\d{1,2}):(\d{2})(.*)$/);if(!mt)return x||"";const H=+mt[1];return (H%12||12)+(mt[2]!=="00"?":"+mt[2]:"")+(H<12?" AM":" PM")+mt[3]}
 function hh(h){h=+h;const H=Math.floor(h),M=Math.round((h-H)*60);return (H%12||12)+(M?":"+String(M).padStart(2,"0"):"")+(H<12?" AM":" PM")}
@@ -156,8 +160,8 @@ function render(data){const s=data.snapshot;if(!s)return;if(last!==data)scoreBat
   $("#h_main_sub").textContent=o.rw_vs_expect==null?"waiting for votes":`± ${errAt(o.counted||0).toFixed(1)} pts expected error · adjusted for vote type and county mix · raw count says ${m(o.vs_expect)}`;
   set("#h_nat",o.rw_implied_generic);$("#h_nat_sub").textContent="polls: "+m(o.generic_ballot);
   $("#h_cnt").textContent=o.races_reporting?pct(o.counted):"—";
-  set("#h_ev",o.turnout_party_shift);$("#h_ev_sub").textContent=o.turnout_states?`${o.turnout_states} states · county-mix shift ${m(o.turnout_geo_shift)}`:"no data";
-  const ck=s.checkins||{};set("#h_ed",ck.d_mix_22);$("#h_ed_sub").textContent=ck.jurisdictions?`vs 2024: ${m(ck.d_mix_24)} · ${ck.jurisdictions} jurisdictions`:"no data";
+  const ck=s.checkins||{};set("#h_ev",o.turnout_party_shift);set("#h_ev24",o.turnout_party_shift_24);set("#h_ed",ck.d_mix_22);set("#h_ed24",ck.d_mix_24);
+  $("#h_ev_sub").textContent=`(D−R) share by party registration, 2026 minus that year · early: ${o.turnout_states||0} states · Election Day: ${ck.jurisdictions||0} counties, vs final totals`;
   const b15=bAgg(15),b60=bAgg(60);set("#h_b",b15.v,true);$("#h_b_sub").textContent=b15.k?`last 15 min · ${b15.k} uploads · ${n(b15.w)} votes · last hour ${m(b60.v)}`:"no new votes in the last 15 minutes";
   if(!sel){const f=s.races.find(r=>r.votes);sel=f?f.id:null}
   $("#races tbody").innerHTML=s.races.map(r=>{const st=r.status||"",dot=st==="ok"?"ok":(st.startsWith("error")||st.startsWith("no feed"))?"err":"";
@@ -197,14 +201,26 @@ function renderChart(hist,races){const svg=$("#chart"),W=svg.clientWidth||900,H=
 $("#tg_races").onclick=()=>{showRaces=!showRaces;$("#tg_races").classList.toggle("on",showRaces);$("#tg_races").textContent=showRaces?"Hide races":"Show races";last&&render(last)};
 
 // ---------- check-ins: one panel per party, like the Maricopa chart ----------
-function renderCheckins(ck){const ps=ck.panels||[],pick=$("#ci_pick");
-  if(!ps.length){$("#ci_chart").innerHTML=`<div class="empty">No check-in data yet.</div>`;pick.innerHTML="";$("#ci_sum").textContent="";return}
-  const opts=ps.map(p=>`<option value="${p.key}">${p.is_state?"★ ":""}${p.name}${p.is_state?"":" ("+p.state+")"}</option>`).join("");
-  if(pick.dataset.opts!==opts){pick.innerHTML=opts;pick.dataset.opts=opts}
-  const p=ps.find(x=>x.key===ciKey)||ps[0];ciKey=p.key;pick.value=p.key;
-  const l=p.latest;$("#ci_sum").innerHTML=`as of ${hh(l.hour)}${p.is_state?" ET":""} · mix now <b class="${cls(p.mix_2026)}">${m(p.mix_2026)}</b>`+
-    [2022,2024].map(y=>p["mix_"+y]!=null?` · ${y} ${p["basis_"+y]==="same hour"?"same hour":"final"} <span class="${cls(p["mix_"+y])}">${m(p["mix_"+y])}</span> (Δ <b class="${cls(p["d_mix_"+(y%100)])}">${m(p["d_mix_"+(y%100)])}</b>)`:"").join("")+
-    (p.pace_2022?` · volume ${pct(p.pace_2022.total)} of 2022 final`:"");
+function renderCheckins(ck){const ps=ck.panels||[],sp=$("#ci_state"),cp=$("#ci_cty");
+  if(!ps.length){$("#ci_chart").innerHTML=`<div class="empty">No check-in data yet.</div>`;sp.innerHTML=cp.innerHTML="";$("#ci_sum").textContent="";return}
+  const states=[...new Set(ps.map(p=>p.state))].sort((a,b)=>ps.filter(p=>p.state===b).length-ps.filter(p=>p.state===a).length);
+  const so=states.map(st=>`<option value="${st}">${st}</option>`).join("");if(sp.dataset.o!==so){sp.innerHTML=so;sp.dataset.o=so}
+  if(!ciState||!states.includes(ciState))ciState=states[0];sp.value=ciState;
+  const statePanel=ps.find(p=>p.is_state&&p.state===ciState),ctys=ps.filter(p=>!p.is_state&&p.state===ciState).sort((a,b)=>a.name.localeCompare(b.name));
+  const co=(statePanel?`<option value="">Statewide (${statePanel.name.split("— ")[1]||"all"})</option>`:"")+ctys.map(p=>`<option value="${p.key}">${p.name}</option>`).join("");
+  if(cp.dataset.o!==co){cp.innerHTML=co;cp.dataset.o=co}
+  if(ciCty&&!ctys.some(p=>p.key===ciCty))ciCty="";if(!statePanel&&!ciCty&&ctys.length)ciCty=ctys[0].key;cp.value=ciCty;cp.style.display=ctys.length>1||statePanel?"":"none";
+  const p=ciCty?ctys.find(x=>x.key===ciCty):statePanel;
+  const l=p.latest,cb=p.combined;
+  $("#ci_sum").innerHTML=`<b>${p.name}</b> · as of ${hh(l.hour)}${p.is_state?" ET":""} · Election Day mix <b class="${cls(p.mix_2026)}">${m(p.mix_2026)}</b>`+
+    [2024,2022].map(y=>p["mix_"+y]!=null?` · ${y} ${p["basis_"+y]==="same hour"?"same hour":"final"} <span class="${cls(p["mix_"+y])}">${m(p["mix_"+y])}</span> (Δ <b class="${cls(p["d_mix_"+(y%100)])}">${m(p["d_mix_"+(y%100)])}</b>)`:"").join("")+
+    (p.pace_2022?` · volume ${pct(p.pace_2022.total)} of 2022 final`:"")+
+    (cb?`<br><b>Early + Election Day so far:</b> <b class="${cls(cb.mix_2026)}">${m(cb.mix_2026)}</b> (${kfmt(cb.votes_2026)} voters)`+
+      [2024,2022].map(y=>cb["mix_"+y+"_final"]!=null?` · ${y} total <span class="${cls(cb["mix_"+y+"_final"])}">${m(cb["mix_"+y+"_final"])}</span> (Δ <b class="${cls(cb["d_"+(y%100)])}">${m(cb["d_"+(y%100)])}</b>)`:"").join("")+
+      `<br><b>Projected</b> if the rest of Election Day reaches that year's volume at today's mix:`+
+      [2024,2022].map(y=>cb["proj_mix_"+(y%100)]!=null?` vs ${y}: <b class="${cls(cb["proj_mix_"+(y%100)])}">${m(cb["proj_mix_"+(y%100)])}</b> (Δ <b class="${cls(cb["proj_d_"+(y%100)])}">${m(cb["proj_d_"+(y%100)])}</b>)`:"").join(" ·")+
+      ` <span class="faint">(party registration, not votes)</span>`:"")+
+    (!p.series["2026"]||p.series["2026"].length<2?`<br><span class="faint">Hourly history is being collected from ${hh(p.series["2026"]?p.series["2026"][0][0]:14)}: a new point about every hour. Earlier hours aren't published anywhere we can reach; past years only have final totals.</span>`:"");
   const parties=[["Republicans",1],["Democrats",2],["Independents & others",3]];
   const yrs={"2022":"var(--y22)","2024":"var(--y24)","2026":"var(--y26)"};
   const W=Math.max(340,$("#ci_chart").clientWidth||900);
@@ -226,13 +242,17 @@ function renderCheckins(ck){const ps=ck.panels||[],pick=$("#ci_pick");
       labels.sort((a,b)=>a[0]-b[0]);for(let i=1;i<labels.length;i++)if(labels[i][0]-labels[i-1][0]<14)labels[i][0]=labels[i-1][0]+14;
       labels.forEach(([yy,t,c,b])=>g+=`<text x="${W-R+8}" y="${yy+4}" style="fill:${c};${b?"font-weight:700;":""}font-size:12px">${t}</text>`);
       return `<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block;margin-bottom:8px">${g}</svg>`}).join("");}
-$("#ci_pick").onchange=()=>{ciKey=$("#ci_pick").value;last&&render(last)};
+$("#ci_state").onchange=()=>{ciState=$("#ci_state").value;ciCty="";last&&render(last)};
+$("#ci_cty").onchange=()=>{ciCty=$("#ci_cty").value;last&&render(last)};
 
-function renderEV(s){const seen=new Set(),rows=[];s.races.forEach(r=>{const t=r.turnout;if(!t||seen.has(r.state))return;seen.add(r.state);
-  rows.push(`<tr><td><b>${r.state}</b></td><td>${n(t.pre_ballots)}</td><td>${t.pre_ratio==null?"—":t.pre_ratio.toFixed(2)+"×"}</td>
-  <td>${t.party_gap_2026==null?"—":`<span class="${cls(t.party_gap_2026)}">${m(t.party_gap_2026)}</span> · <span class="${cls(t.party_gap_2022)}">${m(t.party_gap_2022)}</span>`}</td>
-  <td class="${cls(t.party_shift)}"><b>${m(t.party_shift)}</b></td><td class="${cls(t.geo_shift)}">${m(t.geo_shift)}</td><td class="faint">${(t.as_of||"").slice(0,16)}</td></tr>`)});
-  $("#ev tbody").innerHTML=rows.join("")||`<tr><td colspan="7" class="empty">No early-vote data loaded${s.demo?" (off in demo)":""}.</td></tr>`}
+function renderEV(s){const seen=new Set(),rows=[],x=v=>v==null?"—":v.toFixed(2)+"×",c=v=>`<td class="${cls(v)}">${m(v)}</td>`;
+  s.races.forEach(r=>{const t=r.turnout;if(!t||seen.has(r.state))return;seen.add(r.state);const src=t.source||{};
+  rows.push(`<tr><td><b>${r.state}</b></td><td>${n(t.pre_ballots)}</td><td>${x(t.pre_ratio_24)}</td><td>${x(t.pre_ratio_22)}</td>
+  ${c(t.party_gap_2026)}${c(t.party_gap_2024)}${c(t.party_gap_2022)}
+  <td class="${cls(t.party_shift_24)}"><b>${m(t.party_shift_24)}</b></td><td class="${cls(t.party_shift_22)}"><b>${m(t.party_shift_22)}</b></td>
+  ${c(t.geo_shift_24)}${c(t.geo_shift_22)}
+  <td class="faint" title="${(t.as_of||"").replace(/"/g,"'")}">${src.url?`<a href="${src.url}" target="_blank" rel="noopener" style="color:inherit">${src.name||"source"}</a>`:(src.name||"")}${src.through?` · thru ${src.through}`:""}</td></tr>`)});
+  $("#ev tbody").innerHTML=rows.join("")||`<tr><td colspan="12" class="empty">No early-vote data loaded${s.demo?" (off in demo)":""}.</td></tr>`}
 
 function renderMore(s){const o=s.overall,mn=+$("#bmin").value||0,only=$("#bsel").checked;
   $("#batches tbody").innerHTML=batches.filter(b=>b.v>=mn&&(!only||b.race===sel)).slice(-150).reverse().map(b=>`<tr><td>${new Date(b.t).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})}</td><td>${b.race}</td><td>${b.county}</td><td>${b.vt}</td><td>${n(b.v)}</td><td class="${cls(b.mg)}">${m(b.mg)}</td><td class="${cls(b.e)}">${m(b.e)}</td><td class="${cls(b.diff)}"><b>${m(b.diff)}</b></td></tr>`).join("")||`<tr><td colspan="8" class="empty">No batches yet.</td></tr>`;
