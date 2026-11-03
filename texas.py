@@ -218,8 +218,16 @@ def pre_close(cfg: dict, markets: dict | None, early_votes: float = 7_711_462, m
     for _ in range(n):
         T = max(early_votes * 1.02, rng.gauss(*total))
         s = early_votes / T
-        me = obs["m_early"] if "m_early" in obs else rng.gauss(*m_early)
-        md = obs["m_eday"] if "m_eday" in obs else rng.gauss(ed["mean"], ed["sd"])
+        if "m_early" in obs:   # observed, with residual uncertainty for the uncounted share
+            me = rng.gauss(obs["m_early"], 0.5 + 3.0 * (1 - min(1.0, obs.get("early_counted_share", 1.0))))
+        else:
+            me = rng.gauss(*m_early)
+        if "m_eday" in obs:
+            ed_total = max(1.0, T - early_votes)
+            frac = min(1.0, obs.get("eday_counted", 0) / ed_total)
+            md = rng.gauss(obs["m_eday"], max(1.0, ed["sd"] * (1 - frac)))
+        else:
+            md = rng.gauss(ed["mean"], ed["sd"])
         finals.append(s * me + (1 - s) * md)
     finals.sort()
     q = lambda f: finals[int(f * (len(finals) - 1))]
