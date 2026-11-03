@@ -1,0 +1,16 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "buildCommand": "",
+  "installCommand": "",
+  "outputDirectory": ".",
+  "functions": {
+    "api/state.py": {
+      "maxDuration": 30,
+      "includeFiles": "{__init__.py,engine.py,server.py,config.json,data/**,feeds/**}"
+    }
+  },
+  "rewrites": [
+    { "source": "/", "destination": "/dashboard.html" }
+  ]
+}

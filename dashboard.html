@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Election Night Tracker</title>
+<style>
+:root{--bg:#f7f7f5;--panel:#fff;--ink:#16181d;--muted:#6b7080;--line:#e3e4e8;--dem:#1f5fbf;--rep:#c8322b;--warn:#a86a00;--dem-bg:#e8f0fc;--rep-bg:#fbe9e8}
+@media (prefers-color-scheme:dark){:root{--bg:#111317;--panel:#1a1d23;--ink:#e8e9ec;--muted:#9097a6;--line:#2c3039;--dem:#6ea3ff;--rep:#ff7a70;--warn:#e0a640;--dem-bg:#182742;--rep-bg:#3a1c1b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;padding:14px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+h1{font-size:18px;margin:0}
+.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--line)}
+.badge.live{background:#1d7a3a;color:#fff}.badge.demo{background:var(--warn);color:#fff}
+.muted{color:var(--muted)}
+main{padding:16px;max-width:1400px;margin:0 auto;display:grid;gap:16px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.tile,.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.tile .k{font-size:12px;color:var(--muted)}.tile .v{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}
+.tile .s{font-size:12px;color:var(--muted)}
+.tile.hero{grid-column:span 2}.tile.hero .v{font-size:40px}
+@media (max-width:600px){.tile.hero{grid-column:span 1}}
+.d{color:var(--dem)}.r{color:var(--rep)}
+h2{font-size:14px;margin:0 0 8px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-size:12px;color:var(--muted);font-weight:600;cursor:pointer;position:sticky;top:0;background:var(--panel)}
+th:first-child,td:first-child{text-align:left}
+tr.sel{background:var(--dem-bg)}tbody tr{cursor:pointer}
+td.status{font-size:12px;color:var(--muted);text-align:left;max-width:280px;overflow:hidden;text-overflow:ellipsis}
+td.err{color:var(--warn)}
+.bar{display:inline-block;height:6px;border-radius:3px;background:var(--dem);vertical-align:middle;margin-left:4px}
+.chartwrap{position:relative}svg text{fill:var(--muted);font-size:11px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;margin-top:6px}
+.legend span{display:inline-flex;align-items:center;gap:4px;cursor:pointer}.legend i{width:12px;height:3px;display:inline-block}
+.legend .off{opacity:.35}
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;font-size:12px;margin-bottom:8px}
+.note{font-size:12px;color:var(--muted)}
+.firm{font-weight:700}
+</style>
+</head>
+<body>
+<header>
+  <h1>Election Night Tracker</h1>
+  <span id="mode" class="badge">…</span>
+  <span class="muted" id="ts">waiting for first poll…</span>
+  <span class="muted" style="margin-left:auto">Margins are D − R in points. Positive (blue) = Democrats ahead of the comparison.</span>
+</header>
+<main>
+  <section class="tiles" id="tiles"></section>
+
+  <section class="panel">
+    <h2>Running read: Democrats vs expectations over time</h2>
+    <div class="chartwrap"><svg id="chart" width="100%" height="260"></svg></div>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Races</h2>
+    <div class="scroll"><table id="races"><thead><tr>
+      <th>Race</th><th>Close ET</th><th>Est. in</th><th>Counties in / firm</th><th>Current</th>
+      <th title="Vote-weighted county margin minus expected margin (2024 county result + swing implied by polls)">vs expect</th>
+      <th title="Same, only counties with est. in ≥ firm threshold">firm vs expect</th>
+      <th title="Vote-weighted swing vs 2024 presidential, reporting counties">swing vs '24</th>
+      <th title="Vote-weighted swing vs 2022 baseline office, reporting counties">swing vs '22</th>
+      <th>Projected</th><th>Forecast</th><th>Proj − fcst</th><th>Status</th>
+    </tr></thead><tbody></tbody></table></div>
+    <p class="note">Expected county margin = 2024 presidential county margin + the statewide swing implied by the race's final polling average (or by the national generic ballot when no race average is set). "Est. in" = votes counted ÷ 2022 votes in that county. Partial counties are biased by vote type (early/mail usually lean D, Election Day leans R) — trust <b>firm</b> numbers more. Forecast: † = no race polling average, derived from the national generic ballot; * = low-confidence race average.</p>
+  </section>
+
+  <section class="panel">
+    <div class="controls"><h2 id="ctitle" style="margin:0">Counties</h2>
+      <label><input type="checkbox" id="onlyrep" checked> reporting only</label></div>
+    <div class="scroll" style="max-height:520px;overflow-y:auto"><table id="counties"><thead><tr>
+      <th data-k="county">County</th><th data-k="est_in">Est. in</th><th data-k="votes">Votes</th><th data-k="actual">Actual</th>
+      <th data-k="expected">Expected</th><th data-k="vs_expect">vs expect</th><th data-k="base24">2024 pres</th>
+      <th data-k="swing24">swing vs '24</th><th data-k="base22">2022</th><th data-k="swing22">swing vs '22</th>
+    </tr></thead><tbody></tbody></table></div>
+  </section>
+</main>
+<script>
+const COLORS=["#7b61ff","#00a3a3","#e07a00","#d6336c","#2f9e44","#1c7ed6","#ae3ec9","#f08c00","#868e96","#0ca678","#5c7cfa","#e8590c"];
+let sel=null,sortK="votes",sortDir=-1,hidden=new Set(),last=null;
+const $=s=>document.querySelector(s);
+const m=(x,nd=1)=>x==null?"—":(x>=0?"D+":"R+")+Math.abs(x).toFixed(nd);
+const cls=x=>x==null?"":(x>=0?"d":"r");
+const pct=x=>x==null?"—":(x*100).toFixed(0)+"%";
+const n=x=>x==null?"—":Math.round(x).toLocaleString();
+function tile(k,v,s,hero){return `<div class="tile${hero?" hero":""}"><div class="k">${k}</div><div class="v ${cls(v)}">${m(v)}</div><div class="s">${s||""}</div></div>`}
+function render(data){
+  const s=data.snapshot; if(!s) return; last=data;
+  $("#mode").textContent=s.demo?"DEMO":"LIVE"; $("#mode").className="badge "+(s.demo?"demo":"live");
+  $("#ts").textContent="updated "+new Date(s.ts).toLocaleTimeString()+" · "+s.overall.races_reporting+" races reporting · "+n(s.overall.votes)+" votes";
+  const o=s.overall;
+  $("#tiles").innerHTML=
+    tile("Democrats vs expectations (all reporting counties)",o.vs_expect,"vote-weighted across races; positive = Dems beating polls",true)+
+    tile("Firm counties only",o.firm_vs_expect,`counties ≥ ${Math.round(s.firm_threshold*100)}% in — least vote-type bias`)+
+    tile("Implied national environment",o.implied_generic,`polls: ${m(o.generic_ballot)} generic ballot · firm: ${m(o.implied_generic_firm)}`)+
+    tile("Swing vs 2024 president",o.swing24,`2024 national: ${m(s.national.pres_2024_margin)}`)+
+    tile("Swing vs 2022 midterm",o.swing22,`2022 House national: ${m(s.national.house_2022_margin)}`);
+  const tb=$("#races tbody"); tb.innerHTML="";
+  if(!sel){const f=s.races.find(r=>r.votes)||s.races[0]; sel=f&&f.id;}
+  s.races.forEach(r=>{
+    const tr=document.createElement("tr"); if(r.id===sel) tr.className="sel";
+    const err=(r.status||"").startsWith("error")||(r.status||"").startsWith("no feed");
+    tr.innerHTML=`<td><b>${r.label}</b>${r.dem_name?`<div class="muted" style="font-size:11px">${r.dem_name} v ${r.rep_name}</div>`:""}</td>
+      <td>${r.polls_close_et||""}</td><td>${pct(r.est_in)}<span class="bar" style="width:${Math.min(40,r.est_in*40)}px"></span></td>
+      <td>${r.counties_reporting} / ${r.counties_firm} of ${r.counties_total}</td>
+      <td class="${cls(r.current_margin)}">${m(r.current_margin)}</td>
+      <td class="${cls(r.vs_expect)}"><b>${m(r.vs_expect)}</b></td>
+      <td class="${cls(r.firm_vs_expect)} firm">${m(r.firm_vs_expect)}</td>
+      <td class="${cls(r.swing24)}">${m(r.swing24)}</td><td class="${cls(r.swing22)}">${m(r.swing22)}</td>
+      <td class="${cls(r.projected)}">${m(r.projected)}</td>
+      <td class="${cls(r.forecast)}" title="${r.expect_source}${r.low_confidence?" (low confidence)":""}">${m(r.forecast)}${r.low_confidence?"*":""}${r.expect_source==="national generic ballot"?"†":""}</td>
+      <td class="${cls(r.projected_vs_forecast)}">${m(r.projected_vs_forecast)}</td>
+      <td class="status ${err?"err":""}" title="${(r.status||"").replace(/"/g,"'")}">${r.status||""} · ${r.fetch_seconds}s</td>`;
+    tr.onclick=()=>{sel=r.id;render(last)}; tb.appendChild(tr);
+  });
+  renderCounties(s.races.find(r=>r.id===sel));
+  renderChart(data.history,s.races);
+}
+function renderCounties(r){
+  if(!r) return; $("#ctitle").textContent="Counties — "+r.label+` (2022 baseline: ${r.baseline_2022_office})`;
+  let cs=r.counties.slice(); if($("#onlyrep").checked) cs=cs.filter(c=>c.votes>0);
+  cs.sort((a,b)=>{const x=a[sortK],y=b[sortK]; if(x==null) return 1; if(y==null) return -1; return (x>y?1:x<y?-1:0)*sortDir});
+  const thr=last.snapshot.firm_threshold;
+  $("#counties tbody").innerHTML=cs.map(c=>`<tr><td${c.est_in>=thr?' class="firm"':""}>${c.county}</td><td>${pct(c.est_in)}</td><td>${n(c.votes)}</td>
+    <td class="${cls(c.actual)}">${m(c.actual)}</td><td class="${cls(c.expected)}">${m(c.expected)}</td>
+    <td class="${cls(c.vs_expect)}"><b>${m(c.vs_expect)}</b></td><td class="${cls(c.base24)}">${m(c.base24)}</td>
+    <td class="${cls(c.swing24)}">${m(c.swing24)}</td><td class="${cls(c.base22)}">${m(c.base22)}</td>
+    <td class="${cls(c.swing22)}">${m(c.swing22)}</td></tr>`).join("");
+}
+document.querySelectorAll("#counties th").forEach(th=>th.onclick=()=>{const k=th.dataset.k; if(sortK===k) sortDir*=-1; else {sortK=k;sortDir=-1}; last&&render(last)});
+$("#onlyrep").onchange=()=>last&&render(last);
+function renderChart(hist,races){
+  const svg=$("#chart"); const W=svg.clientWidth||800,H=260,L=48,R=10,T=10,B=24;
+  const series=[{id:"__all",label:"All races",color:"var(--ink)",w:3,get:h=>h.overall.vs_expect},
+    {id:"__firm",label:"Firm counties",color:"var(--muted)",w:2,dash:"5 4",get:h=>h.overall.firm_vs_expect}];
+  races.forEach((r,i)=>series.push({id:r.id,label:r.id,color:COLORS[i%COLORS.length],w:1.5,get:h=>(h.races[r.id]||{}).vs_expect}));
+  const pts=hist.map(h=>({t:new Date(h.ts).getTime(),h}));
+  let lo=-2,hi=2;
+  series.forEach(s=>{if(hidden.has(s.id))return; pts.forEach(p=>{const v=s.get(p.h); if(v!=null){lo=Math.min(lo,v);hi=Math.max(hi,v)}})});
+  lo=Math.floor(lo-0.5);hi=Math.ceil(hi+0.5);
+  const t0=pts.length?pts[0].t:0,t1=pts.length?pts[pts.length-1].t:1, X=t=>L+(W-L-R)*(t1>t0?(t-t0)/(t1-t0):1), Y=v=>T+(H-T-B)*(hi-v)/(hi-lo);
+  let g=`<rect x="${L}" y="${T}" width="${W-L-R}" height="${Y(0)-T}" fill="var(--dem-bg)" opacity=".5"/><rect x="${L}" y="${Y(0)}" width="${W-L-R}" height="${H-B-Y(0)}" fill="var(--rep-bg)" opacity=".5"/>`;
+  const step=Math.max(1,Math.ceil((hi-lo)/6));
+  for(let v=Math.ceil(lo/step)*step;v<=hi;v+=step) g+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${v===0?"0":m(v,0)}</text>`;
+  if(pts.length){for(let i=0;i<5;i++){const t=t0+(t1-t0)*i/4; g+=`<text x="${X(t)}" y="${H-6}" text-anchor="middle">${new Date(t).toLocaleTimeString([], (t1-t0)<600000?{hour:"numeric",minute:"2-digit",second:"2-digit"}:{hour:"numeric",minute:"2-digit"})}</text>`}}
+  series.forEach(s=>{ if(hidden.has(s.id)) return; let d="",pen=false;
+    pts.forEach(p=>{const v=s.get(p.h); if(v==null){pen=false;return} d+=(pen?"L":"M")+X(p.t).toFixed(1)+","+Y(v).toFixed(1); pen=true});
+    if(d) g+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.w}" ${s.dash?`stroke-dasharray="${s.dash}"`:""}/>`;});
+  svg.innerHTML=g;
+  $("#legend").innerHTML=series.map(s=>`<span data-id="${s.id}" class="${hidden.has(s.id)?"off":""}"><i style="background:${s.color}"></i>${s.label}</span>`).join("");
+  document.querySelectorAll("#legend span").forEach(el=>el.onclick=()=>{const id=el.dataset.id; hidden.has(id)?hidden.delete(id):hidden.add(id); render(last)});
+}
+// Serverless deploys return history:null -> keep the running history in the browser.
+const HKEY="en_hist"+location.search;
+let localHist=[];try{localHist=JSON.parse(localStorage.getItem(HKEY)||"[]")}catch(e){}
+function histRow(s){const races={};s.races.forEach(r=>{races[r.id]={vs_expect:r.vs_expect,firm_vs_expect:r.firm_vs_expect,projected:r.projected,projected_vs_forecast:r.projected_vs_forecast,est_in:r.est_in,votes:r.votes}});return {ts:s.ts,overall:s.overall,races}}
+async function tick(){try{const r=await fetch("/api/state"+location.search,{cache:"no-store"}); const data=await r.json();
+  if(data.error) throw new Error(data.error);
+  if(data.history==null&&data.snapshot){const h=histRow(data.snapshot); if(!localHist.length||localHist[localHist.length-1].ts!==h.ts){localHist.push(h); localHist=localHist.slice(-1500); try{localStorage.setItem(HKEY,JSON.stringify(localHist))}catch(e){}} data.history=localHist}
+  render(data)}catch(e){$("#ts").textContent="server unreachable: "+e}}
+tick(); setInterval(tick,10000); addEventListener("resize",()=>last&&render(last));
+</script>
+</body>
+</html>
