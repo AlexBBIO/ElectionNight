@@ -239,6 +239,7 @@ def attach_markets(results: list[dict], snap: dict, cfg: dict) -> None:
         now = l_.get("implied_margin_now")
         r["market_margin_now"] = now
         r["market_move"] = None if (now is None or r["market_margin"] is None) else now - r["market_margin"]
+        r["market_p_now"] = l_.get("p_dem_now")
         r["rw_vs_market"] = None
         if r["market_margin"] is not None and r.get("rw_projected") is not None:
             r["rw_vs_market"] = r["rw_projected"] - r["market_margin"]

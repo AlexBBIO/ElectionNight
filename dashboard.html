@@ -217,7 +217,7 @@ function render(data){const s=data.snapshot;if(!s)return;if(last!==data)scoreBat
       <td class="sep">${r.votes?pct(r.adj_est_in):"—"}<span class="bar"><i style="width:${Math.min(100,(r.adj_est_in||0)*100)}%"></i></span></td>
       <td class="${cls(r.rw_projected)}">${m(r.rw_projected)}</td>
       <td class="sep ${cls(r.rw_vs_expect)}"><b>${m(r.rw_vs_expect)}</b></td><td class="${cls(r.rw_vs_market)}"><b>${m(r.rw_vs_market)}</b></td>
-      <td class="sep ${cls(r.market_move)}">${m(r.market_move)}</td></tr>`}).join("");
+      <td class="sep ${cls(r.market_move)}" title="Change in bracket-implied margin since 6 AM ET; win probability now vs 6 AM alongside">${m(r.market_move)}${r.market_p_now!=null&&r.market_p_dem!=null?` <span class="faint">${Math.round(r.market_p_now*100)}% (${r.market_p_now>=r.market_p_dem?"+":""}${Math.round((r.market_p_now-r.market_p_dem)*100)})</span>`:""}</td></tr>`}).join("");
   document.querySelectorAll("#races tbody tr").forEach(tr=>tr.onclick=()=>{sel=sel===tr.dataset.id?null:tr.dataset.id;render(last)});
   renderDetail(s.races.find(r=>r.id===sel));
   renderChart(data.history||[],s.races);renderCheckins(ck);renderEV(s);renderTVE(s);renderMore(s);}
