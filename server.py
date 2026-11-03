@@ -105,8 +105,16 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
     races = cfg["races"]
     results = [None] * len(races)
 
+    skip = set(cfg.get("skip_feeds") or [])
+
     def work(i, race):
         t = time.time()
+        if race.get("feed") in skip:
+            res = engine.analyze_race(race, [], b, cfg)
+            res["status"] = "runs on the local version only (this state blocks cloud servers)"
+            res["fetch_seconds"] = 0.0
+            results[i] = res
+            return
         try:
             rows = fetcher(race, cfg["election"])
             res = engine.analyze_race(race, rows, b, cfg)
@@ -121,8 +129,19 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
         res["fetch_seconds"] = round(time.time() - t, 2)
         results[i] = res
 
-    with cf.ThreadPoolExecutor(max_workers=8) as ex:
-        list(ex.map(lambda a: work(*a), enumerate(races)))
+    # a hard deadline keeps the serverless endpoint inside its time limit: slow feeds are
+    # reported as timed out for this poll instead of holding up the whole response
+    deadline = cfg.get("deadline_s")
+    ex = cf.ThreadPoolExecutor(max_workers=12)
+    futs = [ex.submit(work, i, r) for i, r in enumerate(races)]
+    cf.wait(futs, timeout=deadline)
+    ex.shutdown(wait=False, cancel_futures=True)
+    for i, race in enumerate(races):
+        if results[i] is None:
+            res = engine.analyze_race(race, [], b, cfg)
+            res["status"] = f"timed out after {deadline:.0f}s this poll; retrying"
+            res["fetch_seconds"] = deadline
+            results[i] = res
     snap = {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "overall": engine.overall(results, cfg), "races": results,
             "national": cfg["national"], "firm_threshold": cfg.get("firm_threshold", 0.9)}
@@ -155,7 +174,14 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
             comb[f"proj_mix_{y % 100}"] = g(p26); comb[f"proj_d_{y % 100}"] = g(p26) - g(cy)
         pnl["combined"] = comb
     try:
-        attach_markets(results, snap, cfg)
+        mx = cf.ThreadPoolExecutor(max_workers=1)
+        fut = mx.submit(attach_markets, results, snap, cfg)
+        try:
+            fut.result(timeout=cfg.get("markets_deadline_s"))
+        except cf.TimeoutError:
+            cfg_b = dict(cfg, markets_mode="baseline")  # fall back to the frozen baseline only
+            attach_markets(results, snap, cfg_b)
+        mx.shutdown(wait=False)
     except Exception:  # noqa: BLE001
         traceback.print_exc()
     try:
@@ -185,12 +211,12 @@ def attach_markets(results: list[dict], snap: dict, cfg: dict) -> None:
                 base = json.loads(p.read_text()) if p.exists() else {}
             except ValueError:
                 base = {}
-            if mode == "live":
+            if mode in ("live", "baseline"):
                 try:
                     mod = importlib.import_module("election_night.feeds.markets")
                     if not base and hasattr(mod, "baseline"):
                         base = mod.baseline() or {}
-                    live = mod.fetch() or {}
+                    live = (mod.fetch() or {}) if mode == "live" else {}
                 except Exception:  # noqa: BLE001
                     live = {}
             _MK = (time.time(), (base, live))

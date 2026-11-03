@@ -1,0 +1,4218 @@
+{
+ "races": {
+  "KY-SEN": {
+   "p_dem": 0.032,
+   "implied_margin": -18.3,
+   "margin_brackets": [
+    {
+     "lo": null,
+     "hi": -45.0,
+     "p": 0.0409
+    },
+    {
+     "lo": -45.0,
+     "hi": -40.0,
+     "p": 0.0164
+    },
+    {
+     "lo": -40.0,
+     "hi": -35.0,
+     "p": 0.0139
+    },
+    {
+     "lo": -35.0,
+     "hi": -30.0,
+     "p": 0.0265
+    },
+    {
+     "lo": -30.0,
+     "hi": -25.0,
+     "p": 0.0462
+    },
+    {
+     "lo": -25.0,
+     "hi": -20.0,
+     "p": 0.2309
+    },
+    {
+     "lo": -20.0,
+     "hi": -15.0,
+     "p": 0.2742
+    },
+    {
+     "lo": -15.0,
+     "hi": -10.0,
+     "p": 0.202
+    },
+    {
+     "lo": -10.0,
+     "hi": 0.0,
+     "p": 0.113
+    },
+    {
+     "lo": 0.0,
+     "hi": null,
+     "p": 0.0361
+    }
+   ],
+   "margin_brackets_source": "polymarket",
+   "margin_from_p": -9.26,
+   "margin_method": "brackets",
+   "sources": {
+    "polymarket": {
+     "p_dem": 0.032,
+     "slug": "kentucky-senate-election-winner",
+     "volume": 56913,
+     "candidates": {
+      "D": "Charles Booker",
+      "R": "Andy Barr"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:17Z",
+      "newest": "2026-11-03T11:00:18Z"
+     },
+     "margin_slug": "kentucky-senate-margin-of-victory-2026",
+     "margin_volume": 25522,
+     "implied_margin_brackets": -18.3,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -45.0,
+       "p": 0.0409
+      },
+      {
+       "lo": -45.0,
+       "hi": -40.0,
+       "p": 0.0164
+      },
+      {
+       "lo": -40.0,
+       "hi": -35.0,
+       "p": 0.0139
+      },
+      {
+       "lo": -35.0,
+       "hi": -30.0,
+       "p": 0.0265
+      },
+      {
+       "lo": -30.0,
+       "hi": -25.0,
+       "p": 0.0462
+      },
+      {
+       "lo": -25.0,
+       "hi": -20.0,
+       "p": 0.2309
+      },
+      {
+       "lo": -20.0,
+       "hi": -15.0,
+       "p": 0.2742
+      },
+      {
+       "lo": -15.0,
+       "hi": -10.0,
+       "p": 0.202
+      },
+      {
+       "lo": -10.0,
+       "hi": 0.0,
+       "p": 0.113
+      },
+      {
+       "lo": 0.0,
+       "hi": null,
+       "p": 0.0361
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T11:00:18Z",
+      "newest": "2026-11-03T11:00:22Z"
+     }
+    }
+   },
+   "p_dem_now": 0.0344,
+   "implied_margin_now": -17.49,
+   "margin_brackets_now": [
+    {
+     "lo": null,
+     "hi": -45.0,
+     "p": 0.0292
+    },
+    {
+     "lo": -45.0,
+     "hi": -40.0,
+     "p": 0.0349
+    },
+    {
+     "lo": -40.0,
+     "hi": -35.0,
+     "p": 0.0163
+    },
+    {
+     "lo": -35.0,
+     "hi": -30.0,
+     "p": 0.0263
+    },
+    {
+     "lo": -30.0,
+     "hi": -25.0,
+     "p": 0.0464
+    },
+    {
+     "lo": -25.0,
+     "hi": -20.0,
+     "p": 0.1245
+    },
+    {
+     "lo": -20.0,
+     "hi": -15.0,
+     "p": 0.292
+    },
+    {
+     "lo": -15.0,
+     "hi": -10.0,
+     "p": 0.2681
+    },
+    {
+     "lo": -10.0,
+     "hi": 0.0,
+     "p": 0.135
+    },
+    {
+     "lo": 0.0,
+     "hi": null,
+     "p": 0.0273
+    }
+   ],
+   "margin_brackets_source_now": "polymarket",
+   "margin_from_p_now": -9.1,
+   "margin_method_now": "brackets",
+   "sources_now": {
+    "polymarket": {
+     "p_dem": 0.0344,
+     "slug": "kentucky-senate-election-winner",
+     "volume": 56913,
+     "candidates": {
+      "D": "Charles Booker",
+      "R": "Andy Barr"
+     },
+     "updated": "2026-11-03T19:39:34Z",
+     "stale": false,
+     "margin_slug": "kentucky-senate-margin-of-victory-2026",
+     "margin_volume": 25522,
+     "implied_margin_brackets": -17.49,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -45.0,
+       "p": 0.0292
+      },
+      {
+       "lo": -45.0,
+       "hi": -40.0,
+       "p": 0.0349
+      },
+      {
+       "lo": -40.0,
+       "hi": -35.0,
+       "p": 0.0163
+      },
+      {
+       "lo": -35.0,
+       "hi": -30.0,
+       "p": 0.0263
+      },
+      {
+       "lo": -30.0,
+       "hi": -25.0,
+       "p": 0.0464
+      },
+      {
+       "lo": -25.0,
+       "hi": -20.0,
+       "p": 0.1245
+      },
+      {
+       "lo": -20.0,
+       "hi": -15.0,
+       "p": 0.292
+      },
+      {
+       "lo": -15.0,
+       "hi": -10.0,
+       "p": 0.2681
+      },
+      {
+       "lo": -10.0,
+       "hi": 0.0,
+       "p": 0.135
+      },
+      {
+       "lo": 0.0,
+       "hi": null,
+       "p": 0.0273
+      }
+     ]
+    }
+   },
+   "move": 0.81
+  },
+  "IN-SOS": {
+   "p_dem": 0.5778,
+   "implied_margin": 0.98,
+   "margin_brackets": null,
+   "margin_brackets_source": null,
+   "margin_from_p": 0.98,
+   "margin_method": "p_dem",
+   "sources": {
+    "kalshi": {
+     "p_dem": 0.5771,
+     "ticker": "KXSECSTATEIN-26",
+     "volume": 75138,
+     "volume_24h": 17939,
+     "candidates": {
+      "D": "Beau Bayh",
+      "R": "Max Engling"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
+    "polymarket": {
+     "p_dem": 0.5808,
+     "slug": "indiana-secretary-of-state-election-winner-2026",
+     "volume": 16120,
+     "candidates": {
+      "D": "Beau Bayh",
+      "R": "Max Engling"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:16Z",
+      "newest": "2026-11-03T11:00:18Z"
+     }
+    }
+   },
+   "p_dem_now": 0.6354,
+   "implied_margin_now": 1.73,
+   "margin_brackets_now": null,
+   "margin_brackets_source_now": null,
+   "margin_from_p_now": 1.73,
+   "margin_method_now": "p_dem",
+   "sources_now": {
+    "kalshi": {
+     "p_dem": 0.6355,
+     "ticker": "KXSECSTATEIN-26",
+     "volume": 75138,
+     "volume_24h": 17939,
+     "candidates": {
+      "D": "Beau Bayh",
+      "R": "Max Engling"
+     },
+     "updated": "2026-11-03T19:38:31Z",
+     "stale": false
+    },
+    "polymarket": {
+     "p_dem": 0.635,
+     "slug": "indiana-secretary-of-state-election-winner-2026",
+     "volume": 16120,
+     "candidates": {
+      "D": "Beau Bayh",
+      "R": "Max Engling"
+     },
+     "updated": "2026-11-03T19:39:34Z",
+     "stale": false
+    }
+   },
+   "move": 0.75
+  },
+  "IN-HOUSE": {
+   "p_dem": null,
+   "implied_margin": null,
+   "margin_brackets": null,
+   "margin_brackets_source": null,
+   "margin_from_p": null,
+   "margin_method": null,
+   "sources": {},
+   "p_dem_now": null,
+   "implied_margin_now": null,
+   "margin_brackets_now": null,
+   "margin_brackets_source_now": null,
+   "margin_from_p_now": null,
+   "margin_method_now": null,
+   "sources_now": {},
+   "move": null
+  },
+  "FL-GOV": {
+   "p_dem": 0.3738,
+   "implied_margin": -1.83,
+   "margin_brackets": [
+    {
+     "lo": null,
+     "hi": -18.0,
+     "p": 0.002
+    },
+    {
+     "lo": -18.0,
+     "hi": -15.0,
+     "p": 0.0055
+    },
+    {
+     "lo": -15.0,
+     "hi": -12.0,
+     "p": 0.01
+    },
+    {
+     "lo": -12.0,
+     "hi": -9.0,
+     "p": 0.0733
+    },
+    {
+     "lo": -9.0,
+     "hi": -6.0,
+     "p": 0.0883
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.2158
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.2709
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.2449
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.0432
+    },
+    {
+     "lo": 6.0,
+     "hi": null,
+     "p": 0.0462
+    }
+   ],
+   "margin_brackets_source": "polymarket",
+   "margin_from_p": -1.61,
+   "margin_method": "brackets",
+   "sources": {
+    "kalshi": {
+     "p_dem": 0.375,
+     "ticker": "GOVPARTYFL-26",
+     "volume": 19078227,
+     "volume_24h": 8074140,
+     "candidates": {
+      "D": "David Jolly",
+      "R": "Byron Donalds"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-GOVPARTYFL-26",
+     "margin_volume": 43187,
+     "implied_margin_brackets": -1.36,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -16.0,
+       "p": 0.0094
+      },
+      {
+       "lo": -16.0,
+       "hi": -14.0,
+       "p": 0.0094
+      },
+      {
+       "lo": -14.0,
+       "hi": -12.0,
+       "p": 0.0094
+      },
+      {
+       "lo": -12.0,
+       "hi": -10.0,
+       "p": 0.0141
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.0423
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0798
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.1315
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.1596
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1737
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.1549
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.0986
+      },
+      {
+       "lo": 4.0,
+       "hi": null,
+       "p": 0.1174
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T07:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
+    "polymarket": {
+     "p_dem": 0.365,
+     "slug": "florida-governor-winner-2026",
+     "volume": 2672627,
+     "candidates": {
+      "D": "David Jolly",
+      "R": "Byron Donalds"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:17Z",
+      "newest": "2026-11-03T11:00:21Z"
+     },
+     "margin_slug": "florida-governor-margin-of-victory-2026",
+     "margin_volume": 112525,
+     "implied_margin_brackets": -2.01,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -18.0,
+       "p": 0.002
+      },
+      {
+       "lo": -18.0,
+       "hi": -15.0,
+       "p": 0.0055
+      },
+      {
+       "lo": -15.0,
+       "hi": -12.0,
+       "p": 0.01
+      },
+      {
+       "lo": -12.0,
+       "hi": -9.0,
+       "p": 0.0733
+      },
+      {
+       "lo": -9.0,
+       "hi": -6.0,
+       "p": 0.0883
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.2158
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.2709
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.2449
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.0432
+      },
+      {
+       "lo": 6.0,
+       "hi": null,
+       "p": 0.0462
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T11:00:16Z",
+      "newest": "2026-11-03T11:00:23Z"
+     }
+    }
+   },
+   "p_dem_now": 0.3717,
+   "implied_margin_now": -2.95,
+   "margin_brackets_now": [
+    {
+     "lo": null,
+     "hi": -18.0,
+     "p": 0.0345
+    },
+    {
+     "lo": -18.0,
+     "hi": -15.0,
+     "p": 0.0161
+    },
+    {
+     "lo": -15.0,
+     "hi": -12.0,
+     "p": 0.0446
+    },
+    {
+     "lo": -12.0,
+     "hi": -9.0,
+     "p": 0.0653
+    },
+    {
+     "lo": -9.0,
+     "hi": -6.0,
+     "p": 0.1329
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.1564
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.2116
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.2576
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.0478
+    },
+    {
+     "lo": 6.0,
+     "hi": null,
+     "p": 0.0331
+    }
+   ],
+   "margin_brackets_source_now": "polymarket",
+   "margin_from_p_now": -1.64,
+   "margin_method_now": "brackets",
+   "sources_now": {
+    "kalshi": {
+     "p_dem": 0.3687,
+     "ticker": "GOVPARTYFL-26",
+     "volume": 19078227,
+     "volume_24h": 8074140,
+     "candidates": {
+      "D": "David Jolly",
+      "R": "Byron Donalds"
+     },
+     "updated": "2026-11-03T19:38:31Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-GOVPARTYFL-26",
+     "margin_volume": 43187,
+     "implied_margin_brackets": -1.78,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -16.0,
+       "p": 0.0088
+      },
+      {
+       "lo": -16.0,
+       "hi": -14.0,
+       "p": 0.0088
+      },
+      {
+       "lo": -14.0,
+       "hi": -12.0,
+       "p": 0.0088
+      },
+      {
+       "lo": -12.0,
+       "hi": -10.0,
+       "p": 0.0132
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.0485
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0749
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.1366
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.1806
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1938
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.1542
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.0881
+      },
+      {
+       "lo": 4.0,
+       "hi": null,
+       "p": 0.0837
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.3929,
+     "slug": "florida-governor-winner-2026",
+     "volume": 2672627,
+     "candidates": {
+      "D": "David Jolly",
+      "R": "Byron Donalds"
+     },
+     "updated": "2026-11-03T19:39:34Z",
+     "stale": false,
+     "margin_slug": "florida-governor-margin-of-victory-2026",
+     "margin_volume": 112525,
+     "implied_margin_brackets": -3.4,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -18.0,
+       "p": 0.0345
+      },
+      {
+       "lo": -18.0,
+       "hi": -15.0,
+       "p": 0.0161
+      },
+      {
+       "lo": -15.0,
+       "hi": -12.0,
+       "p": 0.0446
+      },
+      {
+       "lo": -12.0,
+       "hi": -9.0,
+       "p": 0.0653
+      },
+      {
+       "lo": -9.0,
+       "hi": -6.0,
+       "p": 0.1329
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.1564
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.2116
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.2576
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.0478
+      },
+      {
+       "lo": 6.0,
+       "hi": null,
+       "p": 0.0331
+      }
+     ]
+    }
+   },
+   "move": -1.12
+  },
+  "FL-SEN": {
+   "p_dem": 0.1534,
+   "implied_margin": -5.24,
+   "margin_brackets": [
+    {
+     "lo": null,
+     "hi": -21.0,
+     "p": 0.0116
+    },
+    {
+     "lo": -21.0,
+     "hi": -18.0,
+     "p": 0.0453
+    },
+    {
+     "lo": -18.0,
+     "hi": -15.0,
+     "p": 0.0262
+    },
+    {
+     "lo": -15.0,
+     "hi": -12.0,
+     "p": 0.0156
+    },
+    {
+     "lo": -12.0,
+     "hi": -9.0,
+     "p": 0.1461
+    },
+    {
+     "lo": -9.0,
+     "hi": -6.0,
+     "p": 0.1511
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.2116
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.2222
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.1254
+    },
+    {
+     "lo": 3.0,
+     "hi": null,
+     "p": 0.0448
+    }
+   ],
+   "margin_brackets_source": "polymarket",
+   "margin_from_p": -5.11,
+   "margin_method": "brackets",
+   "sources": {
+    "kalshi": {
+     "p_dem": 0.155,
+     "ticker": "SENATEFLS-26",
+     "volume": 5702124,
+     "volume_24h": 1352338,
+     "candidates": {
+      "D": "Angie Nixon",
+      "R": "Ashley Moody"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-SENATEFLS-26",
+     "margin_volume": 15480,
+     "implied_margin_brackets": -5.28,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -16.0,
+       "p": 0.0419
+      },
+      {
+       "lo": -16.0,
+       "hi": -14.0,
+       "p": 0.0157
+      },
+      {
+       "lo": -14.0,
+       "hi": -12.0,
+       "p": 0.0262
+      },
+      {
+       "lo": -12.0,
+       "hi": -10.0,
+       "p": 0.0838
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.1099
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.1571
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.1675
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.1414
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1099
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.0785
+      },
+      {
+       "lo": 2.0,
+       "hi": null,
+       "p": 0.0681
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T07:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
+    "polymarket": {
+     "p_dem": 0.145,
+     "slug": "florida-senate-election-winner",
+     "volume": 1085809,
+     "candidates": {
+      "D": "Angie Nixon",
+      "R": "Ashley Moody"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:18Z",
+      "newest": "2026-11-03T11:00:18Z"
+     },
+     "margin_slug": "florida-senate-margin-of-victory-2026",
+     "margin_volume": 100260,
+     "implied_margin_brackets": -5.23,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -21.0,
+       "p": 0.0116
+      },
+      {
+       "lo": -21.0,
+       "hi": -18.0,
+       "p": 0.0453
+      },
+      {
+       "lo": -18.0,
+       "hi": -15.0,
+       "p": 0.0262
+      },
+      {
+       "lo": -15.0,
+       "hi": -12.0,
+       "p": 0.0156
+      },
+      {
+       "lo": -12.0,
+       "hi": -9.0,
+       "p": 0.1461
+      },
+      {
+       "lo": -9.0,
+       "hi": -6.0,
+       "p": 0.1511
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.2116
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.2222
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.1254
+      },
+      {
+       "lo": 3.0,
+       "hi": null,
+       "p": 0.0448
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T11:00:18Z",
+      "newest": "2026-11-03T11:00:23Z"
+     }
+    }
+   },
+   "p_dem_now": 0.1232,
+   "implied_margin_now": -5.93,
+   "margin_brackets_now": [
+    {
+     "lo": null,
+     "hi": -21.0,
+     "p": 0.0158
+    },
+    {
+     "lo": -21.0,
+     "hi": -18.0,
+     "p": 0.0182
+    },
+    {
+     "lo": -18.0,
+     "hi": -15.0,
+     "p": 0.0296
+    },
+    {
+     "lo": -15.0,
+     "hi": -12.0,
+     "p": 0.0882
+    },
+    {
+     "lo": -12.0,
+     "hi": -9.0,
+     "p": 0.1331
+    },
+    {
+     "lo": -9.0,
+     "hi": -6.0,
+     "p": 0.1429
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.2316
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.2356
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.0739
+    },
+    {
+     "lo": 3.0,
+     "hi": null,
+     "p": 0.031
+    }
+   ],
+   "margin_brackets_source_now": "polymarket",
+   "margin_from_p_now": -5.8,
+   "margin_method_now": "brackets",
+   "sources_now": {
+    "kalshi": {
+     "p_dem": 0.125,
+     "ticker": "SENATEFLS-26",
+     "volume": 5702124,
+     "volume_24h": 1352338,
+     "candidates": {
+      "D": "Angie Nixon",
+      "R": "Ashley Moody"
+     },
+     "updated": "2026-11-03T19:38:31Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-SENATEFLS-26",
+     "margin_volume": 15480,
+     "implied_margin_brackets": -5.79,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -16.0,
+       "p": 0.0455
+      },
+      {
+       "lo": -16.0,
+       "hi": -14.0,
+       "p": 0.0303
+      },
+      {
+       "lo": -14.0,
+       "hi": -12.0,
+       "p": 0.0657
+      },
+      {
+       "lo": -12.0,
+       "hi": -10.0,
+       "p": 0.0758
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.1061
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.1515
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.1465
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.1212
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.101
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.096
+      },
+      {
+       "lo": 2.0,
+       "hi": null,
+       "p": 0.0606
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.1139,
+     "slug": "florida-senate-election-winner",
+     "volume": 1085809,
+     "candidates": {
+      "D": "Angie Nixon",
+      "R": "Ashley Moody"
+     },
+     "updated": "2026-11-03T19:39:34Z",
+     "stale": false,
+     "margin_slug": "florida-senate-margin-of-victory-2026",
+     "margin_volume": 100260,
+     "implied_margin_brackets": -5.95,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -21.0,
+       "p": 0.0158
+      },
+      {
+       "lo": -21.0,
+       "hi": -18.0,
+       "p": 0.0182
+      },
+      {
+       "lo": -18.0,
+       "hi": -15.0,
+       "p": 0.0296
+      },
+      {
+       "lo": -15.0,
+       "hi": -12.0,
+       "p": 0.0882
+      },
+      {
+       "lo": -12.0,
+       "hi": -9.0,
+       "p": 0.1331
+      },
+      {
+       "lo": -9.0,
+       "hi": -6.0,
+       "p": 0.1429
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.2316
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.2356
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.0739
+      },
+      {
+       "lo": 3.0,
+       "hi": null,
+       "p": 0.031
+      }
+     ]
+    }
+   },
+   "move": -0.69
+  },
+  "GA-SEN": {
+   "p_dem": 0.9681,
+   "implied_margin": 11.36,
+   "margin_brackets": [
+    {
+     "lo": null,
+     "hi": -6.0,
+     "p": 0.0079
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.0099
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.0248
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.0268
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.0793
+    },
+    {
+     "lo": 6.0,
+     "hi": 9.0,
+     "p": 0.1239
+    },
+    {
+     "lo": 9.0,
+     "hi": 12.0,
+     "p": 0.2429
+    },
+    {
+     "lo": 12.0,
+     "hi": 15.0,
+     "p": 0.2925
+    },
+    {
+     "lo": 15.0,
+     "hi": 18.0,
+     "p": 0.1036
+    },
+    {
+     "lo": 18.0,
+     "hi": null,
+     "p": 0.0882
+    }
+   ],
+   "margin_brackets_source": "polymarket",
+   "margin_from_p": 9.27,
+   "margin_method": "brackets",
+   "sources": {
+    "kalshi": {
+     "p_dem": 0.9676,
+     "ticker": "SENATEGA-26",
+     "volume": 5057516,
+     "volume_24h": 993116,
+     "candidates": {
+      "D": "Jon Ossoff",
+      "R": "Mike Collins"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-SENATEGA-26",
+     "margin_volume": 21671,
+     "implied_margin_brackets": 11.23,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -2.0,
+       "p": 0.0105
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.0158
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.0105
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.0474
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.0737
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.0947
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.1526
+      },
+      {
+       "lo": 10.0,
+       "hi": 12.0,
+       "p": 0.1632
+      },
+      {
+       "lo": 12.0,
+       "hi": 14.0,
+       "p": 0.1421
+      },
+      {
+       "lo": 14.0,
+       "hi": 16.0,
+       "p": 0.1105
+      },
+      {
+       "lo": 16.0,
+       "hi": 18.0,
+       "p": 0.0789
+      },
+      {
+       "lo": 18.0,
+       "hi": 20.0,
+       "p": 0.0632
+      },
+      {
+       "lo": 20.0,
+       "hi": null,
+       "p": 0.0368
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T06:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
+    "polymarket": {
+     "p_dem": 0.9715,
+     "slug": "georgia-senate-election-winner",
+     "volume": 726779,
+     "candidates": {
+      "D": "Jon Ossoff",
+      "R": "Mike Collins"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:20Z",
+      "newest": "2026-11-03T11:00:22Z"
+     },
+     "margin_slug": "georgia-senate-election-first-round-margin-of-victory-20260804175717495",
+     "margin_volume": 74331,
+     "implied_margin_brackets": 11.4,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -6.0,
+       "p": 0.0079
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.0099
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.0248
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.0268
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.0793
+      },
+      {
+       "lo": 6.0,
+       "hi": 9.0,
+       "p": 0.1239
+      },
+      {
+       "lo": 9.0,
+       "hi": 12.0,
+       "p": 0.2429
+      },
+      {
+       "lo": 12.0,
+       "hi": 15.0,
+       "p": 0.2925
+      },
+      {
+       "lo": 15.0,
+       "hi": 18.0,
+       "p": 0.1036
+      },
+      {
+       "lo": 18.0,
+       "hi": null,
+       "p": 0.0882
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T11:00:18Z",
+      "newest": "2026-11-03T11:00:23Z"
+     }
+    }
+   },
+   "p_dem_now": 0.9681,
+   "implied_margin_now": 10.76,
+   "margin_brackets_now": [
+    {
+     "lo": null,
+     "hi": -6.0,
+     "p": 0.0057
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.01
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.0214
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.0247
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.201
+    },
+    {
+     "lo": 6.0,
+     "hi": 9.0,
+     "p": 0.1331
+    },
+    {
+     "lo": 9.0,
+     "hi": 12.0,
+     "p": 0.1236
+    },
+    {
+     "lo": 12.0,
+     "hi": 15.0,
+     "p": 0.2804
+    },
+    {
+     "lo": 15.0,
+     "hi": 18.0,
+     "p": 0.1179
+    },
+    {
+     "lo": 18.0,
+     "hi": null,
+     "p": 0.0822
+    }
+   ],
+   "margin_brackets_source_now": "polymarket",
+   "margin_from_p_now": 9.27,
+   "margin_method_now": "brackets",
+   "sources_now": {
+    "kalshi": {
+     "p_dem": 0.9675,
+     "ticker": "SENATEGA-26",
+     "volume": 5057516,
+     "volume_24h": 993116,
+     "candidates": {
+      "D": "Jon Ossoff",
+      "R": "Mike Collins"
+     },
+     "updated": "2026-11-03T19:38:31Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-SENATEGA-26",
+     "margin_volume": 21671,
+     "implied_margin_brackets": 10.9,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -2.0,
+       "p": 0.0103
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.0155
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.0258
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.0515
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.0619
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.1134
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.1495
+      },
+      {
+       "lo": 10.0,
+       "hi": 12.0,
+       "p": 0.1598
+      },
+      {
+       "lo": 12.0,
+       "hi": 14.0,
+       "p": 0.1443
+      },
+      {
+       "lo": 14.0,
+       "hi": 16.0,
+       "p": 0.1031
+      },
+      {
+       "lo": 16.0,
+       "hi": 18.0,
+       "p": 0.0876
+      },
+      {
+       "lo": 18.0,
+       "hi": 20.0,
+       "p": 0.0412
+      },
+      {
+       "lo": 20.0,
+       "hi": null,
+       "p": 0.0361
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.9725,
+     "slug": "georgia-senate-election-winner",
+     "volume": 726779,
+     "candidates": {
+      "D": "Jon Ossoff",
+      "R": "Mike Collins"
+     },
+     "updated": "2026-11-03T19:39:34Z",
+     "stale": false,
+     "margin_slug": "georgia-senate-election-first-round-margin-of-victory-20260804175717495",
+     "margin_volume": 74331,
+     "implied_margin_brackets": 10.72,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -6.0,
+       "p": 0.0057
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.01
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.0214
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.0247
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.201
+      },
+      {
+       "lo": 6.0,
+       "hi": 9.0,
+       "p": 0.1331
+      },
+      {
+       "lo": 9.0,
+       "hi": 12.0,
+       "p": 0.1236
+      },
+      {
+       "lo": 12.0,
+       "hi": 15.0,
+       "p": 0.2804
+      },
+      {
+       "lo": 15.0,
+       "hi": 18.0,
+       "p": 0.1179
+      },
+      {
+       "lo": 18.0,
+       "hi": null,
+       "p": 0.0822
+      }
+     ]
+    }
+   },
+   "move": -0.6
+  },
+  "GA-GOV": {
+   "p_dem": 0.7192,
+   "implied_margin": 2.9,
+   "margin_brackets": null,
+   "margin_brackets_source": null,
+   "margin_from_p": 2.9,
+   "margin_method": "p_dem",
+   "sources": {
+    "kalshi": {
+     "p_dem": 0.7178,
+     "ticker": "GOVPARTYGA-26",
+     "volume": 4954808,
+     "volume_24h": 1080953,
+     "candidates": {
+      "D": "Keisha Lance Bottoms",
+      "R": "Rick Jackson"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
+    "polymarket": {
+     "p_dem": 0.7323,
+     "slug": "georgia-governor-winner-2026",
+     "volume": 548981,
+     "candidates": {
+      "D": "Keisha Lance Bottoms",
+      "R": "Rick Jackson"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:17Z",
+      "newest": "2026-11-03T11:00:17Z"
+     }
+    }
+   },
+   "p_dem_now": 0.705,
+   "implied_margin_now": 2.69,
+   "margin_brackets_now": null,
+   "margin_brackets_source_now": null,
+   "margin_from_p_now": 2.69,
+   "margin_method_now": "p_dem",
+   "sources_now": {
+    "kalshi": {
+     "p_dem": 0.705,
+     "ticker": "GOVPARTYGA-26",
+     "volume": 4954808,
+     "volume_24h": 1080953,
+     "candidates": {
+      "D": "Keisha Lance Bottoms",
+      "R": "Rick Jackson"
+     },
+     "updated": "2026-11-03T19:38:31Z",
+     "stale": false
+    },
+    "polymarket": {
+     "p_dem": 0.705,
+     "slug": "georgia-governor-winner-2026",
+     "volume": 548981,
+     "candidates": {
+      "D": "Keisha Lance Bottoms",
+      "R": "Rick Jackson"
+     },
+     "updated": "2026-11-03T19:39:34Z",
+     "stale": false
+    }
+   },
+   "move": -0.21
+  },
+  "VA-SEN": {
+   "p_dem": 0.9888,
+   "implied_margin": 20.85,
+   "margin_brackets": [
+    {
+     "lo": null,
+     "hi": -3.0,
+     "p": 0.0039
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.0136
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.019
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.0053
+    },
+    {
+     "lo": 6.0,
+     "hi": 9.0,
+     "p": 0.052
+    },
+    {
+     "lo": 9.0,
+     "hi": 12.0,
+     "p": 0.0277
+    },
+    {
+     "lo": 12.0,
+     "hi": 15.0,
+     "p": 0.0622
+    },
+    {
+     "lo": 15.0,
+     "hi": 18.0,
+     "p": 0.1259
+    },
+    {
+     "lo": 18.0,
+     "hi": 21.0,
+     "p": 0.1074
+    },
+    {
+     "lo": 21.0,
+     "hi": null,
+     "p": 0.5831
+    }
+   ],
+   "margin_brackets_source": "polymarket",
+   "margin_from_p": 10.27,
+   "margin_method": "brackets",
+   "sources": {
+    "kalshi": {
+     "p_dem": 0.988,
+     "ticker": "SENATEVA-26",
+     "volume": 142546,
+     "volume_24h": 58298,
+     "candidates": {
+      "D": "Mark Warner",
+      "R": "Bert Mizusawa"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
+    "polymarket": {
+     "p_dem": 0.993,
+     "slug": "virginia-senate-election-winner",
+     "volume": 26190,
+     "candidates": {
+      "D": "Mark Warner",
+      "R": "Bert Mizusawa"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:22Z",
+      "newest": "2026-11-03T11:00:22Z"
+     },
+     "margin_slug": "virginia-senate-margin-of-victory-2026",
+     "margin_volume": 21807,
+     "implied_margin_brackets": 20.85,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -3.0,
+       "p": 0.0039
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.0136
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.019
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.0053
+      },
+      {
+       "lo": 6.0,
+       "hi": 9.0,
+       "p": 0.052
+      },
+      {
+       "lo": 9.0,
+       "hi": 12.0,
+       "p": 0.0277
+      },
+      {
+       "lo": 12.0,
+       "hi": 15.0,
+       "p": 0.0622
+      },
+      {
+       "lo": 15.0,
+       "hi": 18.0,
+       "p": 0.1259
+      },
+      {
+       "lo": 18.0,
+       "hi": 21.0,
+       "p": 0.1074
+      },
+      {
+       "lo": 21.0,
+       "hi": null,
+       "p": 0.5831
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T11:00:17Z",
+      "newest": "2026-11-03T11:00:23Z"
+     }
+    }
+   },
+   "p_dem_now": 0.9875,
+   "implied_margin_now": 20.23,
+   "margin_brackets_now": [
+    {
+     "lo": null,
+     "hi": -3.0,
+     "p": 0.0035
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.0132
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.0212
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.0049
+    },
+    {
+     "lo": 6.0,
+     "hi": 9.0,
+     "p": 0.0384
+    },
+    {
+     "lo": 9.0,
+     "hi": 12.0,
+     "p": 0.026
+    },
+    {
+     "lo": 12.0,
+     "hi": 15.0,
+     "p": 0.0609
+    },
+    {
+     "lo": 15.0,
+     "hi": 18.0,
+     "p": 0.2162
+    },
+    {
+     "lo": 18.0,
+     "hi": 21.0,
+     "p": 0.1125
+    },
+    {
+     "lo": 21.0,
+     "hi": null,
+     "p": 0.5031
+    }
+   ],
+   "margin_brackets_source_now": "polymarket",
+   "margin_from_p_now": 10.27,
+   "margin_method_now": "brackets",
+   "sources_now": {
+    "kalshi": {
+     "p_dem": 0.9875,
+     "ticker": "SENATEVA-26",
+     "volume": 142546,
+     "volume_24h": 58298,
+     "candidates": {
+      "D": "Mark Warner",
+      "R": "Bert Mizusawa"
+     },
+     "updated": "2026-11-03T19:38:31Z",
+     "stale": false
+    },
+    "polymarket": {
+     "p_dem": 0.9875,
+     "slug": "virginia-senate-election-winner",
+     "volume": 26190,
+     "candidates": {
+      "D": "Mark Warner",
+      "R": "Bert Mizusawa"
+     },
+     "updated": "2026-11-03T19:39:34Z",
+     "stale": false,
+     "margin_slug": "virginia-senate-margin-of-victory-2026",
+     "margin_volume": 21807,
+     "implied_margin_brackets": 20.23,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -3.0,
+       "p": 0.0035
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.0132
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.0212
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.0049
+      },
+      {
+       "lo": 6.0,
+       "hi": 9.0,
+       "p": 0.0384
+      },
+      {
+       "lo": 9.0,
+       "hi": 12.0,
+       "p": 0.026
+      },
+      {
+       "lo": 12.0,
+       "hi": 15.0,
+       "p": 0.0609
+      },
+      {
+       "lo": 15.0,
+       "hi": 18.0,
+       "p": 0.2162
+      },
+      {
+       "lo": 18.0,
+       "hi": 21.0,
+       "p": 0.1125
+      },
+      {
+       "lo": 21.0,
+       "hi": null,
+       "p": 0.5031
+      }
+     ]
+    }
+   },
+   "move": -0.62
+  },
+  "SC-SEN": {
+   "p_dem": 0.3217,
+   "implied_margin": -1.8,
+   "margin_brackets": [
+    {
+     "lo": null,
+     "hi": -14.0,
+     "p": 0.01
+    },
+    {
+     "lo": -14.0,
+     "hi": -12.0,
+     "p": 0.01
+    },
+    {
+     "lo": -12.0,
+     "hi": -10.0,
+     "p": 0.01
+    },
+    {
+     "lo": -10.0,
+     "hi": -8.0,
+     "p": 0.04
+    },
+    {
+     "lo": -8.0,
+     "hi": -6.0,
+     "p": 0.07
+    },
+    {
+     "lo": -6.0,
+     "hi": -4.0,
+     "p": 0.13
+    },
+    {
+     "lo": -4.0,
+     "hi": -2.0,
+     "p": 0.15
+    },
+    {
+     "lo": -2.0,
+     "hi": 0.0,
+     "p": 0.185
+    },
+    {
+     "lo": 0.0,
+     "hi": 2.0,
+     "p": 0.23
+    },
+    {
+     "lo": 2.0,
+     "hi": 4.0,
+     "p": 0.1
+    },
+    {
+     "lo": 4.0,
+     "hi": 6.0,
+     "p": 0.025
+    },
+    {
+     "lo": 6.0,
+     "hi": null,
+     "p": 0.04
+    }
+   ],
+   "margin_brackets_source": "kalshi",
+   "margin_from_p": -2.32,
+   "margin_method": "brackets",
+   "sources": {
+    "kalshi": {
+     "p_dem": 0.325,
+     "ticker": "SENATESC-26",
+     "volume": 11022963,
+     "volume_24h": 1397322,
+     "candidates": {
+      "D": "Annie Andrews",
+      "R": "Darline Graham"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-SENATESC-26",
+     "margin_volume": 86263,
+     "implied_margin_brackets": -1.47,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -14.0,
+       "p": 0.01
+      },
+      {
+       "lo": -14.0,
+       "hi": -12.0,
+       "p": 0.01
+      },
+      {
+       "lo": -12.0,
+       "hi": -10.0,
+       "p": 0.01
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.04
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.07
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.13
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.15
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.185
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.23
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.025
+      },
+      {
+       "lo": 6.0,
+       "hi": null,
+       "p": 0.04
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T06:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
+    "polymarket": {
+     "p_dem": 0.305,
+     "slug": "south-carolina-senate-election-winner",
+     "volume": 2215842,
+     "candidates": {
+      "D": "Annie Andrews",
+      "R": "Darline Graham Nordone"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:21Z",
+      "newest": "2026-11-03T11:00:22Z"
+     },
+     "margin_slug": "south-carolina-senate-margin-of-victory-2026",
+     "margin_volume": 83100,
+     "implied_margin_brackets": -2.14,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -30.0,
+       "p": 0.0005
+      },
+      {
+       "lo": -30.0,
+       "hi": -25.0,
+       "p": 0.004
+      },
+      {
+       "lo": -25.0,
+       "hi": -20.0,
+       "p": 0.0074
+      },
+      {
+       "lo": -20.0,
+       "hi": -15.0,
+       "p": 0.0064
+      },
+      {
+       "lo": -15.0,
+       "hi": -10.0,
+       "p": 0.042
+      },
+      {
+       "lo": -10.0,
+       "hi": -5.0,
+       "p": 0.2324
+      },
+      {
+       "lo": -5.0,
+       "hi": 0.0,
+       "p": 0.4006
+      },
+      {
+       "lo": 0.0,
+       "hi": null,
+       "p": 0.3066
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T11:00:16Z",
+      "newest": "2026-11-03T11:00:22Z"
+     }
+    }
+   },
+   "p_dem_now": 0.2992,
+   "implied_margin_now": -2.08,
+   "margin_brackets_now": [
+    {
+     "lo": null,
+     "hi": -14.0,
+     "p": 0.0097
+    },
+    {
+     "lo": -14.0,
+     "hi": -12.0,
+     "p": 0.0097
+    },
+    {
+     "lo": -12.0,
+     "hi": -10.0,
+     "p": 0.0097
+    },
+    {
+     "lo": -10.0,
+     "hi": -8.0,
+     "p": 0.058
+    },
+    {
+     "lo": -8.0,
+     "hi": -6.0,
+     "p": 0.0966
+    },
+    {
+     "lo": -6.0,
+     "hi": -4.0,
+     "p": 0.1159
+    },
+    {
+     "lo": -4.0,
+     "hi": -2.0,
+     "p": 0.1546
+    },
+    {
+     "lo": -2.0,
+     "hi": 0.0,
+     "p": 0.1981
+    },
+    {
+     "lo": 0.0,
+     "hi": 2.0,
+     "p": 0.2174
+    },
+    {
+     "lo": 2.0,
+     "hi": 4.0,
+     "p": 0.0676
+    },
+    {
+     "lo": 4.0,
+     "hi": 6.0,
+     "p": 0.029
+    },
+    {
+     "lo": 6.0,
+     "hi": null,
+     "p": 0.0338
+    }
+   ],
+   "margin_brackets_source_now": "kalshi",
+   "margin_from_p_now": -2.63,
+   "margin_method_now": "brackets",
+   "sources_now": {
+    "kalshi": {
+     "p_dem": 0.298,
+     "ticker": "SENATESC-26",
+     "volume": 11022963,
+     "volume_24h": 1397322,
+     "candidates": {
+      "D": "Annie Andrews",
+      "R": "Darline Graham"
+     },
+     "updated": "2026-11-03T19:38:31Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-SENATESC-26",
+     "margin_volume": 86263,
+     "implied_margin_brackets": -1.92,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -14.0,
+       "p": 0.0097
+      },
+      {
+       "lo": -14.0,
+       "hi": -12.0,
+       "p": 0.0097
+      },
+      {
+       "lo": -12.0,
+       "hi": -10.0,
+       "p": 0.0097
+      },
+      {
+       "lo": -10.0,
+       "hi": -8.0,
+       "p": 0.058
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0966
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.1159
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.1546
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1981
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.2174
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.0676
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.029
+      },
+      {
+       "lo": 6.0,
+       "hi": null,
+       "p": 0.0338
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.305,
+     "slug": "south-carolina-senate-election-winner",
+     "volume": 2215842,
+     "candidates": {
+      "D": "Annie Andrews",
+      "R": "Darline Graham Nordone"
+     },
+     "updated": "2026-11-03T19:39:34Z",
+     "stale": false,
+     "margin_slug": "south-carolina-senate-margin-of-victory-2026",
+     "margin_volume": 83100,
+     "implied_margin_brackets": -2.25,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -30.0,
+       "p": 0.0005
+      },
+      {
+       "lo": -30.0,
+       "hi": -25.0,
+       "p": 0.004
+      },
+      {
+       "lo": -25.0,
+       "hi": -20.0,
+       "p": 0.0055
+      },
+      {
+       "lo": -20.0,
+       "hi": -15.0,
+       "p": 0.0065
+      },
+      {
+       "lo": -15.0,
+       "hi": -10.0,
+       "p": 0.0629
+      },
+      {
+       "lo": -10.0,
+       "hi": -5.0,
+       "p": 0.2113
+      },
+      {
+       "lo": -5.0,
+       "hi": 0.0,
+       "p": 0.4074
+      },
+      {
+       "lo": 0.0,
+       "hi": null,
+       "p": 0.3018
+      }
+     ]
+    }
+   },
+   "move": -0.28
+  },
+  "NC-SEN": {
+   "p_dem": 0.972,
+   "implied_margin": 14.12,
+   "margin_brackets": [
+    {
+     "lo": null,
+     "hi": -6.0,
+     "p": 0.0068
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.0048
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.0131
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.0198
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.03
+    },
+    {
+     "lo": 6.0,
+     "hi": 9.0,
+     "p": 0.0794
+    },
+    {
+     "lo": 9.0,
+     "hi": 12.0,
+     "p": 0.1888
+    },
+    {
+     "lo": 12.0,
+     "hi": 15.0,
+     "p": 0.2004
+    },
+    {
+     "lo": 15.0,
+     "hi": 18.0,
+     "p": 0.228
+    },
+    {
+     "lo": 18.0,
+     "hi": null,
+     "p": 0.2289
+    }
+   ],
+   "margin_brackets_source": "polymarket",
+   "margin_from_p": 9.55,
+   "margin_method": "brackets",
+   "sources": {
+    "kalshi": {
+     "p_dem": 0.9716,
+     "ticker": "SENATENC-26",
+     "volume": 6633598,
+     "volume_24h": 576677,
+     "candidates": {
+      "D": "Roy Cooper",
+      "R": "Michael Whatley"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-SENATENC-26",
+     "margin_volume": 35073,
+     "implied_margin_brackets": 13.33,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -2.0,
+       "p": 0.0088
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.0088
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.0088
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.0219
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.0395
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.0789
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.1053
+      },
+      {
+       "lo": 10.0,
+       "hi": 12.0,
+       "p": 0.136
+      },
+      {
+       "lo": 12.0,
+       "hi": 14.0,
+       "p": 0.1579
+      },
+      {
+       "lo": 14.0,
+       "hi": 16.0,
+       "p": 0.1316
+      },
+      {
+       "lo": 16.0,
+       "hi": 18.0,
+       "p": 0.114
+      },
+      {
+       "lo": 18.0,
+       "hi": 20.0,
+       "p": 0.0789
+      },
+      {
+       "lo": 20.0,
+       "hi": 22.0,
+       "p": 0.0482
+      },
+      {
+       "lo": 22.0,
+       "hi": null,
+       "p": 0.0614
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T01:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
+    "polymarket": {
+     "p_dem": 0.977,
+     "slug": "north-carolina-senate-election-winner",
+     "volume": 462778,
+     "candidates": {
+      "D": "Roy Cooper",
+      "R": "Michael Whatley"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:18Z",
+      "newest": "2026-11-03T11:00:20Z"
+     },
+     "margin_slug": "north-carolina-senate-margin-of-victory-2026",
+     "margin_volume": 116453,
+     "implied_margin_brackets": 14.36,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -6.0,
+       "p": 0.0068
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.0048
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.0131
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.0198
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.03
+      },
+      {
+       "lo": 6.0,
+       "hi": 9.0,
+       "p": 0.0794
+      },
+      {
+       "lo": 9.0,
+       "hi": 12.0,
+       "p": 0.1888
+      },
+      {
+       "lo": 12.0,
+       "hi": 15.0,
+       "p": 0.2004
+      },
+      {
+       "lo": 15.0,
+       "hi": 18.0,
+       "p": 0.228
+      },
+      {
+       "lo": 18.0,
+       "hi": null,
+       "p": 0.2289
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T11:00:18Z",
+      "newest": "2026-11-03T11:00:23Z"
+     }
+    }
+   },
+   "p_dem_now": 0.9723,
+   "implied_margin_now": 13.69,
+   "margin_brackets_now": [
+    {
+     "lo": null,
+     "hi": -6.0,
+     "p": 0.0081
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.0038
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.0138
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.0272
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.0296
+    },
+    {
+     "lo": 6.0,
+     "hi": 9.0,
+     "p": 0.1082
+    },
+    {
+     "lo": 9.0,
+     "hi": 12.0,
+     "p": 0.1954
+    },
+    {
+     "lo": 12.0,
+     "hi": 15.0,
+     "p": 0.1878
+    },
+    {
+     "lo": 15.0,
+     "hi": 18.0,
+     "p": 0.2197
+    },
+    {
+     "lo": 18.0,
+     "hi": null,
+     "p": 0.2064
+    }
+   ],
+   "margin_brackets_source_now": "polymarket",
+   "margin_from_p_now": 9.58,
+   "margin_method_now": "brackets",
+   "sources_now": {
+    "kalshi": {
+     "p_dem": 0.972,
+     "ticker": "SENATENC-26",
+     "volume": 6633598,
+     "volume_24h": 576677,
+     "candidates": {
+      "D": "Roy Cooper",
+      "R": "Michael Whatley"
+     },
+     "updated": "2026-11-03T19:38:31Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-SENATENC-26",
+     "margin_volume": 35073,
+     "implied_margin_brackets": 13.24,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -2.0,
+       "p": 0.0091
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.0091
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.0136
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.0182
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.0455
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.0864
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.1091
+      },
+      {
+       "lo": 10.0,
+       "hi": 12.0,
+       "p": 0.1409
+      },
+      {
+       "lo": 12.0,
+       "hi": 14.0,
+       "p": 0.15
+      },
+      {
+       "lo": 14.0,
+       "hi": 16.0,
+       "p": 0.1182
+      },
+      {
+       "lo": 16.0,
+       "hi": 18.0,
+       "p": 0.1
+      },
+      {
+       "lo": 18.0,
+       "hi": 20.0,
+       "p": 0.0727
+      },
+      {
+       "lo": 20.0,
+       "hi": 22.0,
+       "p": 0.0591
+      },
+      {
+       "lo": 22.0,
+       "hi": null,
+       "p": 0.0682
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.977,
+     "slug": "north-carolina-senate-election-winner",
+     "volume": 462778,
+     "candidates": {
+      "D": "Roy Cooper",
+      "R": "Michael Whatley"
+     },
+     "updated": "2026-11-03T19:39:34Z",
+     "stale": false,
+     "margin_slug": "north-carolina-senate-margin-of-victory-2026",
+     "margin_volume": 116453,
+     "implied_margin_brackets": 13.82,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -6.0,
+       "p": 0.0081
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.0038
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.0138
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.0272
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.0296
+      },
+      {
+       "lo": 6.0,
+       "hi": 9.0,
+       "p": 0.1082
+      },
+      {
+       "lo": 9.0,
+       "hi": 12.0,
+       "p": 0.1954
+      },
+      {
+       "lo": 12.0,
+       "hi": 15.0,
+       "p": 0.1878
+      },
+      {
+       "lo": 15.0,
+       "hi": 18.0,
+       "p": 0.2197
+      },
+      {
+       "lo": 18.0,
+       "hi": null,
+       "p": 0.2064
+      }
+     ]
+    }
+   },
+   "move": -0.43
+  },
+  "OH-SEN": {
+   "p_dem": 0.7093,
+   "implied_margin": 3.48,
+   "margin_brackets": [
+    {
+     "lo": null,
+     "hi": -12.0,
+     "p": 0.0058
+    },
+    {
+     "lo": -12.0,
+     "hi": -9.0,
+     "p": 0.0107
+    },
+    {
+     "lo": -9.0,
+     "hi": -6.0,
+     "p": 0.038
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.0673
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.1316
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.1803
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.2632
+    },
+    {
+     "lo": 6.0,
+     "hi": 9.0,
+     "p": 0.1559
+    },
+    {
+     "lo": 9.0,
+     "hi": 12.0,
+     "p": 0.0848
+    },
+    {
+     "lo": 12.0,
+     "hi": null,
+     "p": 0.0624
+    }
+   ],
+   "margin_brackets_source": "polymarket",
+   "margin_from_p": 2.76,
+   "margin_method": "brackets",
+   "sources": {
+    "kalshi": {
+     "p_dem": 0.7079,
+     "ticker": "SENATEOHS-26",
+     "volume": 11672398,
+     "volume_24h": 1605068,
+     "candidates": {
+      "D": "Sherrod Brown",
+      "R": "Jon Husted"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-SENATEOHS-26",
+     "margin_volume": 26227,
+     "implied_margin_brackets": 3.13,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -8.0,
+       "p": 0.0095
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0095
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0332
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0758
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.128
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.128
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1706
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.1564
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.1848
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.0664
+      },
+      {
+       "lo": 10.0,
+       "hi": 12.0,
+       "p": 0.019
+      },
+      {
+       "lo": 12.0,
+       "hi": null,
+       "p": 0.019
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T07:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
+    "polymarket": {
+     "p_dem": 0.715,
+     "slug": "ohio-senate-election-winner",
+     "volume": 2968851,
+     "candidates": {
+      "D": "Sherrod Brown",
+      "R": "Jon Husted"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:17Z",
+      "newest": "2026-11-03T11:00:18Z"
+     },
+     "margin_slug": "ohio-senate-margin-of-victory-2026",
+     "margin_volume": 86263,
+     "implied_margin_brackets": 3.58,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -12.0,
+       "p": 0.0058
+      },
+      {
+       "lo": -12.0,
+       "hi": -9.0,
+       "p": 0.0107
+      },
+      {
+       "lo": -9.0,
+       "hi": -6.0,
+       "p": 0.038
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.0673
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.1316
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.1803
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.2632
+      },
+      {
+       "lo": 6.0,
+       "hi": 9.0,
+       "p": 0.1559
+      },
+      {
+       "lo": 9.0,
+       "hi": 12.0,
+       "p": 0.0848
+      },
+      {
+       "lo": 12.0,
+       "hi": null,
+       "p": 0.0624
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T11:00:18Z",
+      "newest": "2026-11-03T11:00:22Z"
+     }
+    }
+   },
+   "p_dem_now": 0.7114,
+   "implied_margin_now": 2.99,
+   "margin_brackets_now": [
+    {
+     "lo": null,
+     "hi": -12.0,
+     "p": 0.0042
+    },
+    {
+     "lo": -12.0,
+     "hi": -9.0,
+     "p": 0.0182
+    },
+    {
+     "lo": -9.0,
+     "hi": -6.0,
+     "p": 0.0522
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.0717
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.1677
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.1444
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.2469
+    },
+    {
+     "lo": 6.0,
+     "hi": 9.0,
+     "p": 0.163
+    },
+    {
+     "lo": 9.0,
+     "hi": 12.0,
+     "p": 0.0755
+    },
+    {
+     "lo": 12.0,
+     "hi": null,
+     "p": 0.0564
+    }
+   ],
+   "margin_brackets_source_now": "polymarket",
+   "margin_from_p_now": 2.79,
+   "margin_method_now": "brackets",
+   "sources_now": {
+    "kalshi": {
+     "p_dem": 0.7079,
+     "ticker": "SENATEOHS-26",
+     "volume": 11672398,
+     "volume_24h": 1605068,
+     "candidates": {
+      "D": "Sherrod Brown",
+      "R": "Jon Husted"
+     },
+     "updated": "2026-11-03T19:38:31Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-SENATEOHS-26",
+     "margin_volume": 26227,
+     "implied_margin_brackets": 2.7,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -8.0,
+       "p": 0.0153
+      },
+      {
+       "lo": -8.0,
+       "hi": -6.0,
+       "p": 0.0153
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.051
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0969
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.1224
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.148
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1531
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.148
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.1276
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.0612
+      },
+      {
+       "lo": 10.0,
+       "hi": 12.0,
+       "p": 0.0255
+      },
+      {
+       "lo": 12.0,
+       "hi": null,
+       "p": 0.0357
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.725,
+     "slug": "ohio-senate-election-winner",
+     "volume": 2968851,
+     "candidates": {
+      "D": "Sherrod Brown",
+      "R": "Jon Husted"
+     },
+     "updated": "2026-11-03T19:39:34Z",
+     "stale": false,
+     "margin_slug": "ohio-senate-margin-of-victory-2026",
+     "margin_volume": 86263,
+     "implied_margin_brackets": 3.07,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -12.0,
+       "p": 0.0042
+      },
+      {
+       "lo": -12.0,
+       "hi": -9.0,
+       "p": 0.0182
+      },
+      {
+       "lo": -9.0,
+       "hi": -6.0,
+       "p": 0.0522
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.0717
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.1677
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.1444
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.2469
+      },
+      {
+       "lo": 6.0,
+       "hi": 9.0,
+       "p": 0.163
+      },
+      {
+       "lo": 9.0,
+       "hi": 12.0,
+       "p": 0.0755
+      },
+      {
+       "lo": 12.0,
+       "hi": null,
+       "p": 0.0564
+      }
+     ]
+    }
+   },
+   "move": -0.49
+  },
+  "OH-GOV": {
+   "p_dem": 0.8267,
+   "implied_margin": 4.54,
+   "margin_brackets": [
+    {
+     "lo": null,
+     "hi": -12.0,
+     "p": 0.0162
+    },
+    {
+     "lo": -12.0,
+     "hi": -9.0,
+     "p": 0.0122
+    },
+    {
+     "lo": -9.0,
+     "hi": -6.0,
+     "p": 0.0385
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.0538
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.0609
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.1521
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.2992
+    },
+    {
+     "lo": 6.0,
+     "hi": 9.0,
+     "p": 0.1658
+    },
+    {
+     "lo": 9.0,
+     "hi": 12.0,
+     "p": 0.106
+    },
+    {
+     "lo": 12.0,
+     "hi": null,
+     "p": 0.0953
+    }
+   ],
+   "margin_brackets_source": "polymarket",
+   "margin_from_p": 4.71,
+   "margin_method": "brackets",
+   "sources": {
+    "kalshi": {
+     "p_dem": 0.825,
+     "ticker": "GOVPARTYOH-26",
+     "volume": 10922320,
+     "volume_24h": 2680501,
+     "candidates": {
+      "D": "Amy Acton",
+      "R": "Vivek Ramaswamy"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     },
+     "margin_ticker": "KXGENERALMOV-GOVPARTYOH-26",
+     "margin_volume": 35624,
+     "implied_margin_brackets": 4.56,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -6.0,
+       "p": 0.0245
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0147
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0539
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.0882
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.1225
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1667
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.1765
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.1324
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.0833
+      },
+      {
+       "lo": 10.0,
+       "hi": 12.0,
+       "p": 0.0539
+      },
+      {
+       "lo": 12.0,
+       "hi": 14.0,
+       "p": 0.0245
+      },
+      {
+       "lo": 14.0,
+       "hi": 16.0,
+       "p": 0.0294
+      },
+      {
+       "lo": 16.0,
+       "hi": null,
+       "p": 0.0294
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T06:00:00Z",
+      "newest": "2026-11-03T11:00:00Z"
+     }
+    },
+    "polymarket": {
+     "p_dem": 0.835,
+     "slug": "ohio-governor-winner-2026",
+     "volume": 2174842,
+     "candidates": {
+      "D": "Amy Acton",
+      "R": "Vivek Ramaswamy"
+     },
+     "price_ts": {
+      "oldest": "2026-11-03T11:00:20Z",
+      "newest": "2026-11-03T11:00:20Z"
+     },
+     "margin_slug": "ohio-governor-margin-of-victory-2026",
+     "margin_volume": 54329,
+     "implied_margin_brackets": 4.53,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -12.0,
+       "p": 0.0162
+      },
+      {
+       "lo": -12.0,
+       "hi": -9.0,
+       "p": 0.0122
+      },
+      {
+       "lo": -9.0,
+       "hi": -6.0,
+       "p": 0.0385
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.0538
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.0609
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.1521
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.2992
+      },
+      {
+       "lo": 6.0,
+       "hi": 9.0,
+       "p": 0.1658
+      },
+      {
+       "lo": 9.0,
+       "hi": 12.0,
+       "p": 0.106
+      },
+      {
+       "lo": 12.0,
+       "hi": null,
+       "p": 0.0953
+      }
+     ],
+     "margin_price_ts": {
+      "oldest": "2026-11-03T11:00:16Z",
+      "newest": "2026-11-03T11:00:23Z"
+     }
+    }
+   },
+   "p_dem_now": 0.8167,
+   "implied_margin_now": 4.25,
+   "margin_brackets_now": [
+    {
+     "lo": null,
+     "hi": -12.0,
+     "p": 0.0143
+    },
+    {
+     "lo": -12.0,
+     "hi": -9.0,
+     "p": 0.0119
+    },
+    {
+     "lo": -9.0,
+     "hi": -6.0,
+     "p": 0.0168
+    },
+    {
+     "lo": -6.0,
+     "hi": -3.0,
+     "p": 0.0475
+    },
+    {
+     "lo": -3.0,
+     "hi": 0.0,
+     "p": 0.1038
+    },
+    {
+     "lo": 0.0,
+     "hi": 3.0,
+     "p": 0.1582
+    },
+    {
+     "lo": 3.0,
+     "hi": 6.0,
+     "p": 0.3262
+    },
+    {
+     "lo": 6.0,
+     "hi": 9.0,
+     "p": 0.1656
+    },
+    {
+     "lo": 9.0,
+     "hi": 12.0,
+     "p": 0.1102
+    },
+    {
+     "lo": 12.0,
+     "hi": null,
+     "p": 0.0455
+    }
+   ],
+   "margin_brackets_source_now": "polymarket",
+   "margin_from_p_now": 4.51,
+   "margin_method_now": "brackets",
+   "sources_now": {
+    "kalshi": {
+     "p_dem": 0.815,
+     "ticker": "GOVPARTYOH-26",
+     "volume": 10922320,
+     "volume_24h": 2680501,
+     "candidates": {
+      "D": "Amy Acton",
+      "R": "Vivek Ramaswamy"
+     },
+     "updated": "2026-11-03T19:38:31Z",
+     "stale": false,
+     "margin_ticker": "KXGENERALMOV-GOVPARTYOH-26",
+     "margin_volume": 35624,
+     "implied_margin_brackets": 4.62,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -6.0,
+       "p": 0.0136
+      },
+      {
+       "lo": -6.0,
+       "hi": -4.0,
+       "p": 0.0181
+      },
+      {
+       "lo": -4.0,
+       "hi": -2.0,
+       "p": 0.0498
+      },
+      {
+       "lo": -2.0,
+       "hi": 0.0,
+       "p": 0.086
+      },
+      {
+       "lo": 0.0,
+       "hi": 2.0,
+       "p": 0.1584
+      },
+      {
+       "lo": 2.0,
+       "hi": 4.0,
+       "p": 0.1674
+      },
+      {
+       "lo": 4.0,
+       "hi": 6.0,
+       "p": 0.1765
+      },
+      {
+       "lo": 6.0,
+       "hi": 8.0,
+       "p": 0.1131
+      },
+      {
+       "lo": 8.0,
+       "hi": 10.0,
+       "p": 0.0679
+      },
+      {
+       "lo": 10.0,
+       "hi": 12.0,
+       "p": 0.0543
+      },
+      {
+       "lo": 12.0,
+       "hi": 14.0,
+       "p": 0.0317
+      },
+      {
+       "lo": 14.0,
+       "hi": 16.0,
+       "p": 0.0317
+      },
+      {
+       "lo": 16.0,
+       "hi": null,
+       "p": 0.0317
+      }
+     ]
+    },
+    "polymarket": {
+     "p_dem": 0.825,
+     "slug": "ohio-governor-winner-2026",
+     "volume": 2174842,
+     "candidates": {
+      "D": "Amy Acton",
+      "R": "Vivek Ramaswamy"
+     },
+     "updated": "2026-11-03T19:39:34Z",
+     "stale": false,
+     "margin_slug": "ohio-governor-margin-of-victory-2026",
+     "margin_volume": 54329,
+     "implied_margin_brackets": 4.01,
+     "brackets": [
+      {
+       "lo": null,
+       "hi": -12.0,
+       "p": 0.0143
+      },
+      {
+       "lo": -12.0,
+       "hi": -9.0,
+       "p": 0.0119
+      },
+      {
+       "lo": -9.0,
+       "hi": -6.0,
+       "p": 0.0168
+      },
+      {
+       "lo": -6.0,
+       "hi": -3.0,
+       "p": 0.0475
+      },
+      {
+       "lo": -3.0,
+       "hi": 0.0,
+       "p": 0.1038
+      },
+      {
+       "lo": 0.0,
+       "hi": 3.0,
+       "p": 0.1582
+      },
+      {
+       "lo": 3.0,
+       "hi": 6.0,
+       "p": 0.3262
+      },
+      {
+       "lo": 6.0,
+       "hi": 9.0,
+       "p": 0.1656
+      },
+      {
+       "lo": 9.0,
+       "hi": 12.0,
+       "p": 0.1102
+      },
+      {
+       "lo": 12.0,
+       "hi": null,
+       "p": 0.0455
+      }
+     ]
+    }
+   },
+   "move": -0.29
+  }
+ },
+ "national": {
+  "senate_dem_control": 0.7538,
+  "senate_dem_control_sources": {
+   "kalshi": {
+    "p_dem": 0.7475,
+    "ticker": "CONTROLS-2026",
+    "volume": 37935958,
+    "price_ts": {
+     "oldest": "2026-11-03T11:00:00Z",
+     "newest": "2026-11-03T11:00:00Z"
+    }
+   },
+   "polymarket": {
+    "p_dem": 0.765,
+    "slug": "which-party-will-win-the-senate-in-2026",
+    "volume": 21001321,
+    "price_ts": {
+     "oldest": "2026-11-03T11:00:19Z",
+     "newest": "2026-11-03T11:00:21Z"
+    }
+   }
+  },
+  "house_dem_control": 0.94,
+  "house_dem_control_sources": {
+   "kalshi": {
+    "p_dem": 0.9381,
+    "ticker": "CONTROLH-2026",
+    "volume": 119438800,
+    "price_ts": {
+     "oldest": "2026-11-03T11:00:00Z",
+     "newest": "2026-11-03T11:00:00Z"
+    }
+   },
+   "polymarket": {
+    "p_dem": 0.945,
+    "slug": "which-party-will-win-the-house-in-2026",
+    "volume": 45813345,
+    "price_ts": {
+     "oldest": "2026-11-03T11:00:18Z",
+     "newest": "2026-11-03T11:00:22Z"
+    }
+   }
+  },
+  "house_popular_vote_margin": 10.02,
+  "house_popular_vote_brackets": [
+   {
+    "lo": null,
+    "hi": -6.0,
+    "p": 0.0024
+   },
+   {
+    "lo": -6.0,
+    "hi": -4.0,
+    "p": 0.0024
+   },
+   {
+    "lo": -4.0,
+    "hi": -2.0,
+    "p": 0.0052
+   },
+   {
+    "lo": -2.0,
+    "hi": 0.0,
+    "p": 0.0179
+   },
+   {
+    "lo": 0.0,
+    "hi": 2.0,
+    "p": 0.0165
+   },
+   {
+    "lo": 2.0,
+    "hi": 4.0,
+    "p": 0.0268
+   },
+   {
+    "lo": 4.0,
+    "hi": 6.0,
+    "p": 0.0565
+   },
+   {
+    "lo": 6.0,
+    "hi": 8.0,
+    "p": 0.1365
+   },
+   {
+    "lo": 8.0,
+    "hi": 10.0,
+    "p": 0.2494
+   },
+   {
+    "lo": 10.0,
+    "hi": 12.0,
+    "p": 0.2306
+   },
+   {
+    "lo": 12.0,
+    "hi": 14.0,
+    "p": 0.1351
+   },
+   {
+    "lo": 14.0,
+    "hi": 16.0,
+    "p": 0.0786
+   },
+   {
+    "lo": 16.0,
+    "hi": null,
+    "p": 0.0424
+   }
+  ],
+  "house_popular_vote_brackets_source": "polymarket",
+  "house_popular_vote_sources": {
+   "kalshi": {
+    "ticker": "KXHOUSEPOPVOTEMARGIND-26NOV03",
+    "volume": 83709,
+    "implied_margin": 10.41,
+    "brackets": [
+     {
+      "lo": null,
+      "hi": 2.0,
+      "p": 0.05
+     },
+     {
+      "lo": 2.0,
+      "hi": 4.0,
+      "p": 0.0
+     },
+     {
+      "lo": 4.0,
+      "hi": 5.0,
+      "p": 0.01
+     },
+     {
+      "lo": 5.0,
+      "hi": 6.0,
+      "p": 0.045
+     },
+     {
+      "lo": 6.0,
+      "hi": 7.0,
+      "p": 0.075
+     },
+     {
+      "lo": 7.0,
+      "hi": 8.0,
+      "p": 0.07
+     },
+     {
+      "lo": 8.0,
+      "hi": 9.0,
+      "p": 0.05
+     },
+     {
+      "lo": 9.0,
+      "hi": 10.0,
+      "p": 0.15
+     },
+     {
+      "lo": 10.0,
+      "hi": 11.0,
+      "p": 0.105
+     },
+     {
+      "lo": 11.0,
+      "hi": 12.0,
+      "p": 0.13
+     },
+     {
+      "lo": 12.0,
+      "hi": 13.0,
+      "p": 0.11
+     },
+     {
+      "lo": 13.0,
+      "hi": 14.0,
+      "p": 0.04
+     },
+     {
+      "lo": 14.0,
+      "hi": 16.0,
+      "p": 0.095
+     },
+     {
+      "lo": 16.0,
+      "hi": null,
+      "p": 0.07
+     }
+    ],
+    "price_ts": {
+     "oldest": "2026-11-03T02:00:00Z",
+     "newest": "2026-11-03T11:00:00Z"
+    }
+   },
+   "polymarket": {
+    "slug": "2026-midterms-house-popular-vote-margin-of-victory-224",
+    "volume": 213176,
+    "implied_margin": 9.87,
+    "brackets": [
+     {
+      "lo": null,
+      "hi": -6.0,
+      "p": 0.0024
+     },
+     {
+      "lo": -6.0,
+      "hi": -4.0,
+      "p": 0.0024
+     },
+     {
+      "lo": -4.0,
+      "hi": -2.0,
+      "p": 0.0052
+     },
+     {
+      "lo": -2.0,
+      "hi": 0.0,
+      "p": 0.0179
+     },
+     {
+      "lo": 0.0,
+      "hi": 2.0,
+      "p": 0.0165
+     },
+     {
+      "lo": 2.0,
+      "hi": 4.0,
+      "p": 0.0268
+     },
+     {
+      "lo": 4.0,
+      "hi": 6.0,
+      "p": 0.0565
+     },
+     {
+      "lo": 6.0,
+      "hi": 8.0,
+      "p": 0.1365
+     },
+     {
+      "lo": 8.0,
+      "hi": 10.0,
+      "p": 0.2494
+     },
+     {
+      "lo": 10.0,
+      "hi": 12.0,
+      "p": 0.2306
+     },
+     {
+      "lo": 12.0,
+      "hi": 14.0,
+      "p": 0.1351
+     },
+     {
+      "lo": 14.0,
+      "hi": 16.0,
+      "p": 0.0786
+     },
+     {
+      "lo": 16.0,
+      "hi": null,
+      "p": 0.0424
+     }
+    ],
+    "price_ts": {
+     "oldest": "2026-11-03T11:00:16Z",
+     "newest": "2026-11-03T11:00:23Z"
+    }
+   }
+  },
+  "senate_dem_control_now": 0.7404,
+  "senate_dem_control_sources_now": {
+   "kalshi": {
+    "p_dem": 0.7323,
+    "ticker": "CONTROLS-2026",
+    "volume": 37935958
+   },
+   "polymarket": {
+    "p_dem": 0.755,
+    "slug": "which-party-will-win-the-senate-in-2026",
+    "volume": 21001321
+   }
+  },
+  "house_dem_control_now": 0.9367,
+  "house_dem_control_sources_now": {
+   "kalshi": {
+    "p_dem": 0.9335,
+    "ticker": "CONTROLH-2026",
+    "volume": 119438800
+   },
+   "polymarket": {
+    "p_dem": 0.945,
+    "slug": "which-party-will-win-the-house-in-2026",
+    "volume": 45813345
+   }
+  },
+  "house_popular_vote_margin_now": 10.22,
+  "house_popular_vote_brackets_now": [
+   {
+    "lo": null,
+    "hi": -6.0,
+    "p": 0.001
+   },
+   {
+    "lo": -6.0,
+    "hi": -4.0,
+    "p": 0.002
+   },
+   {
+    "lo": -4.0,
+    "hi": -2.0,
+    "p": 0.004
+   },
+   {
+    "lo": -2.0,
+    "hi": 0.0,
+    "p": 0.0205
+   },
+   {
+    "lo": 0.0,
+    "hi": 2.0,
+    "p": 0.007
+   },
+   {
+    "lo": 2.0,
+    "hi": 4.0,
+    "p": 0.018
+   },
+   {
+    "lo": 4.0,
+    "hi": 6.0,
+    "p": 0.0549
+   },
+   {
+    "lo": 6.0,
+    "hi": 8.0,
+    "p": 0.1248
+   },
+   {
+    "lo": 8.0,
+    "hi": 10.0,
+    "p": 0.2546
+   },
+   {
+    "lo": 10.0,
+    "hi": 12.0,
+    "p": 0.2346
+   },
+   {
+    "lo": 12.0,
+    "hi": 14.0,
+    "p": 0.1568
+   },
+   {
+    "lo": 14.0,
+    "hi": 16.0,
+    "p": 0.0804
+   },
+   {
+    "lo": 16.0,
+    "hi": null,
+    "p": 0.0414
+   }
+  ],
+  "house_popular_vote_brackets_source_now": "polymarket",
+  "house_popular_vote_sources_now": {
+   "kalshi": {
+    "ticker": "KXHOUSEPOPVOTEMARGIND-26NOV03",
+    "volume": 83709,
+    "implied_margin": 10.42,
+    "brackets": [
+     {
+      "lo": null,
+      "hi": 2.0,
+      "p": 0.04
+     },
+     {
+      "lo": 2.0,
+      "hi": 4.0,
+      "p": 0.0
+     },
+     {
+      "lo": 4.0,
+      "hi": 5.0,
+      "p": 0.025
+     },
+     {
+      "lo": 5.0,
+      "hi": 6.0,
+      "p": 0.045
+     },
+     {
+      "lo": 6.0,
+      "hi": 7.0,
+      "p": 0.07
+     },
+     {
+      "lo": 7.0,
+      "hi": 8.0,
+      "p": 0.065
+     },
+     {
+      "lo": 8.0,
+      "hi": 9.0,
+      "p": 0.055
+     },
+     {
+      "lo": 9.0,
+      "hi": 10.0,
+      "p": 0.165
+     },
+     {
+      "lo": 10.0,
+      "hi": 11.0,
+      "p": 0.095
+     },
+     {
+      "lo": 11.0,
+      "hi": 12.0,
+      "p": 0.14
+     },
+     {
+      "lo": 12.0,
+      "hi": 13.0,
+      "p": 0.09
+     },
+     {
+      "lo": 13.0,
+      "hi": 14.0,
+      "p": 0.05
+     },
+     {
+      "lo": 14.0,
+      "hi": 16.0,
+      "p": 0.095
+     },
+     {
+      "lo": 16.0,
+      "hi": null,
+      "p": 0.065
+     }
+    ]
+   },
+   "polymarket": {
+    "slug": "2026-midterms-house-popular-vote-margin-of-victory-224",
+    "volume": 213176,
+    "implied_margin": 10.14,
+    "brackets": [
+     {
+      "lo": null,
+      "hi": -6.0,
+      "p": 0.001
+     },
+     {
+      "lo": -6.0,
+      "hi": -4.0,
+      "p": 0.002
+     },
+     {
+      "lo": -4.0,
+      "hi": -2.0,
+      "p": 0.004
+     },
+     {
+      "lo": -2.0,
+      "hi": 0.0,
+      "p": 0.0205
+     },
+     {
+      "lo": 0.0,
+      "hi": 2.0,
+      "p": 0.007
+     },
+     {
+      "lo": 2.0,
+      "hi": 4.0,
+      "p": 0.018
+     },
+     {
+      "lo": 4.0,
+      "hi": 6.0,
+      "p": 0.0549
+     },
+     {
+      "lo": 6.0,
+      "hi": 8.0,
+      "p": 0.1248
+     },
+     {
+      "lo": 8.0,
+      "hi": 10.0,
+      "p": 0.2546
+     },
+     {
+      "lo": 10.0,
+      "hi": 12.0,
+      "p": 0.2346
+     },
+     {
+      "lo": 12.0,
+      "hi": 14.0,
+      "p": 0.1568
+     },
+     {
+      "lo": 14.0,
+      "hi": 16.0,
+      "p": 0.0804
+     },
+     {
+      "lo": 16.0,
+      "hi": null,
+      "p": 0.0414
+     }
+    ]
+   }
+  },
+  "senate_dem_control_move": -0.0134,
+  "house_dem_control_move": -0.0033,
+  "house_popular_vote_margin_move": 0.2
+ },
+ "as_of": "2026-11-03T19:39:48Z",
+ "baseline_ts": "2026-11-03T11:00:00Z",
+ "baseline_built_at": "2026-11-03T19:39:34Z",
+ "status": {
+  "polymarket": {
+   "updated": "2026-11-03T19:39:34Z",
+   "stale": false,
+   "error": null,
+   "events": 23
+  },
+  "kalshi": {
+   "updated": "2026-11-03T19:38:31Z",
+   "stale": false,
+   "error": null,
+   "markets": 37,
+   "margin_updated": "2026-11-03T19:38:34Z",
+   "margin_stale": false,
+   "margin_error": null,
+   "margin_events": 15
+  }
+ },
+ "method": {
+  "sigma": 5.0,
+  "p_clamp": [
+   0.02,
+   0.98
+  ],
+  "open_end": 5.0,
+  "max_spread": 0.1,
+  "note": "implied_margin = bracket-weighted mean if margin brackets exist, else SIGMA*NormalInverse(p_dem); D-R points"
+ }
+}

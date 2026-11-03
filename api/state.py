@@ -47,6 +47,10 @@ def build(query: dict) -> bytes:
     cfg["checkins_live"] = os.environ.get("CHECKINS_LIVE", "0") == "1"
     cfg["checkins_save"] = False
     cfg["markets_mode"] = "off" if demo else os.environ.get("MARKETS_MODE", "live")
+    # stay well inside the function time limit; KY and OH block cloud servers outright
+    cfg["deadline_s"] = float(os.environ.get("FEED_DEADLINE_S", "18"))
+    cfg["markets_deadline_s"] = float(os.environ.get("MARKETS_DEADLINE_S", "6"))
+    cfg["skip_feeds"] = [] if demo else [x for x in os.environ.get("SKIP_FEEDS", "ky,oh").split(",") if x]
     if demo:
         feed = server.DemoFeed(_B, cfg, span=DEMO_CYCLE * 0.5)
         now = time.time()

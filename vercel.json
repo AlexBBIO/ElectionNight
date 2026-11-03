@@ -6,7 +6,7 @@
   "outputDirectory": ".",
   "functions": {
     "api/state.py": {
-      "maxDuration": 30,
+      "maxDuration": 60,
       "includeFiles": "{__init__.py,engine.py,server.py,checkins_model.py,config.json,vote_type_research.json,data/**,feeds/**}"
     }
   },

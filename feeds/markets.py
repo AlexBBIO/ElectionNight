@@ -1,11 +1,26 @@
 """Prediction-market expectations (Kalshi + Polymarket) for the tracked races (stdlib only).
 
-fetch() -> {"races": {race_id: {...}}, "national": {...}, "as_of": iso}
+The EXPECTATION is the market going into the day, not live prices (live prices react to
+results, which would make "vs expectations" circular):
 
-Per race:
-  p_dem           probability the Democrat wins (volume-weighted mean of the sources; each
-                  source's D/R prices are normalised so p_D + p_R = 1). None for IN-HOUSE.
-  sources         {"kalshi"|"polymarket": {p_dem, ticker|slug, volume, updated, ...}}
+  baseline() -> data/markets_baseline.json, frozen once built: every mapped market priced at
+                BASELINE_TS (2026-11-03 06:00 ET = 11:00 UTC, before polls opened) from Kalshi
+                hourly candlesticks (mid of the yes bid/ask close, else trade close) and
+                Polymarket CLOB /prices-history (fidelity 60). If a market has no point in the
+                baseline hour, its last point before it is used; per-source "price_ts"
+                records the oldest/newest timestamp used. A build that misses history
+                (rate limit) is saved with complete=false and retried every BASELINE_RETRY s.
+  live()     -> the same shape at current prices.
+  fetch()    -> {"races": {race_id: {...}}, "national": {...}, "as_of", "baseline_ts", ...}
+
+Per race in fetch():
+  p_dem, implied_margin, margin_brackets, margin_from_p, sources   BASELINE (pre-day) values
+  p_dem_now, implied_margin_now, margin_brackets_now, sources_now  live values
+  move            implied_margin_now - implied_margin (how far the market moved today)
+where
+  p_dem           probability the Democrat wins (volume-weighted mean of the venues; each
+                  venue's D/R prices are normalised so p_D + p_R = 1). None for IN-HOUSE.
+  sources         {"kalshi": {p_dem, ticker, volume, ...}, "polymarket": {p_dem, slug, ...}}
   margin_brackets [{"lo", "hi", "p"}] D-R points, open ends None, p normalised to sum 1,
                   from the venue with more bracket volume (margin_brackets_source); each
                   venue's own set is under sources[venue]["brackets"].
@@ -13,6 +28,8 @@ Per race:
                   volume-weighted across venues that list brackets; otherwise
                   SIGMA * NormalInverse(clamp(p_dem, .02, .98)).
   margin_from_p   the SIGMA formula even when brackets exist (to compare the two).
+national: senate_dem_control, house_dem_control, house_popular_vote_margin (+ _brackets,
+  _sources) at baseline, the same keys + "_now" live, and *_move for the three headline numbers.
 
 Market sources found 2026-11-03 (seeded in DEFAULT_MAP and written to cache/markets/map.json):
   Kalshi winner   SENATE{ST}-26 / SENATE{ST}S-26 (specials) / GOVPARTY{ST}-26 / KXSECSTATEIN-26,
@@ -27,14 +44,18 @@ Prices: mid of best bid/ask when the spread is <= MAX_SPREAD, else last trade.
 Volumes: Kalshi volume is contracts (<= $1 each), Polymarket volume is USD; both are used
 as-is for weighting.
 
-Politeness: Kalshi answered HTTP 429 from this host, so a refresh makes at most 2 Kalshi
+Politeness: Kalshi answered HTTP 429 from this host, so a live refresh makes at most 2 Kalshi
 requests (one /markets?tickers=... for winners/control/popular vote, one KXGENERALMOV
 events call for the margin brackets) and 1 Polymarket request (all slugs in one /events
-call). Bodies are cached under cache/markets/ and reused for CACHE_SECONDS; a 429 starts a
+call). Bodies are cached under cache/markets/ and reused for CACHE_SECONDS (Kalshi:
+KALSHI_CACHE_SECONDS); a 429 starts a
 cool-down (2, 4, 8 ... 15 min) during which only cached Kalshi data is served (flagged
-stale). Ticker discovery for unmapped races runs at most once per RESOLVE_EVERY seconds.
+stale). The one-off baseline build adds 2 Kalshi batch-candlestick requests and one CLOB
+history request per Polymarket market (~130, PM_GAP apart); history responses are cached
+under cache/markets/hist/ for good. Ticker discovery for unmapped races runs at most once per RESOLVE_EVERY seconds.
 
-CLI: python3 -m election_night.feeds.markets [--resolve] [--json] [--snapshot PATH]
+CLI: python3 -m election_night.feeds.markets [--resolve] [--rebuild-baseline] [--json]
+                                            [--snapshot [PATH]]
 """
 from __future__ import annotations
 
@@ -61,6 +82,7 @@ SNAPSHOT_PATH = Path(__file__).resolve().parent.parent / "data" / "markets_snaps
 BASELINE_PATH = Path(__file__).resolve().parent.parent / "data" / "markets_baseline.json"
 
 CACHE_SECONDS = 60.0
+KALSHI_CACHE_SECONDS = 120.0
 RESOLVE_EVERY = 6 * 3600.0
 SIGMA = 5.0            # state-race forecast error (points) at the end of a campaign
 P_CLAMP = (0.02, 0.98)
@@ -308,7 +330,7 @@ def _get(url: str, cache_name: str, *, kalshi: bool) -> _Got:
     on failure (or during a Kalshi cool-down) the last cached body is served, flagged stale."""
     path = CACHE / cache_name
     age = _now() - path.stat().st_mtime if path.exists() else None
-    if age is not None and age < CACHE_SECONDS:
+    if age is not None and age < (KALSHI_CACHE_SECONDS if kalshi else CACHE_SECONDS):
         d = _read_json(path)
         if d is not None:
             return _Got(d, path.stat().st_mtime, False)
@@ -799,12 +821,13 @@ def kalshi_history(tickers: list[str], event_of: dict[str, str]) -> tuple[dict, 
     fallback = False
     for i in range(0, len(todo), 100):
         chunk = todo[i:i + 100]
-        if i:
-            time.sleep(KALSHI_GAP)
         url = (f"{KALSHI}/markets/candlesticks?market_tickers={','.join(chunk)}"
                f"&start_ts={start}&end_ts={end}&period_interval=60")
+        name = f"kalshi_batch_{int(BASELINE_TS)}_{i // 100}_{len(chunk)}.json"
+        if not (CACHE / "hist" / name).exists():
+            time.sleep(KALSHI_GAP)  # space from the previous Kalshi request
         try:
-            d = _hist_get(url, f"kalshi_batch_{int(BASELINE_TS)}_{i // 100}_{len(chunk)}.json", kalshi=True)
+            d = _hist_get(url, name, kalshi=True)
         except (common.FeedError, ValueError) as e:
             errors.append(str(e)[:200])
             fallback = "HTTP 404" in str(e) or "HTTP Error 400" in str(e)
@@ -972,53 +995,60 @@ def _fmt(x, spec="{:.2f}", none="-"):
 
 def print_table(res: dict) -> None:
     try:
-        cfg = {r["id"]: r for r in json.loads(CONFIG_PATH.read_text())["races"]}
-    except (OSError, ValueError, KeyError):
+        cfg = json.loads(CONFIG_PATH.read_text())
+    except (OSError, ValueError):
         cfg = {}
-    hdr = (f"{'race':<9}{'Kalshi p':>9}{'Poly p':>8}{'p_dem':>7}  {'brackets':<9}"
-           f"{'impl.mgn':>9}{'from p':>8}{'poll fcst':>10}{'mkt-poll':>9}")
+    fc_by = {r["id"]: r.get("forecast_margin") for r in cfg.get("races", [])}
+    print(f"baseline {res.get('baseline_ts')} (built {res.get('baseline_built_at')})   live {res.get('as_of')}")
+    hdr = (f"{'race':<9}{'K p0':>7}{'P p0':>7}{'p_dem0':>7}{'p_now':>7}  {'brk':<4}"
+           f"{'margin0':>8}{'now':>7}{'move':>6}{'from p0':>8}{'poll':>7}{'mkt-poll':>9}")
     print(hdr)
     print("-" * len(hdr))
     for rid, r in res["races"].items():
-        s = r["sources"]
+        s = r.get("sources") or {}
         kb = "K" if (s.get("kalshi") or {}).get("brackets") else ""
         pb = "P" if (s.get("polymarket") or {}).get("brackets") else ""
-        fc = (cfg.get(rid) or {}).get("forecast_margin")
-        im = r["implied_margin"]
+        fc = fc_by.get(rid)
+        im = r.get("implied_margin")
         diff = im - fc if (im is not None and fc is not None) else None
-        print(f"{rid:<9}{_fmt((s.get('kalshi') or {}).get('p_dem'), '{:.3f}'):>9}"
-              f"{_fmt((s.get('polymarket') or {}).get('p_dem'), '{:.3f}'):>8}"
-              f"{_fmt(r['p_dem'], '{:.3f}'):>7}  {(kb + pb) or 'no':<9}"
-              f"{_fmt(im, '{:+.1f}'):>9}{_fmt(r['margin_from_p'], '{:+.1f}'):>8}"
-              f"{_fmt(fc, '{:+.1f}'):>10}{_fmt(diff, '{:+.1f}'):>9}")
+        print(f"{rid:<9}{_fmt((s.get('kalshi') or {}).get('p_dem'), '{:.3f}'):>7}"
+              f"{_fmt((s.get('polymarket') or {}).get('p_dem'), '{:.3f}'):>7}"
+              f"{_fmt(r.get('p_dem'), '{:.3f}'):>7}{_fmt(r.get('p_dem_now'), '{:.3f}'):>7}  {(kb + pb) or '-':<4}"
+              f"{_fmt(im, '{:+.1f}'):>8}{_fmt(r.get('implied_margin_now'), '{:+.1f}'):>7}"
+              f"{_fmt(r.get('move'), '{:+.1f}'):>6}{_fmt(r.get('margin_from_p'), '{:+.1f}'):>8}"
+              f"{_fmt(fc, '{:+.1f}'):>7}{_fmt(diff, '{:+.1f}'):>9}")
     n = res["national"]
     print()
-    print(f"Senate D control {_fmt(n.get('senate_dem_control'), '{:.3f}')}   "
-          f"House D control {_fmt(n.get('house_dem_control'), '{:.3f}')}   "
-          f"House popular vote (D-R) {_fmt(n.get('house_popular_vote_margin'), '{:+.1f}')}")
-    try:
-        gb = json.loads(CONFIG_PATH.read_text())["national"]["generic_ballot_margin"]
-        print(f"config generic_ballot_margin {gb:+.1f}")
-    except (OSError, ValueError, KeyError, TypeError):
-        pass
-    st = res["status"]
+    for k, label, f in (("senate_dem_control", "Senate D control", "{:.3f}"),
+                        ("house_dem_control", "House D control", "{:.3f}"),
+                        ("house_popular_vote_margin", "House popular vote D-R", "{:+.1f}")):
+        print(f"{label:<24} baseline {_fmt(n.get(k), f):>7}   now {_fmt(n.get(k + '_now'), f):>7}")
+    gb = (cfg.get("national") or {}).get("generic_ballot_margin")
+    if gb is not None:
+        print(f"{'config generic ballot':<24} {gb:+.1f}")
+    st = res.get("status") or {}
     for k in ("kalshi", "polymarket"):
         x = st.get(k) or {}
         flag = " STALE" if x.get("stale") else ""
-        print(f"{k}: updated {x.get('updated')}{flag}" + (f"  ({x['error']})" if x.get("error") else ""))
-    print("brackets: K = Kalshi, P = Polymarket margin-of-victory brackets; "
-          "'from p' = SIGMA*NormalInverse(p_dem)")
+        err = (x.get("error") or "")
+        print(f"live {k}: updated {x.get('updated')}{flag}" + (f"  ({err[:90]})" if err else ""))
+    print("0 = baseline (pre-day) value; brk: K/P = Kalshi/Polymarket margin brackets at baseline; "
+          "'from p0' = SIGMA*NormalInverse(p_dem0)")
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Prediction-market expectations (Kalshi + Polymarket)")
     ap.add_argument("--resolve", action="store_true", help="retry Kalshi ticker discovery now")
+    ap.add_argument("--rebuild-baseline", action="store_true",
+                    help="rebuild data/markets_baseline.json (history is cached on disk)")
     ap.add_argument("--json", action="store_true", help="print the full fetch() result")
     ap.add_argument("--snapshot", nargs="?", const=str(SNAPSHOT_PATH), default=None,
                     help=f"also write the result to PATH (default {SNAPSHOT_PATH})")
     a = ap.parse_args()
     if a.resolve:
         resolve(load_map(), force=True)
+    if a.rebuild_baseline:
+        build_baseline()
     res = fetch()
     if a.json:
         print(json.dumps(res, indent=1))
