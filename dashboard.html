@@ -79,10 +79,9 @@ h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fain
   </section>
 
   <section class="signals">
-    <div class="card"><div class="k">TURNOUT'S PART OF THE EXPECTED SWING</div>
-      <div class="row2"><div><div class="sub">vs 2024</div><div class="mid" id="h_t24">—</div><div class="sub" id="h_t24s"></div></div>
-        <div><div class="sub">vs 2022</div><div class="mid" id="h_t22">—</div><div class="sub" id="h_t22s"></div></div></div>
-      <div class="sub" id="h_t_sub" style="margin-top:4px">how much of the swing the polls expect the electorate's party mix already delivers; the rest has to come from independents and party-switchers</div>
+    <div class="card"><div class="k">TURNOUT'S PART OF THE SWING POLLS EXPECT</div>
+      <table style="margin-top:4px"><thead><tr><th></th><th>vs 2022</th><th>vs 2024</th></tr></thead><tbody id="h_tt"></tbody></table>
+      <div class="sub" style="margin-top:4px">"D+2.7 of D+15.4" = the party mix of who voted moved 2.7 pts toward Democrats, out of the 15.4-pt swing the polls expect; independents and party-switchers must supply the rest.</div>
       <div class="hist" id="h_t_hist"></div></div>
     <div class="card"><div class="k">LATEST BATCHES VS EXPECTED</div><div class="mid" id="h_b" style="margin-top:6px">—</div><div class="sub" id="h_b_sub">no batches yet</div>
       <div class="hist">each new upload vs what that vote type should look like in that county, given expectations</div></div>
@@ -147,6 +146,7 @@ h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fain
     <div class="card"><h2>How it works</h2><div class="sub">
       <p><b>Expected</b> county margin = 2024 presidential county margin + the statewide swing implied by the race's final polls (or the national generic ballot, D+8.7, where no race average exists).</p>
       <p><b>Vote-type adjustment</b>: early/mail and Election Day votes lean differently and post in different orders. Each county's final margin is estimated by filling in the vote types not yet counted, using 2022 county vote-type data (or state research) and each county's actual early-ballot count.</p>
+      <p><b>Turnout's part of the expected swing</b>: margin = party mix of who voted (registered D − registered R, as a share of all voters) + what independents and party-switchers net. So a swing splits exactly into a change in party mix ("from turnout") and the rest ("left to persuasion"). Worked example, Florida Governor vs 2022: the polls expect R+3.9; 2022's actual result was R+19.4, so the expected swing is D+15.4. 2022's voters were R+12.2 by registration (early ballots + final Election Day check-ins); 2026's are R+9.5 (early ballots + Election Day check-ins so far, with the rest of Election Day assumed to reach 2022's volume at today's mix), a change of D+2.7. The other D+12.7 must come from independents and party-switchers. For early-vote-only rows (NC) the expected margin is converted to an expected early-vote margin, E + (1 − early share) × that year's early-vs-Election-Day gap, and compared with that year's early-vote result and party mix.</p>
       <p><b>County mix</b>: counties not yet counted are filled with the average of three estimates (the race's read so far, a county-type model and a demographic model), the combination that backtested best on 2020→22, 2016→20 and 2020→24 swings (BACKTEST.md). Expected error ≈ ±1.8 pts at 5% counted, ±1.2 at 10%, ±0.6 at 25%.</p></div></div>
   </details>
 </main>
@@ -196,11 +196,11 @@ function render(data){const s=data.snapshot;if(!s)return;if(last!==data)scoreBat
     `<span class="${cls(v)}">${v>0?"Democrats ahead of":"Democrats behind"} the polls by ${Math.abs(v).toFixed(1)}</span> <span class="faint">— outside the ±${err.toFixed(1)} expected error</span>`;
   $("#h_main_sub").textContent=v==null?"":`${pct(o.counted)} of expected vote counted in ${o.races_reporting} races · adjusted for vote type and county mix · implies a national environment of ${m(o.rw_implied_generic)} (polls ${m(o.generic_ballot)})`;
   $("#h_hist").innerHTML=`<b>History</b> · swing vs 2024 president ${m(o.swing24)} · vs 2022 ${m(o.swing22)} · raw count vs polls ${m(o.vs_expect)}`;
-  const tpart=(id,a,b)=>{const el=$(id);el.textContent=a==null?"—":`${m(a)} of ${m(b)}`;el.className="mid"};
-  tpart("#h_t24",o.turnout_part_24,o.expected_swing_24);tpart("#h_t22",o.turnout_part_22,o.expected_swing_22);
-  $("#h_t24s").textContent=o.turnout_part_24==null||!o.expected_swing_24?"":`${Math.round(100*o.turnout_part_24/o.expected_swing_24)}% from turnout`;
-  $("#h_t22s").textContent=o.turnout_part_22==null||!o.expected_swing_22?"":`${Math.round(100*o.turnout_part_22/o.expected_swing_22)}% from turnout`;
-  $("#h_t_hist").innerHTML=`<b>${(o.turnout_split_states||[]).join(", ")||"no states yet"}</b> · not a verdict: there is no reliable norm for how a swing splits between turnout and persuasion<br><b>History</b> · early-vote party mix vs 2024 ${m(o.turnout_party_shift_24)} · vs 2022 ${m(o.turnout_party_shift)} · Election Day check-ins vs 2024 ${m(ck.d_mix_24)} · vs 2022 ${m(ck.d_mix_22)}`;
+  {const rows=[],seen=new Set();s.races.forEach(r=>{const ts=r.turnout_split;if(!ts||seen.has(r.state))return;seen.add(r.state);const v=ts.full||ts.early;
+     const c=y=>{const x=v.years[y];return x?`<td><b>${m(x.turnout)}</b> <span class="faint">of ${m(x.expected)}</span></td>`:"<td>—</td>"};
+     rows.push(`<tr><td class="sub">${r.state} <span class="faint">${v===ts.full?"all voters":"early vote"}</span></td>${c(2022)}${c(2024)}</tr>`)});
+   $("#h_tt").innerHTML=rows.join("")||`<tr><td colspan="3" class="sub">needs party-registration turnout (FL, NC, KY)</td></tr>`;}
+  $("#h_t_hist").innerHTML=`Not a verdict: no reliable norm exists for how a swing splits between turnout and persuasion. 2022 is the cleaner (midterm) comparison.<br><b>History</b> · early-vote party mix vs 2024 ${m(o.turnout_party_shift_24)} · vs 2022 ${m(o.turnout_party_shift)} · Election Day check-ins vs 2024 ${m(ck.d_mix_24)} · vs 2022 ${m(ck.d_mix_22)}`;
   const b15=bAgg(15),b60=bAgg(60);set("#h_b",b15.v);$("#h_b_sub").textContent=b15.k?`last 15 min · ${b15.k} uploads · ${n(b15.w)} votes · last hour ${m(b60.v)}`:"no new votes in the last 15 minutes";
   const mv=s.races.filter(r=>r.market_move!=null);set("#h_mm",mv.length?mv.reduce((a,r)=>a+r.market_move,0)/mv.length:null);
   const nb=mk.national||{},nn=mk.national_now||{},pc=x=>x==null?"?":Math.round(x*100)+"%";
