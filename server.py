@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import engine
+from . import checkins_model, engine
 
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "out"
@@ -126,11 +126,16 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
     snap = {"ts": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "overall": engine.overall(results, cfg), "races": results,
             "national": cfg["national"], "firm_threshold": cfg.get("firm_threshold", 0.9)}
+    try:
+        snap["checkins"] = checkins_model.summary(live=cfg.get("turnout_mode", "live") != "off")
+    except Exception as exc:  # noqa: BLE001
+        snap["checkins"] = {"error": str(exc), "jurisdictions": []}
     return snap
 
 
 def history_row(snap: dict) -> dict:
     return {"ts": snap["ts"], "overall": snap["overall"],
+            "checkins": {k: (snap.get("checkins") or {}).get(k) for k in ("d_gap_22", "d_gap_24")},
             "races": {r["id"]: {k: r.get(k) for k in ("vs_expect", "firm_vs_expect", "projected",
                                                        "projected_vs_forecast", "est_in", "votes",
                                                        "swing24", "swing22", "current_margin",
@@ -191,6 +196,23 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def do_POST(self):
+        if self.path.startswith("/api/checkins"):
+            try:
+                n = int(self.headers.get("Content-Length") or 0)
+                row = json.loads(self.rfile.read(n) or b"{}")
+                for k in ("jurisdiction", "year", "hour_local", "rep", "dem"):
+                    if not str(row.get(k, "")).strip():
+                        raise ValueError(f"missing {k}")
+                row.setdefault("as_of", datetime.now(timezone.utc).isoformat(timespec="minutes"))
+                row.setdefault("source", "manual entry")
+                checkins_model.append_manual(row)
+                self._send(200, b'{"ok":true}', "application/json")
+            except Exception as exc:  # noqa: BLE001
+                self._send(400, json.dumps({"error": str(exc)}).encode(), "application/json")
+        else:
+            self._send(404, b"not found", "text/plain")
+
     def do_GET(self):
         if self.path in ("/", "/index.html"):
             self._send(200, (HERE / "dashboard.html").read_bytes(), "text/html; charset=utf-8")
@@ -218,6 +240,8 @@ def main():
         keep = set(a.races.split(","))
         cfg["races"] = [r for r in cfg["races"] if r["id"] in keep]
     b = engine.Baselines.load()
+    if a.demo:
+        cfg["turnout_mode"] = "off"
     fetcher = DemoFeed(b, cfg, shift=a.demo_shift).fetch if a.demo else live_fetch
     interval = a.interval or (3 if a.demo else cfg.get("poll_seconds", 30))
 

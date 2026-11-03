@@ -7,7 +7,7 @@
   "functions": {
     "api/state.py": {
       "maxDuration": 30,
-      "includeFiles": "{__init__.py,engine.py,server.py,config.json,data/**,feeds/**}"
+      "includeFiles": "{__init__.py,engine.py,server.py,checkins_model.py,config.json,vote_type_research.json,data/**,feeds/**}"
     }
   },
   "rewrites": [

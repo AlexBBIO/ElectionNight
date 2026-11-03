@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import sys
 import time
 from http.server import BaseHTTPRequestHandler
@@ -40,6 +41,8 @@ def build(query: dict) -> bytes:
     if _B is None:
         _B = engine.Baselines.load()
     demo = query.get("demo", ["0"])[0] not in ("0", "")
+    # big turnout files don't fit the serverless time limit: use the committed snapshot there
+    cfg["turnout_mode"] = "off" if demo else os.environ.get("TURNOUT_MODE", "snapshot")
     if demo:
         feed = server.DemoFeed(_B, cfg, span=DEMO_CYCLE * 0.5)
         now = time.time()

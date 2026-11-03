@@ -145,6 +145,7 @@ def analyze_race(race: dict, rows: list[dict], b: Baselines, cfg: dict) -> dict:
         expect_source = "national generic ballot"
     forecast = st_pres + state_swing
     vt = state_vote_type_params(st, office, b, cfg)
+    t26 = turnout_2026(st, cfg)
     tfac = vt["turnout_factor"]
     firm_thr = cfg.get("firm_threshold", 0.75)
 
@@ -189,7 +190,10 @@ def analyze_race(race: dict, rows: list[dict], b: Baselines, cfg: dict) -> dict:
             "type": b.types.get(f, "Exurban / working metro"), "cov": b.cov.get(f),
             "lm": {k: v for k, v in lv["modes"].items() if v[2]} if lv.get("modes") else None,
         })
-        counties[-1].update(adjust_county(lv, b.c22_modes.get((f, office)), vt, turnout, expected))
+        pre_b = _n((t26.get(f) or {}).get("pre_ballots")) if t26 else None
+        if pre_b:
+            counties[-1]["pre_ballots"] = pre_b
+        counties[-1].update(adjust_county(lv, b.c22_modes.get((f, office)), vt, turnout, expected, pre_b))
     rep_ = [c for c in counties if c["votes"]]
     firm = [c for c in rep_ if c["est_in"] >= firm_thr]
 
@@ -224,6 +228,7 @@ def analyze_race(race: dict, rows: list[dict], b: Baselines, cfg: dict) -> dict:
         "firm_vs_expect": agg(firm, "vs_expect"), "firm_swing24": agg(firm, "swing24"),
         "firm_swing22": agg(firm, "swing22"),
         "projected": proj, "projected_vs_forecast": None if proj is None else proj - forecast,
+        "turnout": turnout_signals(st, office, b, t26),
         "vote_type": {k: vt[k] for k in ("order", "pre_share", "delta", "turnout_factor", "source", "notes")},
         **adj,
         "counties": counties,
@@ -245,6 +250,7 @@ def overall(results: list[dict], cfg: dict) -> dict:
         "generic_ballot": gb, "races_reporting": len(live), "votes": sum(r["votes"] for r in live),
         **overall_adjusted(live, gb),
         **reweight_by_type(results, gb),
+        **overall_turnout(results),
     }
 
 
@@ -337,7 +343,8 @@ def state_vote_type_params(st: str, office: str, b: Baselines, cfg: dict) -> dic
             "notes": ov.get("notes") or res.get("order_notes"), "have_county_modes": bool(have22)}
 
 
-def adjust_county(lv: dict, m22: dict | None, vt: dict, turnout: float, expected: float) -> dict:
+def adjust_county(lv: dict, m22: dict | None, vt: dict, turnout: float, expected: float,
+                  pre_ballots: float | None = None) -> dict:
     V = lv.get("total") or 0
     out = {"pre_votes": None, "eday_votes": None, "s": None, "delta": None, "adj_margin": None,
            "adj_vs_expect": None, "exp_vote": turnout, "est_in_adj": 0.0, "method": "no votes"}
@@ -351,6 +358,10 @@ def adjust_county(lv: dict, m22: dict | None, vt: dict, turnout: float, expected
             s = s22c
         d22c = margin(*m22["pre"]) - margin(*m22["eday"])
         delta = d22c + ((vt["delta"] - vt["delta_2022"]) if vt["delta"] is not None and vt.get("delta_2022") is not None else 0.0)
+    if pre_ballots:  # actual pre-Election-Day ballots in this county beat any modelled share
+        turnout = max(turnout, pre_ballots / 0.97)
+        out["exp_vote"] = turnout
+        s = pre_ballots / turnout
     s = max(0.03, min(0.97, s))
     out["s"], out["delta"] = s, delta
     if not V:
@@ -361,6 +372,8 @@ def adjust_county(lv: dict, m22: dict | None, vt: dict, turnout: float, expected
     p = (pr / pt) if (pr is not None and pt) else None
     pu = lv.get("pre_units") or (None, None)
     pre_frac = (pu[0] / pu[1]) if (pu[0] is not None and pu[1]) else 1.0
+    if pre_ballots and lv.get("modes") and lv["modes"]["pre"][2]:
+        pre_frac = min(1.0, lv["modes"]["pre"][2] / pre_ballots)  # share of early/mail ballots counted
 
     modes = lv.get("modes")
     if modes and (modes["pre"][2] or modes["eday"][2] or modes["other"][2]):
@@ -602,3 +615,126 @@ def reweight_by_type(results: list[dict], gb: float) -> dict:
     return {"rw_vs_expect": rw, "rw_implied_generic": None if rw is None else gb + rw, "types": types,
             "rw_models_fitted": {"type": b_type is not None, "demographic": b_demo is not None,
                                  "counties": len(rep_rows)}}
+
+
+# ======================================================================================
+# Turnout before counts
+#
+# Ballots cast before Election Day are published by county (and by party where the state
+# registers by party) before any votes are counted. Two pre-count signals, vs 2022:
+#   geo_shift   = sum_c (pre26_c / P26 - pre22_c / P22) * m_c    (m_c = 2022 county pre-ED margin
+#                 where known, else 2022 county margin): did the early electorate's geography
+#                 tilt D or R compared with 2022?
+#   party_shift = (D - R) / ballots among 2026 pre-ED voters minus the same for 2022 (FL/NC/KY):
+#                 registration mix of the early electorate.
+# The county pre-ED ballot counts also feed the vote-type model: s_c = pre ballots / expected
+# votes, and the share of pre-ED ballots already counted = counted early/mail / pre ballots.
+# ======================================================================================
+_TURNOUT_CACHE: dict[str, tuple[float, dict]] = {}
+_T22 = None
+
+
+def turnout_2022() -> dict:
+    global _T22
+    if _T22 is None:
+        _T22 = {}
+        p = DATA / "turnout_2022_pre.csv"
+        if p.exists():
+            with open(p, newline="") as fh:
+                for r in csv.DictReader(fh):
+                    _T22[r["fips"].zfill(5)] = r
+    return _T22
+
+
+def turnout_2026(st: str, cfg: dict) -> dict:
+    """fips -> row from feeds.turnout (cached 5 min). Empty if unsupported / unavailable."""
+    import time as _t
+    mode = cfg.get("turnout_mode", "live")
+    if mode == "off":
+        return {}
+    hit = _TURNOUT_CACHE.get(st)
+    if hit and _t.time() - hit[0] < 300:
+        return hit[1]
+    rows = {}
+    try:
+        import importlib
+        mod = importlib.import_module("election_night.feeds.turnout")
+        if st in getattr(mod, "STATES", []):
+            try:
+                data = mod.fetch(st, live=(mode == "live"))
+            except TypeError:
+                data = mod.fetch(st) if mode == "live" else []
+            rows = {(r.get("fips") or "").zfill(5): r for r in data or []}
+    except Exception:  # noqa: BLE001
+        rows = {}
+    _TURNOUT_CACHE[st] = (_t.time(), rows)
+    return rows
+
+
+def _n(x):
+    try:
+        return float(x) if x not in (None, "") else None
+    except (TypeError, ValueError):
+        return None
+
+
+def turnout_signals(st: str, office: str, b: Baselines, t26: dict) -> dict | None:
+    if not t26:
+        return None
+    t22 = turnout_2022()
+    P26 = P22 = 0.0
+    pairs = []
+    party26 = [0.0, 0.0, 0.0]; party22 = [0.0, 0.0, 0.0]; have_party = True
+    ed = 0.0; ed_any = False; as_of = None
+    for f in b.state_counties(st):
+        a = t26.get(f); z = t22.get(f)
+        if not a:
+            continue
+        as_of = as_of or a.get("as_of")
+        p26 = _n(a.get("pre_ballots")); p22 = _n(z.get("pre_ballots")) if z else None
+        if _n(a.get("eday_checkins")) is not None:
+            ed += _n(a.get("eday_checkins")); ed_any = True
+        if p26 is None:
+            continue
+        P26 += p26
+        if p22:
+            P22 += p22
+            m = b.c22_modes.get((f, office))
+            mm = margin(*m["pre"]) if m and m.get("pre") and m["pre"][2] else (margin(*b.c22[(f, office)]) if b.c22.get((f, office)) else None)
+            if mm is not None:
+                pairs.append((p26, p22, mm))
+        d26, r26, o26 = _n(a.get("pre_dem")), _n(a.get("pre_rep")), _n(a.get("pre_oth"))
+        d22, r22, o22 = (_n(z.get("pre_dem")), _n(z.get("pre_rep")), _n(z.get("pre_oth"))) if z else (None, None, None)
+        if None in (d26, r26, d22, r22):
+            have_party = False
+        else:
+            party26 = [party26[0] + d26, party26[1] + r26, party26[2] + (o26 or 0)]
+            party22 = [party22[0] + d22, party22[1] + r22, party22[2] + (o22 or 0)]
+    if not P26:
+        return None
+    S26 = sum(p[0] for p in pairs); S22 = sum(p[1] for p in pairs)
+    geo = sum((p26 / S26 - p22 / S22) * mm for p26, p22, mm in pairs) if S26 and S22 else None
+    ps = None
+    if have_party and sum(party26) and sum(party22):
+        ps = 100 * ((party26[0] - party26[1]) / sum(party26) - (party22[0] - party22[1]) / sum(party22))
+    return {"pre_ballots": P26, "pre_ballots_2022": P22 or None, "pre_ratio": (P26 / P22) if P22 else None,
+            "geo_shift": geo, "party_shift": ps,
+            "party_gap_2026": 100 * (party26[0] - party26[1]) / sum(party26) if have_party and sum(party26) else None,
+            "party_gap_2022": 100 * (party22[0] - party22[1]) / sum(party22) if have_party and sum(party22) else None,
+            "eday_checkins": ed if ed_any else None, "as_of": as_of, "counties": len(pairs)}
+
+
+def overall_turnout(results: list[dict]) -> dict:
+    seen, g, p = set(), [0.0, 0.0], [0.0, 0.0]
+    for r in results:
+        t = r.get("turnout")
+        if not t or r["state"] in seen:
+            continue
+        seen.add(r["state"])
+        w = t.get("pre_ballots") or 0
+        if t.get("geo_shift") is not None:
+            g[0] += t["geo_shift"] * w; g[1] += w
+        if t.get("party_shift") is not None:
+            p[0] += t["party_shift"] * w; p[1] += w
+    return {"turnout_geo_shift": g[0] / g[1] if g[1] else None,
+            "turnout_party_shift": p[0] / p[1] if p[1] else None, "turnout_states": len(seen)}

@@ -67,6 +67,30 @@ td.err{color:var(--warn)}
   </section>
 
   <section class="panel">
+    <h2>Election Day check-ins by party · same hour vs 2022 / 2024</h2>
+    <div class="scroll"><table id="checkins"><thead><tr><th>Jurisdiction</th><th>Hour</th><th>R</th><th>D</th><th>Other</th>
+      <th title="(D − R) share of Election Day check-ins">Mix 2026</th><th>Mix 2022</th><th>Mix 2024</th>
+      <th title="Mix 2026 − mix 2022 at the same hour">Δ vs '22</th><th>Δ vs '24</th><th>Volume vs '22</th>
+      <th title="2022 final ED electorate scaled by each party's same-hour 2026/2022 ratio">Proj. final mix</th><th>Source</th></tr></thead><tbody></tbody></table></div>
+    <svg id="cichart" width="100%" height="180"></svg>
+    <details id="ciform" style="margin-top:8px"><summary class="note">Add check-in data (local server only; saved to data/checkins_manual.csv)</summary>
+      <div class="controls" style="margin-top:6px">
+        <input id="ci_j" placeholder="Jurisdiction (e.g. Maricopa County)" style="width:220px"><input id="ci_st" placeholder="ST" style="width:40px">
+        <input id="ci_y" placeholder="Year" value="2026" style="width:60px"><input id="ci_h" placeholder="Hour e.g. 11:00 or final" style="width:150px">
+        <input id="ci_r" placeholder="Rep" style="width:80px"><input id="ci_d" placeholder="Dem" style="width:80px"><input id="ci_o" placeholder="Other" style="width:80px">
+        <input id="ci_src" placeholder="Source" style="width:200px"><button id="ci_add">Add</button><span id="ci_msg" class="muted"></span></div></details>
+    <p class="note">Party registration of people checking in, not votes. Election Day's share keeps shrinking as voters (lately more Republicans) shift to early voting, so a more Democratic Election Day mix is partly that shift; read it together with the early ballots by party below. Rough vote equivalent ≈ 0.88 × Δ mix.</p>
+  </section>
+
+  <section class="panel">
+    <h2>Turnout before counts · early electorate vs 2022</h2>
+    <div class="scroll"><table id="turnout"><thead><tr><th>State</th><th>Pre-ED ballots 2026</th><th>2022</th><th>Ratio</th>
+      <th title="Did the early electorate's county mix tilt D or R vs 2022? Σ(share26 − share22) × 2022 county early-vote margin">Geography shift</th>
+      <th title="(D − R) share of early voters by party registration, 2026 vs 2022">Party mix 2026 / 2022</th><th>Party shift</th><th>Election Day check-ins</th><th>As of</th></tr></thead><tbody></tbody></table></div>
+    <p class="note">Ballots cast before Election Day are published by county (by party where the state registers by party) before any vote is counted. Positive = the early electorate is more Democratic in mix than 2022's. Mix is not vote choice: registered Democrats in KY and independents everywhere cross over. The county counts also feed the vote-type model: each county's early share comes from its actual ballots, and the share of early ballots already counted is known.</p>
+  </section>
+
+  <section class="panel">
     <h2>By county type (all reporting races pooled)</h2>
     <div class="scroll"><table id="types"><thead><tr><th>Type</th><th>Counties reporting</th><th>Races</th><th>Votes</th>
       <th>Adj vs expect</th><th>Raw vs expect</th><th id="typerace">Selected race: weight · counted · adj · used</th></tr></thead><tbody></tbody></table></div>
@@ -138,6 +162,8 @@ function render(data){
     tile("Adjusted, firm counties only",o.adj_firm_vs_expect,`counties ≥ ${Math.round(s.firm_threshold*100)}% of their expected vote counted`)+
     tile("Implied national environment",o.rw_implied_generic,`polls: ${m(o.generic_ballot)} generic ballot · adjusted only: ${m(o.adj_implied_generic)}`)+
     tile("Recent batches vs expected (15 min)",batchAgg(15).v,batchAgg(15).s)+
+    tile("ED check-ins: party mix vs 2022",(s.checkins||{}).d_gap_22,`same hour · vs 2024: ${m((s.checkins||{}).d_gap_24)} · ${((s.checkins||{}).jurisdictions||[]).length} jurisdictions · ED votes only — partly Republicans moving to early voting`)+
+    tile("Turnout signal (pre-count)",o.turnout_geo_shift,`early-electorate geography vs 2022 · party mix: ${m(o.turnout_party_shift)} · ${o.turnout_states||0} states`)+
     `<div class="tile"><div class="k">Implied turnout vs 2022</div><div class="v">${o.implied_turnout_vs_2022==null?"—":(o.implied_turnout_vs_2022*100).toFixed(0)+"%"}</div><div class="s">from estimated expected vote in counties ≥30% in</div></div>`;
   $("#rawtiles").innerHTML=
     tile("Unadjusted vs expectations",o.vs_expect,"raw counted votes — biased by which vote types report first")+
@@ -164,7 +190,7 @@ function render(data){
     tr.onclick=()=>{sel=r.id;render(last)}; tb.appendChild(tr);
   });
   renderCounties(s.races.find(r=>r.id===sel));
-  renderTypes(s); renderBatches();
+  renderTypes(s); renderBatches(); renderTurnout(s); renderCheckins(s);
   renderChart(data.history,s.races);
 }
 function renderAdj(s){
@@ -179,6 +205,32 @@ function renderAdj(s){
     <td class="status">${meth}</td>
     <td class="status" title="${(v.notes||"").replace(/"/g,"'")}">${v.order||""} · pre ${v.pre_share==null?"?":Math.round(v.pre_share*100)+"%"} · lean ${v.delta==null?"none":m(v.delta,0)} · ${v.source||""}</td></tr>`}).join("");
 }
+function renderCheckins(s){const c=s.checkins||{},js=c.jurisdictions||[];
+  $("#checkins tbody").innerHTML=js.map(j=>`<tr><td><b>${j.jurisdiction}</b> <span class="muted">${j.state||""}</span></td><td>${j.hour}</td><td>${n(j.rep)}</td><td>${n(j.dem)}</td><td>${n(j.oth)}</td>
+    <td class="${cls(j.gap_2026)}">${m(j.gap_2026)}</td><td class="${cls(j.gap_2022)}">${m(j.gap_2022)}</td><td class="${cls(j.gap_2024)}">${m(j.gap_2024)}</td>
+    <td class="${cls(j.d_gap_22)}"><b>${m(j.d_gap_22)}</b></td><td class="${cls(j.d_gap_24)}">${m(j.d_gap_24)}</td>
+    <td>${j.vol_22==null?"—":j.vol_22.toFixed(2)+"×"}</td><td class="${cls(j.proj_final_gap)}">${m(j.proj_final_gap)}</td>
+    <td class="status" title="${(j.source||"").replace(/"/g,"'")} ${j.as_of||""}">${j.source||""}</td></tr>`).join("")||`<tr><td colspan="13" class="muted">No check-in data yet.</td></tr>`;
+  // mini chart: party mix by hour, per year, for the largest jurisdiction
+  const svg=$("#cichart"),j=js[0]; if(!j){svg.innerHTML="";return}
+  const W=svg.clientWidth||800,H=180,L=48,R=90,T=10,B=22,cols={"2022":"var(--muted)","2024":"#c9a227","2026":"var(--ink)"};
+  let lo=0,hi=0; Object.values(j.series).forEach(a=>a.forEach(p=>{lo=Math.min(lo,p[1]);hi=Math.max(hi,p[1])})); lo=Math.floor(lo/10)*10;hi=Math.ceil(hi/10)*10||10;
+  const X=h=>L+(W-L-R)*(h-6)/13, Y=v=>T+(H-T-B)*(hi-v)/(hi-lo||1);
+  let g=`<line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--line)"/>`;
+  for(let v=lo;v<=hi;v+=10) g+=`<text x="${L-6}" y="${Y(v)+4}" text-anchor="end">${v===0?"0":m(v,0)}</text>`;
+  [6,8,10,12,14,16,18].forEach(h=>g+=`<text x="${X(h)}" y="${H-6}" text-anchor="middle">${h>12?h-12:h}${h>=12?"p":"a"}</text>`);
+  Object.entries(j.series).forEach(([y,a])=>{if(!a.length)return;const d=a.map((p,i)=>(i?"L":"M")+X(p[0]).toFixed(1)+","+Y(p[1]).toFixed(1)).join("");
+    const lp=a[a.length-1]; g+=`<path d="${d}" fill="none" stroke="${cols[y]||"#888"}" stroke-width="${y==="2026"?3:2}"/>`+a.map(p=>`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="3" fill="${cols[y]||"#888"}"/>`).join("")+
+    `<text x="${X(lp[0])+6}" y="${Y(lp[1])+4}" style="fill:${cols[y]||"#888"}">${y} ${m(lp[1])}</text>`});
+  svg.innerHTML=`<text x="${L}" y="12" style="font-weight:600">${j.jurisdiction}: D−R mix of ED check-ins by hour</text>`+g;}
+$("#ci_add")&&($("#ci_add").onclick=async()=>{const row={jurisdiction:$("#ci_j").value,state:$("#ci_st").value,year:$("#ci_y").value,hour_local:$("#ci_h").value,rep:$("#ci_r").value,dem:$("#ci_d").value,oth:$("#ci_o").value,source:$("#ci_src").value};
+  try{const r=await fetch("/api/checkins",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(row)});const j=await r.json();$("#ci_msg").textContent=j.ok?"saved — shows on next poll":"error: "+(j.error||r.status)}catch(e){$("#ci_msg").textContent="save failed (read-only deploy?)"}});
+function renderTurnout(s){const seen=new Set();const rows=[];
+  s.races.forEach(r=>{const t=r.turnout;if(!t||seen.has(r.state))return;seen.add(r.state);
+    rows.push(`<tr><td><b>${r.state}</b></td><td>${n(t.pre_ballots)}</td><td>${n(t.pre_ballots_2022)}</td><td>${t.pre_ratio==null?"—":t.pre_ratio.toFixed(2)+"×"}</td>
+      <td class="${cls(t.geo_shift)}"><b>${m(t.geo_shift)}</b></td><td>${t.party_gap_2026==null?"—":m(t.party_gap_2026)+" / "+m(t.party_gap_2022)}</td>
+      <td class="${cls(t.party_shift)}"><b>${m(t.party_shift)}</b></td><td>${t.eday_checkins==null?"—":n(t.eday_checkins)}</td><td class="status">${t.as_of||""}</td></tr>`)});
+  $("#turnout tbody").innerHTML=rows.join("")||`<tr><td colspan="9" class="muted">No turnout data loaded${s.demo?" (off in demo)":""}.</td></tr>`;}
 const TYPES=["Rural","Exurban / working metro","College suburbs","Urban core","Black","Hispanic"];
 function renderTypes(s){
   const o=s.overall, t=o.types||{}, r=s.races.find(x=>x.id===sel)||{}, g=r.groups||{};
