@@ -58,7 +58,7 @@ td.err{color:var(--warn)}
       <th title="Expected vote ÷ 2022 votes, counties ≥30% in">Turnout vs '22</th>
       <th title="Vote-weighted (estimated final county margin − expected margin)">Adj vs expect</th>
       <th title="Same, counties ≥ firm threshold of expected vote">Adj firm</th>
-      <th title="Adjusted, with county types weighted to the state's expected vote (missing types borrowed from other states)">Reweighted</th>
+      <th title="Adjusted, uncounted counties filled with the average of race read, type model and demographic model (backtested)">Reweighted</th>
       <th>Adj projected</th><th>Forecast</th><th>Adj proj − fcst</th>
       <th title="How each county was adjusted">Method</th>
       <th title="Reporting order · 2026 pre-Election-Day share · lean of pre vs Election Day votes (D−R pts) · source">Vote-type model</th>
@@ -70,7 +70,8 @@ td.err{color:var(--warn)}
     <h2>By county type (all reporting races pooled)</h2>
     <div class="scroll"><table id="types"><thead><tr><th>Type</th><th>Counties reporting</th><th>Races</th><th>Votes</th>
       <th>Adj vs expect</th><th>Raw vs expect</th><th id="typerace">Selected race: weight · counted · adj · used</th></tr></thead><tbody></tbody></table></div>
-    <p class="note">Types: Hispanic ≥30%; urban core (large central county, pop ≥750k); Black ≥35%; college suburbs (metro, ≥35% bachelor's); exurban / working metro; rural (non-metro). Sources: Census 2023 estimates, USDA education and rural-urban codes. If suburbs and rural areas are moving differently, the reweighted read corrects for whichever reports first.</p>
+    <p class="note" id="rwmodels"></p>
+    <p class="note">Reweighted read = average of three estimates for the counties not yet counted: the race's own read so far, a county-type model and a demographic model (college %, Black %, Hispanic %, population, non-metro), both fit on all reporting counties with race fixed effects. That average backtested best across the 2020→22, 2016→20 and 2020→24 county swings. Expected headline error from the replay: about ±1.2 pts at 10% counted, ±0.6 at 25% (see BACKTEST.md). Types: Hispanic ≥30%; urban core (pop ≥750k); Black ≥35%; college suburbs (metro, ≥35% bachelor's); exurban / working metro; rural (non-metro).</p>
   </section>
 
   <section class="panel">
@@ -182,6 +183,7 @@ const TYPES=["Rural","Exurban / working metro","College suburbs","Urban core","B
 function renderTypes(s){
   const o=s.overall, t=o.types||{}, r=s.races.find(x=>x.id===sel)||{}, g=r.groups||{};
   $("#typerace").textContent=(r.label||"Selected race")+": weight · counted · adj · used";
+  const cp=r.rw_components||{}; $("#rwmodels").innerHTML=`<b>${r.label||""}</b> reweighted ${m(r.rw_vs_expect)} = average of ` + Object.entries(cp).map(([k,v])=>`${k} <span class="${cls(v)}">${m(v)}</span>`).join(" · ") + (o.rw_models_fitted?` · models fit on ${o.rw_models_fitted.counties} counties`:"");
   $("#types tbody").innerHTML=TYPES.map(k=>{const x=t[k]||{}, y=g[k];
     return `<tr><td><b>${k}</b></td><td>${x.counties_reporting||0}</td><td>${x.races||0}</td><td>${n(x.votes||0)}</td>
       <td class="${cls(x.adj_vs_expect)}"><b>${m(x.adj_vs_expect)}</b></td><td class="${cls(x.vs_expect)}">${m(x.vs_expect)}</td>
