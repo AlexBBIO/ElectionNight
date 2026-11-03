@@ -172,6 +172,7 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
             comb[f"mix_{y}_final"] = g(cy); comb[f"votes_{y}"] = sum(cy)
             comb[f"d_{y % 100}"] = g(c26) - g(cy)
             comb[f"proj_mix_{y % 100}"] = g(p26); comb[f"proj_d_{y % 100}"] = g(p26) - g(cy)
+            comb[f"vec26_{y % 100}"] = p26; comb[f"vec_{y}"] = cy
         pnl["combined"] = comb
     try:
         mx = cf.ThreadPoolExecutor(max_workers=1)
@@ -184,6 +185,7 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
         mx.shutdown(wait=False)
     except Exception:  # noqa: BLE001
         traceback.print_exc()
+    snap["_pi"] = cfg.get("turnout_share_of_swing", PI_DEFAULT)
     try:
         turnout_vs_expectation(results, snap, b)
     except Exception:  # noqa: BLE001
@@ -238,6 +240,10 @@ def attach_markets(results: list[dict], snap: dict, cfg: dict) -> None:
                        "baseline_ts": (base or {}).get("baseline_ts"), "races": len(braces)}
 
 
+LOYAL_D, LOYAL_R = 85.0, 88.0   # net margin among registered Democrats / Republicans who vote
+PI_DEFAULT = 1 / 3              # assumed share of a swing that comes from turnout composition
+
+
 def _delta_y(res: dict, vt: dict, year: int):
     """Early-minus-Election-Day margin gap for a given year (kept consistent with that year)."""
     if year == 2022 and vt.get("source", "").startswith("2022") and vt.get("delta") is not None:
@@ -283,7 +289,8 @@ def turnout_vs_expectation(results: list[dict], snap: dict, b) -> None:
                 if None in (Gy, G26, M[y]):
                     continue
                 basis[y] = {"expected": E - M[y], "market_expected": None if mk is None else mk - M[y],
-                            "turnout": G26 - Gy, "mix_2026": G26, "mix_y": Gy}
+                            "turnout": G26 - Gy, "mix_2026": G26, "mix_y": Gy,
+                            "vec26": cb.get(f"vec26_{k}"), "vecy": cb.get(f"vec_{y}"), "M_y": M[y]}
             if basis:
                 out["full"] = {"label": "early + Election Day (projected)", "years": basis}
         if t.get("party_gap_2026") is not None and vt.get("pre_share") is not None:
@@ -303,13 +310,30 @@ def turnout_vs_expectation(results: list[dict], snap: dict, b) -> None:
                 shift = (1 - s_) * d_y
                 basis[y] = {"expected": E + shift - pre_m[y],
                             "market_expected": None if mk is None else mk + shift - pre_m[y],
-                            "turnout": t["party_gap_2026"] - Gy, "mix_2026": t["party_gap_2026"], "mix_y": Gy}
+                            "turnout": t["party_gap_2026"] - Gy, "mix_2026": t["party_gap_2026"], "mix_y": Gy,
+                            "vec26": t.get("party_2026"), "vecy": t.get(f"party_{y}"), "M_y": pre_m[y]}
             if basis:
                 out["early"] = {"label": "early vote", "years": basis}
+        PI = snap.get("_pi", 1 / 3)
         for v in out.values():
             for x in v["years"].values():
                 x["persuasion"] = x["expected"] - x["turnout"]
                 x["share"] = x["turnout"] / x["expected"] if abs(x["expected"]) > 0.5 else None
+                # composition effect: value the change in party shares at group vote margins
+                # (registered D ~ +85, registered R ~ -88, others solved to reproduce year y's result)
+                a, z = x.pop("vec26"), x.pop("vecy")
+                My = x.pop("M_y")
+                if a and z and sum(a) and sum(z):
+                    s26 = [q / sum(a) for q in a]; sy = [q / sum(z) for q in z]  # [dem, rep, oth]
+                    m_oth = (My - LOYAL_D * sy[0] + LOYAL_R * sy[1]) / sy[2] if sy[2] > 0.02 else 0.0
+                    m_oth = max(-60.0, min(60.0, m_oth))
+                    eff = LOYAL_D * (s26[0] - sy[0]) - LOYAL_R * (s26[1] - sy[1]) + m_oth * (s26[2] - sy[2])
+                    x["comp_effect"] = eff; x["m_oth_y"] = m_oth
+                    x["vs_polls"] = eff - PI * x["expected"]
+                    x["vs_polls_range"] = [eff - 0.5 * x["expected"], eff - 0.2 * x["expected"]]
+                    if x.get("market_expected") is not None:
+                        x["vs_markets"] = eff - PI * x["market_expected"]
+                        x["vs_markets_range"] = [eff - 0.5 * x["market_expected"], eff - 0.2 * x["market_expected"]]
         r["turnout_split"] = out or None
     # headline: per state (first race with data), full electorate preferred, weighted by electorate
     seen, acc = set(), {y: [0.0, 0.0, 0.0] for y in (2024, 2022)}
@@ -327,6 +351,24 @@ def turnout_vs_expectation(results: list[dict], snap: dict, b) -> None:
         o[f"turnout_part_{y % 100}"] = tu / w if w else None
         o[f"expected_swing_{y % 100}"] = ex / w if w else None
     o["turnout_split_states"] = sorted(seen)
+    for y in (2022, 2024):
+        for key in ("vs_polls", "vs_markets"):
+            num = den = 0.0
+            for r in results:
+                ts = r.get("turnout_split")
+                if not ts:
+                    continue
+                v = ts.get("full") or ts.get("early")
+                x = v["years"].get(y) or {}
+                if x.get(key) is None or r["state"] in o.get(f"_seen_{key}_{y}", set()):
+                    continue
+                o.setdefault(f"_seen_{key}_{y}", set()).add(r["state"])
+                w = (r.get("turnout") or {}).get("pre_ballots") or 1.0
+                num += x[key] * w; den += w
+            o[f"turnout_{key}_{y % 100}"] = num / den if den else None
+    for k in [k for k in o if k.startswith("_seen_")]:
+        del o[k]
+    o["turnout_pi"] = PI_DEFAULT if "_pi" not in snap else snap["_pi"]
 
 
 def history_row(snap: dict) -> dict:

@@ -638,13 +638,14 @@ _TBASE: dict[int, dict] = {}
 
 def turnout_base(year: int) -> dict:
     """fips -> row of data/turnout_{year}_pre.csv (final pre-Election-Day ballots that year)."""
-    if year not in _TBASE:
-        _TBASE[year] = {}
+    if year not in _TBASE:  # build fully before publishing: races load this concurrently
+        d = {}
         p = DATA / f"turnout_{year}_pre.csv"
         if p.exists():
             with open(p, newline="") as fh:
                 for r in csv.DictReader(fh):
-                    _TBASE[year][r["fips"].zfill(5)] = r
+                    d[r["fips"].zfill(5)] = r
+        _TBASE[year] = d
     return _TBASE[year]
 
 
