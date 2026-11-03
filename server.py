@@ -169,39 +169,47 @@ _MK: tuple[float, dict] = (0.0, {})
 
 
 def attach_markets(results: list[dict], snap: dict, cfg: dict) -> None:
-    """Market-implied expected margin per race (Kalshi / Polymarket), and the live read against it:
-    rw_vs_market = projected margin (adjusted + reweighted) - market-implied margin."""
+    """Market expectation = prices going INTO the day (frozen baseline, data/markets_baseline.json,
+    built from price history at 06:00 ET), so intraday moves driven by results don't leak into the
+    expectation. Live prices are shown only as context ("market move today").
+    rw_vs_market = projected margin (adjusted + reweighted) - baseline market-implied margin."""
     global _MK
     mode = cfg.get("markets_mode", "live")
-    data = {}
+    base, live = {}, {}
     if mode != "off":
         if time.time() - _MK[0] < 60:
-            data = _MK[1]
+            base, live = _MK[1]
         else:
+            p = HERE / "data" / "markets_baseline.json"
             try:
-                if mode == "live":
-                    data = importlib.import_module("election_night.feeds.markets").fetch() or {}
-            except Exception:  # noqa: BLE001
-                data = {}
-            if not data:
-                p = HERE / "data" / "markets_snapshot.json"
-                if p.exists():
-                    data = json.loads(p.read_text())
-                    data["_snapshot"] = True
-            _MK = (time.time(), data)
-    races = (data or {}).get("races") or {}
+                base = json.loads(p.read_text()) if p.exists() else {}
+            except ValueError:
+                base = {}
+            if mode == "live":
+                try:
+                    mod = importlib.import_module("election_night.feeds.markets")
+                    if not base and hasattr(mod, "baseline"):
+                        base = mod.baseline() or {}
+                    live = mod.fetch() or {}
+                except Exception:  # noqa: BLE001
+                    live = {}
+            _MK = (time.time(), (base, live))
+    braces, lraces = (base or {}).get("races") or {}, (live or {}).get("races") or {}
     num = den = 0.0
     for r in results:
-        mk = races.get(r["id"]) or {}
-        r["market_margin"] = mk.get("implied_margin")
-        r["market_p_dem"] = mk.get("p_dem")
+        b_, l_ = braces.get(r["id"]) or {}, lraces.get(r["id"]) or {}
+        r["market_margin"] = b_.get("implied_margin")
+        r["market_p_dem"] = b_.get("p_dem")
+        now = l_.get("implied_margin_now")
+        r["market_margin_now"] = now
+        r["market_move"] = None if (now is None or r["market_margin"] is None) else now - r["market_margin"]
         r["rw_vs_market"] = None
         if r["market_margin"] is not None and r.get("rw_projected") is not None:
             r["rw_vs_market"] = r["rw_projected"] - r["market_margin"]
             num += r["rw_vs_market"] * r["votes"]; den += r["votes"]
     snap["overall"]["rw_vs_market"] = num / den if den else None
-    snap["markets"] = {"national": (data or {}).get("national"), "as_of": (data or {}).get("as_of"),
-                       "snapshot": bool((data or {}).get("_snapshot")), "races": len(races)}
+    snap["markets"] = {"national": (base or {}).get("national"), "national_now": (live or {}).get("national"),
+                       "baseline_ts": (base or {}).get("baseline_ts"), "races": len(braces)}
 
 
 def turnout_vs_expectation(results: list[dict], snap: dict, b) -> None:
@@ -259,6 +267,27 @@ def turnout_vs_expectation(results: list[dict], snap: dict, b) -> None:
                                 "was_24": None if (pre24 is None or t.get("party_gap_2024") is None) else pre24 - t["party_gap_2024"],
                                 "was_22": None if (pre22 is None or t.get("party_gap_2022") is None) else pre22 - t["party_gap_2022"]}
         r["turnout_vs_exp"] = out or None
+        # one turnout read per race: full electorate if available, else early vote; 2024 persuasion
+        x = out.get("full") or out.get("early")
+        if x and x.get("was_24") is not None:
+            T = x["mix"] + x["was_24"]
+            r["turnout_implied"] = T
+            r["turnout_vs_polls"] = T - x["expect"]
+            r["turnout_vs_markets"] = None if x.get("market_needed") is None else T - (x["mix"] + x["market_needed"])
+            r["turnout_basis"] = x["label"]
+    # aggregate across states (one race per state, weighted by electorate size)
+    seen, acc = set(), {"turnout_vs_polls": [0.0, 0.0], "turnout_vs_markets": [0.0, 0.0]}
+    for r in results:
+        if r["state"] in seen or r.get("turnout_vs_polls") is None:
+            continue
+        seen.add(r["state"])
+        w = (r.get("turnout") or {}).get("pre_ballots") or 1.0
+        for k in acc:
+            if r.get(k) is not None:
+                acc[k][0] += r[k] * w; acc[k][1] += w
+    for k, (a_, b_) in acc.items():
+        snap["overall"][k] = a_ / b_ if b_ else None
+    snap["overall"]["turnout_vs_states"] = sorted(seen)
 
 
 def history_row(snap: dict) -> dict:

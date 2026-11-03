@@ -46,6 +46,17 @@ details .card{margin-top:10px}
 .note{font-size:12px;color:var(--muted);margin:8px 0 0}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media (max-width:820px){.grid2{grid-template-columns:1fr}}
 .empty{color:var(--muted);padding:16px 0;text-align:center}
+.expect{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:12.5px;color:var(--muted);padding:2px 2px 0}
+.expect b{color:var(--ink);font-weight:600}
+.primary{display:grid;grid-template-columns:auto auto 1fr;gap:10px 34px;align-items:end}
+@media (max-width:820px){.primary{grid-template-columns:1fr 1fr}}
+.verdict{font-size:14px;font-weight:600;margin-top:2px}
+.signals{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}@media (max-width:820px){.signals{grid-template-columns:1fr}}
+.hist{font-size:12px;color:var(--faint);margin-top:6px;border-top:1px dashed var(--line);padding-top:6px}
+.hist b{color:var(--muted);font-weight:600}
+th.grp{text-align:center;border-bottom:none;padding-bottom:0;color:var(--faint);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+td.sep,th.sep{border-left:1px solid var(--line)}
+h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:6px 0 8px;font-weight:700}
 </style>
 </head>
 <body>
@@ -55,19 +66,27 @@ details .card{margin-top:10px}
   <span class="faint" style="margin-left:auto;font-size:12px">Margins D − R in points · blue = better for Democrats than the comparison</span>
 </header>
 <main>
-  <section class="hero">
-    <div class="card"><div class="k">DEMOCRATS VS EXPECTATIONS (POLLS)</div><div class="big" id="h_main">—</div>
-      <div class="sub" id="h_main_sub">waiting for votes</div>
-      <div class="row2"><div><div class="k">vs prediction markets</div><div class="mid" id="h_mk">—</div><div class="sub" id="h_mk_sub">same read against market-implied margins</div></div>
-        <div><div class="k">Implied national environment</div><div class="mid" id="h_nat">—</div><div class="sub" id="h_nat_sub"></div></div>
-        <div><div class="k">Expected vote counted</div><div class="mid" id="h_cnt">—</div><div class="sub">reporting races</div></div></div></div>
-    <div class="card"><div class="k">TURNOUT · PARTY MIX SHIFT</div>
-      <table style="margin-top:4px"><thead><tr><th></th><th>vs 2024</th><th>vs 2022</th></tr></thead><tbody>
-        <tr><td class="sub">Early vote</td><td><span class="mid" id="h_ev24">—</span></td><td><span class="mid" id="h_ev">—</span></td></tr>
-        <tr><td class="sub">Election Day check-ins</td><td><span class="mid" id="h_ed24">—</span></td><td><span class="mid" id="h_ed">—</span></td></tr></tbody></table>
-      <div class="sub" id="h_ev_sub" style="margin-top:4px"></div></div>
-    <div class="card"><div class="k">LATEST BATCHES VS EXPECTED</div><div class="big" id="h_b">—</div><div class="sub" id="h_b_sub">no batches yet</div>
-      <div class="sub" style="margin-top:8px">Each new upload compared with what that vote type (early/mail or Election Day) should look like in that county.</div></div>
+  <div class="expect" id="expect"></div>
+
+  <section class="card">
+    <div class="k">ARE DEMOCRATS BEATING EXPECTATIONS? · VOTES COUNTED</div>
+    <div class="primary">
+      <div><div class="sub">vs polls</div><div class="big" id="h_main">—</div></div>
+      <div><div class="sub">vs markets (6 AM ET)</div><div class="big" id="h_mk">—</div></div>
+      <div><div class="verdict" id="h_verdict">Waiting for the first votes.</div><div class="sub" id="h_main_sub"></div></div>
+    </div>
+    <div class="hist" id="h_hist"></div>
+  </section>
+
+  <section class="signals">
+    <div class="card"><div class="k">TURNOUT VS EXPECTATIONS</div>
+      <div class="row2"><div><div class="sub">vs polls</div><div class="mid" id="h_tp">—</div></div><div><div class="sub">vs markets</div><div class="mid" id="h_tm">—</div></div></div>
+      <div class="sub" id="h_t_sub">turnout-implied margin minus the expected margin</div>
+      <div class="hist" id="h_t_hist"></div></div>
+    <div class="card"><div class="k">LATEST BATCHES VS EXPECTED</div><div class="mid" id="h_b" style="margin-top:6px">—</div><div class="sub" id="h_b_sub">no batches yet</div>
+      <div class="hist">each new upload vs what that vote type should look like in that county, given expectations</div></div>
+    <div class="card"><div class="k">MARKETS SINCE THIS MORNING</div><div class="mid" id="h_mm" style="margin-top:6px">—</div><div class="sub" id="h_mm_sub">average move in market-implied margins since 6 AM ET</div>
+      <div class="hist">context only; the expectation stays frozen at the 6 AM prices</div></div>
   </section>
 
   <section class="card">
@@ -78,11 +97,21 @@ details .card{margin-top:10px}
 
   <section class="card">
     <div class="head"><h2>Races</h2><span class="sub">click a race for counties and model detail</span></div>
-    <div class="scroll"><table id="races"><thead><tr><th>Race</th><th>Polls close (ET)</th><th>Counted</th>
-      <th title="Adjusted for vote type and county mix, vs poll expectation">Dems vs polls</th><th title="Projected margin minus market-implied margin">vs markets</th><th>Projected</th><th>Polls</th><th title="Market-implied margin (Kalshi/Polymarket win probability or margin brackets)">Markets</th></tr></thead><tbody></tbody></table></div>
+    <div class="scroll"><table id="races"><thead><tr><th class="grp"></th><th class="grp"></th><th class="grp sep" colspan="2">Expected going in</th><th class="grp sep" colspan="2">So far</th><th class="grp sep" colspan="2">vs expected</th><th class="grp sep">Markets today</th></tr>
+      <tr><th>Race</th><th>Polls close (ET)</th><th class="sep">Polls</th><th title="Market-implied margin at 6 AM ET">Markets</th><th class="sep">Counted</th><th title="Adjusted + reweighted projection">Projected</th>
+      <th class="sep">vs polls</th><th>vs markets</th><th class="sep" title="Move in market-implied margin since 6 AM ET">Move</th></tr></thead><tbody></tbody></table></div>
     <div id="detail" style="margin-top:14px"></div>
   </section>
 
+  <section class="card">
+    <div class="head"><h2>Turnout vs expectations</h2><span class="sub">is the electorate that showed up enough to deliver what polls and markets expect?</span></div>
+    <div class="scroll"><table id="tve"><thead><tr><th>Race</th><th>Electorate</th><th title="(D−R) share of the electorate by party registration">Party mix</th>
+      <th title="Party mix + the net independent/crossover margin seen in 2024">Turnout-implied<br>(2024 persuasion)</th><th title="Same with 2022's net independent/crossover margin">(2022 persuasion)</th>
+      <th>Expected (polls)</th><th>Turnout vs polls</th><th>Expected (markets)</th><th>Turnout vs markets</th><th title="Net D margin among independents/crossovers the polls need, vs what it was in 2024 / 2022">Polls need from indep. · was '24 · '22</th></tr></thead><tbody></tbody></table></div>
+    <p class="note">Party registration isn't a vote, so the turnout-implied margin = this year's party mix + the net independent and crossover margin seen in 2024 (or 2022). An R+ "turnout vs polls" means turnout alone falls short of what the polls expect, and the expectation relies on independents swinging further toward Democrats than they did then. Early-vote rows compare against the expected early-vote margin (expectation + the usual early-vote lean). Florida's full-electorate row projects Election Day to finish at 2024's volume with today's mix.</p>
+  </section>
+
+  <h3>Historical analogs · how today compares with 2024 and 2022</h3>
   <section class="card">
     <div class="head"><h2>Election Day check-ins by party</h2>
       <select id="ci_state"></select><select id="ci_cty"></select></div>
@@ -91,16 +120,9 @@ details .card{margin-top:10px}
     <p class="note">Cumulative in-person Election Day check-ins by party registration. Horizontal lines = that year's final Election Day total; dots = snapshots saved through the day. Registration isn't vote choice, and Election Day's share keeps shrinking as voters (lately more Republicans) vote early, so read this with the early-vote mix below.</p>
   </section>
 
-  <section class="card">
-    <div class="head"><h2>Is turnout delivering what's expected?</h2><span class="sub">turnout-implied margin vs the poll and market expectation</span></div>
-    <div class="scroll"><table id="tve"><thead><tr><th>Race</th><th>Electorate</th><th title="(D−R) share of the electorate by party registration">Party mix</th>
-      <th title="Party mix + the net independent/crossover margin seen in 2024">Turnout-implied<br>(2024 persuasion)</th><th title="Same with 2022's net independent/crossover margin">(2022 persuasion)</th>
-      <th>Expected (polls)</th><th>Turnout vs polls</th><th>Expected (markets)</th><th>Turnout vs markets</th><th title="Net D margin among independents/crossovers the polls need, vs what it was in 2024 / 2022">Polls need from indep. · was '24 · '22</th></tr></thead><tbody></tbody></table></div>
-    <p class="note">Party registration isn't a vote, so the turnout-implied margin = this year's party mix + the net independent and crossover margin seen in 2024 (or 2022). An R+ "turnout vs polls" means turnout alone falls short of what the polls expect, and the expectation relies on independents swinging further toward Democrats than they did then. Early-vote rows compare against the expected early-vote margin (expectation + the usual early-vote lean). Florida's full-electorate row projects Election Day to finish at 2024's volume with today's mix.</p>
-  </section>
 
   <section class="card">
-    <div class="head"><h2>Early vote vs 2022</h2><span class="sub">ballots cast before Election Day, by county</span></div>
+    <div class="head"><h2>Early vote vs 2024 and 2022</h2><span class="sub">ballots cast before Election Day, by county</span></div>
     <div class="scroll"><table id="ev"><thead><tr><th>State</th><th>Ballots</th><th>vs '24</th><th>vs '22</th><th title="(D−R) share of early voters by party registration">Party mix 2026</th><th>2024</th><th>2022</th>
       <th title="Party mix 2026 minus 2024">Shift vs '24</th><th>vs '22</th><th title="Turnout up more in D or R counties (county margins)">County-mix vs '24</th><th>vs '22</th><th>Source</th></tr></thead><tbody></tbody></table></div>
   </section>
@@ -165,21 +187,32 @@ function bAgg(min){const cut=Date.now()-min*6e4;let a=0,w=0,k=0;batches.forEach(
 function render(data){const s=data.snapshot;if(!s)return;if(last!==data)scoreBatches(s);last=data;const o=s.overall;
   $("#mode").textContent=s.demo?"DEMO":"LIVE";$("#mode").className="badge "+(s.demo?"demo":"live");
   $("#ts").textContent="updated "+new Date(s.ts).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})+" · "+o.races_reporting+" of "+s.races.length+" races reporting";
-  set("#h_main",o.rw_vs_expect,true);
-  $("#h_main_sub").textContent=o.rw_vs_expect==null?"waiting for votes":`± ${errAt(o.counted||0).toFixed(1)} pts expected error · adjusted for vote type and county mix · raw count says ${m(o.vs_expect)}`;
-  set("#h_mk",o.rw_vs_market);$("#h_mk_sub").textContent=s.markets&&s.markets.races?`Kalshi/Polymarket · ${s.markets.races} races${s.markets.snapshot?" (saved prices)":""}`:"market data unavailable";
-  set("#h_nat",o.rw_implied_generic);$("#h_nat_sub").textContent="polls: "+m(o.generic_ballot);
-  $("#h_cnt").textContent=o.races_reporting?pct(o.counted):"—";
-  const ck=s.checkins||{};set("#h_ev",o.turnout_party_shift);set("#h_ev24",o.turnout_party_shift_24);set("#h_ed",ck.d_mix_22);set("#h_ed24",ck.d_mix_24);
-  $("#h_ev_sub").textContent=`(D−R) share by party registration, 2026 minus that year · early: ${o.turnout_states||0} states · Election Day: ${ck.jurisdictions||0} counties, vs final totals`;
-  const b15=bAgg(15),b60=bAgg(60);set("#h_b",b15.v,true);$("#h_b_sub").textContent=b15.k?`last 15 min · ${b15.k} uploads · ${n(b15.w)} votes · last hour ${m(b60.v)}`:"no new votes in the last 15 minutes";
+  const err=errAt(o.counted||0),ck=s.checkins||{},mk=s.markets||{};
+  set("#h_main",o.rw_vs_expect,true);set("#h_mk",o.rw_vs_market,true);
+  const v=o.rw_vs_expect;$("#h_verdict").innerHTML=v==null?"Waiting for the first votes.":
+    Math.abs(v)<=err?`Within expected error (±${err.toFixed(1)}) of the polls`:
+    `<span class="${cls(v)}">${v>0?"Democrats ahead of":"Democrats behind"} the polls by ${Math.abs(v).toFixed(1)}</span> <span class="faint">— outside the ±${err.toFixed(1)} expected error</span>`;
+  $("#h_main_sub").textContent=v==null?"":`${pct(o.counted)} of expected vote counted in ${o.races_reporting} races · adjusted for vote type and county mix · implies a national environment of ${m(o.rw_implied_generic)} (polls ${m(o.generic_ballot)})`;
+  $("#h_hist").innerHTML=`<b>History</b> · swing vs 2024 president ${m(o.swing24)} · vs 2022 ${m(o.swing22)} · raw count vs polls ${m(o.vs_expect)}`;
+  set("#h_tp",o.turnout_vs_polls);set("#h_tm",o.turnout_vs_markets);
+  $("#h_t_sub").textContent=o.turnout_vs_polls==null?"needs party-registration turnout (FL, NC, KY)":`${(o.turnout_vs_states||[]).join(", ")} · registration mix + 2024 independent/crossover margin, vs expected`;
+  $("#h_t_hist").innerHTML=`<b>History</b> · early-vote party mix vs 2024 ${m(o.turnout_party_shift_24)} · vs 2022 ${m(o.turnout_party_shift)} · Election Day check-ins vs 2024 ${m(ck.d_mix_24)} · vs 2022 ${m(ck.d_mix_22)}`;
+  const b15=bAgg(15),b60=bAgg(60);set("#h_b",b15.v);$("#h_b_sub").textContent=b15.k?`last 15 min · ${b15.k} uploads · ${n(b15.w)} votes · last hour ${m(b60.v)}`:"no new votes in the last 15 minutes";
+  const mv=s.races.filter(r=>r.market_move!=null);set("#h_mm",mv.length?mv.reduce((a,r)=>a+r.market_move,0)/mv.length:null);
+  const nb=mk.national||{},nn=mk.national_now||{},pc=x=>x==null?"?":Math.round(x*100)+"%";
+  $("#expect").innerHTML=`<span><b>Going in</b></span><span>Polls: generic ballot <b class="${cls(o.generic_ballot)}">${m(o.generic_ballot)}</b> · race averages in the table</span>`+
+    (mk.races?`<span>Markets ${mk.baseline_ts?"at "+new Date(mk.baseline_ts).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}):"this morning"}: Senate D <b>${pc(nb.senate_dem_control)}</b>${nn.senate_dem_control!=null?` <span class="faint">(now ${pc(nn.senate_dem_control)})</span>`:""} · House D <b>${pc(nb.house_dem_control)}</b>${nn.house_dem_control!=null?` <span class="faint">(now ${pc(nn.house_dem_control)})</span>`:""}</span>`:"<span>Markets: loading</span>")+
+    `<span class="faint">History (2022, 2024) is context, not the benchmark</span>`;
   if(!sel){const f=s.races.find(r=>r.votes);sel=f?f.id:null}
   $("#races tbody").innerHTML=s.races.map(r=>{const st=r.status||"",dot=st==="ok"?"ok":(st.startsWith("error")||st.startsWith("no feed"))?"err":"";
     return `<tr class="click ${r.id===sel?"sel":""}" data-id="${r.id}"><td><span class="dot ${dot}" title="${st.replace(/"/g,"'")}"></span><b>${r.label}</b>${r.dem_name?` <span class="faint">${r.dem_name} v ${r.rep_name}</span>`:""}</td>
-      <td>${closeFmt(r.polls_close_et)}</td><td>${r.votes?pct(r.adj_est_in):"—"}<span class="bar"><i style="width:${Math.min(100,(r.adj_est_in||0)*100)}%"></i></span></td>
-      <td class="${cls(r.rw_vs_expect)}"><b>${m(r.rw_vs_expect)}</b></td><td class="${cls(r.rw_vs_market)}"><b>${m(r.rw_vs_market)}</b></td><td class="${cls(r.rw_projected)}">${m(r.rw_projected)}</td>
-      <td class="${cls(r.forecast)}" title="${r.expect_source}">${m(r.forecast)}${r.expect_source==="national generic ballot"?"†":""}</td>
-      <td class="${cls(r.market_margin)}" title="${r.market_p_dem==null?"":"P(Dem win) "+Math.round(r.market_p_dem*100)+"%"}">${m(r.market_margin)}${r.market_p_dem==null?"":` <span class="faint">${Math.round(r.market_p_dem*100)}%</span>`}</td></tr>`}).join("");
+      <td>${closeFmt(r.polls_close_et)}</td>
+      <td class="sep ${cls(r.forecast)}" title="${r.expect_source}">${m(r.forecast)}${r.expect_source==="national generic ballot"?"†":""}</td>
+      <td class="${cls(r.market_margin)}" title="${r.market_p_dem==null?"":"P(Dem win) "+Math.round(r.market_p_dem*100)+"% at 6 AM ET"}">${m(r.market_margin)}${r.market_p_dem==null?"":` <span class="faint">${Math.round(r.market_p_dem*100)}%</span>`}</td>
+      <td class="sep">${r.votes?pct(r.adj_est_in):"—"}<span class="bar"><i style="width:${Math.min(100,(r.adj_est_in||0)*100)}%"></i></span></td>
+      <td class="${cls(r.rw_projected)}">${m(r.rw_projected)}</td>
+      <td class="sep ${cls(r.rw_vs_expect)}"><b>${m(r.rw_vs_expect)}</b></td><td class="${cls(r.rw_vs_market)}"><b>${m(r.rw_vs_market)}</b></td>
+      <td class="sep ${cls(r.market_move)}">${m(r.market_move)}</td></tr>`}).join("");
   document.querySelectorAll("#races tbody tr").forEach(tr=>tr.onclick=()=>{sel=sel===tr.dataset.id?null:tr.dataset.id;render(last)});
   renderDetail(s.races.find(r=>r.id===sel));
   renderChart(data.history||[],s.races);renderCheckins(ck);renderEV(s);renderTVE(s);renderMore(s);}
@@ -197,9 +230,9 @@ function renderDetail(r){const el=$("#detail");if(!r){el.innerHTML="";return}
 function renderChart(hist,races){const svg=$("#chart"),W=svg.clientWidth||900,H=240,L=46,R=12,T=10,B=24;
   const pts=hist.map(h=>({t:new Date(h.ts).getTime(),h})).filter(p=>p.h.overall);
   if(!pts.some(p=>p.h.overall.rw_vs_expect!=null)){svg.innerHTML=`<text x="${W/2}" y="${H/2}" text-anchor="middle">The line starts when the first votes are counted.</text>`;return}
-  const ser=[{c:"var(--ink)",w:3,g:h=>h.overall.rw_vs_expect,band:true,lab:"adjusted"},{c:"var(--faint)",w:1.5,dash:"5 4",g:h=>h.overall.vs_expect,lab:"raw count"}];
+  const ser=[{c:"var(--ink)",w:3,g:h=>h.overall.rw_vs_expect,band:true,lab:"vs polls"},{c:"var(--y24)",w:2,g:h=>h.overall.rw_vs_market,lab:"vs markets"},{c:"var(--faint)",w:1.5,dash:"5 4",g:h=>h.overall.vs_expect,lab:"raw count"}];
   const sw=(c,d,w)=>`<svg width="26" height="10" style="vertical-align:middle;margin:0 4px 0 10px"><line x1="1" x2="25" y1="5" y2="5" stroke="${c}" stroke-width="${w}" ${d?`stroke-dasharray="${d}"`:""}/></svg>`;
-  $("#chartlegend").innerHTML=`Democrats vs expectations ${sw("var(--ink)","",3)}adjusted (headline) ${sw("var(--faint)","5 4",1.5)}raw count <span style="display:inline-block;width:18px;height:10px;background:var(--ink);opacity:.12;vertical-align:middle;margin:0 4px 0 10px"></span>expected error`+(showRaces?" · coloured = individual races":"");
+  $("#chartlegend").innerHTML=`Democrats vs expectations ${sw("var(--ink)","",3)}vs polls (adjusted) ${sw("var(--y24)","",2)}vs markets (6 AM ET) ${sw("var(--faint)","5 4",1.5)}raw count vs polls <span style="display:inline-block;width:18px;height:10px;background:var(--ink);opacity:.12;vertical-align:middle;margin:0 4px 0 10px"></span>expected error`+(showRaces?" · coloured = individual races":"");
   if(showRaces)races.forEach((r,i)=>ser.push({c:RACECOL[i%RACECOL.length],w:1.3,g:h=>(h.races[r.id]||{}).rw_vs_expect,lab:r.id}));
   let lo=-2,hi=2;ser.forEach(s=>pts.forEach(p=>{const v=s.g(p.h);if(v!=null){const e=s.band?errAt(p.h.overall.counted||0):0;lo=Math.min(lo,v-e);hi=Math.max(hi,v+e)}}));lo=Math.floor(lo-.5);hi=Math.ceil(hi+.5);
   const t0=pts[0].t,t1=pts[pts.length-1].t,X=t=>L+(W-L-R)*(t1>t0?(t-t0)/(t1-t0):1),Y=v=>T+(H-T-B)*(hi-v)/(hi-lo);
