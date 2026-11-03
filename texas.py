@@ -196,8 +196,8 @@ ED_POOL = {"mean": -20.0, "sd": 8.0,
 # Republican by party mix than the early electorate (~9-15 pts of margin) on top of the usual ~3.
 # The unvoted Republican-primary pool (2.1M) is about the size it was in 2022 (~2.3M); the change
 # is the smaller Democratic remainder. Harris's Election Day running at 91% of its 2024 pace argues
-# against an extreme Republican Election Day. Prior: 13 +/- 5.
-GAP = {"mean": 13.0, "sd": 5.0, "history": {"2022": 2.8, "2024": 2.6},
+# against an extreme Republican Election Day. Prior: 13 +/- 7 (wide: this is the least-known input).
+GAP = {"mean": 13.0, "sd": 7.0, "history": {"2022": 2.8, "2024": 2.6},
        "market_implied_note": "the 6 AM poll/market prior implies ~22 given an early vote of D+3.8"}
 BENCH_2022 = {"early_only_margin": -10.0, "final": -10.9,
               "note": "2022: Abbott 54-44 with all early votes and ~30% of Election Day precincts (Texas Tribune)"}
