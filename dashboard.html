@@ -326,6 +326,7 @@ $("#ci_add").onclick=async()=>{const row={jurisdiction:$("#ci_j").value,state:$(
 async function tick(){try{const r=await fetch("/api/state"+location.search,{cache:"no-store"});const data=await r.json();if(data.error)throw new Error(data.error);
   if(data.history==null&&data.snapshot){const h=histRow(data.snapshot);if(!localHist.length||localHist[localHist.length-1].ts!==h.ts){localHist.push(h);localHist=localHist.slice(-1500);try{localStorage.setItem(HKEY,JSON.stringify(localHist))}catch(e){}}data.history=localHist}
   render(data)}catch(e){$("#ts").textContent="can't reach the server: "+e.message}}
+setTimeout(()=>{if(!last)$("#ts").textContent="fetching live data from the state feeds (first load can take ~10 s)…"},2500);
 tick();setInterval(tick,10000);addEventListener("resize",()=>last&&render(last));
 </script>
 </body>
