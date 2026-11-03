@@ -89,6 +89,16 @@ class Baselines:
             a = agg[(fips, office)]
             a[0] += src[0]; a[1] += src[1]; a[2] += src[2]
         b.c22 = dict(agg)
+        txv = DATA / "tx_vote_types_2022_2024.json"
+        if txv.exists():  # Texas SOS county files: early (EV) vs Election Day by candidate
+            try:
+                g22 = json.loads(txv.read_text()).get("gov2022") or {}
+                for f, v in g22.items():
+                    if sum(v["pre"]) and sum(v["ed"]):
+                        b.c22_modes[(f, "GOVERNOR")] = {"pre": [v["pre"][0], v["pre"][1], sum(v["pre"])],
+                                                        "eday": [v["ed"][0], v["ed"][1], sum(v["ed"])]}
+            except (OSError, ValueError):
+                pass
         tp = DATA / "county_types.csv"
         if tp.exists():
             with open(tp, newline="") as fh:

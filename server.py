@@ -205,6 +205,11 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
         snap["texas"] = texas.read(b, cfg, _MK[1][0] if _MK[1] else None, pi=snap["_pi"])
         if snap["texas"] is not None:
             mkb = _MK[1][0] if _MK[1] else None
+            _txg = next((x for x in results if x["id"] == "TX-GOV"), None)
+            try:
+                snap["texas"]["dump"] = texas.dump_benchmarks(b, cfg, mkb, _txg["counties"] if _txg else None)
+            except Exception:  # noqa: BLE001
+                traceback.print_exc()
             snap["texas"]["model"] = {}
             for rid in ("TX-GOV", "TX-SEN"):
                 r = next((x for x in results if x["id"] == rid), None)

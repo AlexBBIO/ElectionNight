@@ -192,10 +192,10 @@
   "states": {
     "TX": {
       "order": "pre_first",
-      "pre_share": 0.7,
-      "delta": 12.0,
-      "turnout_factor": 1.36,
-      "notes": "TX: early vote 7.71M posts first (right after 8 PM ET), Election Day after. delta (early minus Election Day lean) is a prior: 2022 gap was only ~3 pts (early-only R+10, final R+10.9) but the 2026 unvoted pool is far more Republican; 12 used until counties report both vote types. turnout_factor 1.36 = ~11.0M expected / 8.1M in 2022."
+      "pre_share": 0.76,
+      "delta": 10.0,
+      "turnout_factor": 1.26,
+      "notes": "TX: early vote (7.71M) posts first after 8 PM ET. Measured 2022 gap (Election Day minus early) 7.5 pts, 2024 2.6; 10 used because Democratic-primary voters front-loaded into early voting this year. turnout_factor 1.26 = ~10.2M expected / 8.1M in 2022. County 2022 early/Election Day splits are loaded from data/tx_vote_types_2022_2024.json."
     }
   }
 }

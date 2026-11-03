@@ -110,7 +110,7 @@ h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fain
   </section>
 
   <section class="card" id="txcard" style="display:none">
-    <div class="head"><h2>Texas Governor · pre-close model</h2><span class="sub">early vote is in; Election Day is the unknown</span></div>
+    <div class="head"><h2>Texas Governor · early-vote benchmarks</h2><span class="sub">measured 2022/2024 splits, what the 8 PM dump must show, county-by-county</span></div>
     <div id="tx_body"></div>
   </section>
 
@@ -313,25 +313,27 @@ function renderCheckins(ck){const ps=ck.panels||[],sp=$("#ci_state"),cp=$("#ci_c
 $("#ci_state").onchange=()=>{ciState=$("#ci_state").value;ciCty="";last&&render(last)};
 $("#ci_cty").onchange=()=>{ciCty=$("#ci_cty").value;last&&render(last)};
 
-function renderTexas(s){const tx=s.texas,card=$("#txcard");if(!tx||!tx.model||!tx.model["TX-GOV"]){card.style.display="none";return}card.style.display="";
-  const g=tx.model["TX-GOV"],sn=tx.model["TX-SEN"],pc=x=>x==null?"—":Math.round(x*100)+"%";
-  const geo=tx.geo||{},ph=(tx.primary_history||{}).comp||{},c22=ph["2022"]||ph[2022];
-  const scen=g.scenarios.map(r=>`<tr><td>${m(r.m_eday,0)}</td>${["early low","early mid","early high"].map(k=>`<td class="${cls(r[k])}">${m(r[k])}</td>`).join("")}</tr>`).join("");
+function renderTexas(s){const tx=s.texas,card=$("#txcard");if(!tx||!tx.dump||!tx.dump.statewide){card.style.display="none";return}card.style.display="";
+  const d=tx.dump,st=d.statewide,g=(tx.model||{})["TX-GOV"],pc=x=>x==null?"—":Math.round(x*100)+"%",rep=d.reporting;
+  const exp=st.expected_early_by_gap||{},ff=d.final_from_early||{};
+  const rows=(d.counties||[]).slice(0,16).map(r=>`<tr><td>${r.county}</td><td>${kfmt(r.early_votes_2024)}</td><td class="${cls(r.early_2022)}">${m(r.early_2022)}</td><td class="${cls(r.early_2024)}">${m(r.early_2024)}</td><td class="${cls(r.expected_early)}">${m(r.expected_early)}</td>
+    <td class="${cls(r.actual_early)}">${r.actual_early==null?"—":m(r.actual_early)}</td><td class="${cls(r.vs_expected)}"><b>${r.vs_expected==null?"—":m(r.vs_expected)}</b></td></tr>`).join("");
+  const cond=[0,1,2,3,4,5,6].map(e=>`<tr><td>D+${e}</td>${["7.5","11.0","15.0","20.0"].map(k=>{const v=e-(ff[k]?ff[k].needed_for_tie:0);return `<td class="${cls(v)}">${m(v)}</td>`}).join("")}</tr>`).join("");
   $("#tx_body").innerHTML=`
-  <div class="primary" style="grid-template-columns:auto auto auto 1fr">
-    <div><div class="sub">Going in: polls · market 6 AM</div><div class="mid"><span class="${cls(g.prior_polls)}">${m(g.prior_polls)}</span> · <span class="${cls(g.prior_market)}">${m(g.prior_market)}</span></div><div class="sub">Hinojosa ${pc(g.p_dem_market)} on the market</div></div>
-    <div><div class="sub">Model median (10th–90th)</div><div class="mid ${cls(g.median)}">${m(g.median)}</div><div class="sub">${m(g.p10)} to ${m(g.p90)}</div></div>
-    <div><div class="sub">P(Hinojosa wins)</div><div class="big ${g.p_dem>=g.p_dem_market?"d":"r"}" style="font-size:34px">${pc(g.p_dem)}</div><div class="sub">market ${pc(g.p_dem_market)}</div></div>
-    <div class="sub"><b>Early vote (7.71M):</b> by primary history Democrats are at parity with Republicans (2022: R+11, 2024: R+10); early-electorate vote models say D+1 to D+6.6; county mix ${m((geo["2022"]||geo[2022]||{}).shift)} more Democratic than 2022.<br>
-    <b>Election Day size:</b> ~${(g.ed_size.mean/1e6).toFixed(1)}M ± ${(g.ed_size.sd/1e6).toFixed(2)}M (early ≈ ${Math.round(g.early_share*100)}% of all votes) — the record early vote cannibalised Election Day: Harris's live Election Day count is running ~91% of 2024's pace, ~72% of its 2022 Election Day.<br>
-    <b>Election Day (the unknown):</b> modelled as the early vote minus a gap of ${g.ed.gap?g.ed.gap.mean:"?"} ± ${g.ed.gap?g.ed.gap.sd:"?"} pts (so ~${m(g.ed.mean,0)} if the early vote is ${m(g.m_early[0])}). History: Election Day ran only ~3 pts redder than the early vote in 2022 and 2024; this year Democratic-primary voters front-loaded into early voting, leaving a redder remainder. The poll/market prior implies a gap of ~${g.ed.implied_gap!=null?Math.round(g.ed.implied_gap):"?"} pts.</div>
+  <div class="grid2">
+    <div><h3>Measured: early vote vs Election Day</h3><div class="scroll"><table><thead><tr><th></th><th>Early vote</th><th>Election Day</th><th>Final</th><th>Gap</th></tr></thead><tbody>
+      <tr><td>2022 Governor</td><td class="r">${m(st.early_2022)}</td><td class="r">${m(st.eday_2022)}</td><td class="r">R+10.9</td><td>${(st.early_2022-st.eday_2022).toFixed(1)}</td></tr>
+      <tr><td>2024 President</td><td class="r">${m(st.early_2024)}</td><td class="r">${m(st.eday_2024)}</td><td class="r">R+13.7</td><td>${(st.early_2024-st.eday_2024).toFixed(1)}</td></tr>
+      <tr><td>2026 (early ≈ ${Math.round(d.early_share*100)}% of votes)</td><td id="tx_live_early">${rep?`<b class="${cls(rep.vs_expected+exp["gap 11.0"])}">${m(rep.vs_expected+exp["gap 11.0"])}</b> <span class="faint">(${rep.counties} counties, ${pct(rep.share_of_2024_early)} of the 2024 early vote)</span>`:"<span class='faint'>posts right after 8 PM ET</span>"}</td><td class="faint">later</td><td class="faint">—</td><td class="faint">?</td></tr></tbody></table></div>
+      <div class="sub" style="margin-top:6px">Source: Texas SOS county files (early = early in-person + mail). Expectation going in: polls ${m(g?g.prior_polls:null)}, market 6 AM ${m(g?g.prior_market:null)} (Hinojosa ${pc(g?g.p_dem_market:null)}).</div>
+      <h3 style="margin-top:12px">What the 8 PM early-vote dump must show</h3>
+      <div class="sub">If the expectation (Abbott ${m(d.prior)}) is right, the statewide early vote should land near <b class="${cls(exp["gap 7.5"])}">${m(exp["gap 7.5"])}</b> with a 2022-sized gap (7.5), <b class="${cls(exp["gap 11.0"])}">${m(exp["gap 11.0"])}</b> with a gap of 11, <b class="${cls(exp["gap 15.0"])}">${m(exp["gap 15.0"])}</b> with 15.<br>
+      Final ≈ early-vote margin minus ${ff["7.5"]?ff["7.5"].needed_for_tie.toFixed(1):"?"} (gap 7.5) to ${ff["20.0"]?ff["20.0"].needed_for_tie.toFixed(1):"?"} (gap 20). <b>Hinojosa needs the early vote at D+2 to D+5</b> depending on how much redder Election Day runs; above D+5 he is winning under any historical gap, below D+1 he is not.</div>
+      <div class="scroll" style="margin-top:6px"><table><thead><tr><th>Early vote shows</th><th>Final if gap 7.5 (2022)</th><th>gap 11</th><th>gap 15</th><th>gap 20</th></tr></thead><tbody>${cond}</tbody></table></div></div>
+    <div><h3>County benchmarks for the dump</h3><div class="scroll" style="max-height:420px;overflow:auto"><table><thead><tr><th>County</th><th>2024 early votes</th><th>Early '22</th><th>Early '24</th><th title="2024 early margin + the statewide swing the expectation implies (gap 11)">Expected '26</th><th>Actual</th><th>vs exp.</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="sub" style="margin-top:6px">Expected = each county's 2024 early-vote margin shifted by the statewide swing the expectation implies. The <b>vs exp.</b> column is the trading signal once counties post: positive = Hinojosa running ahead of what the market priced.</div></div>
   </div>
-  <div class="grid2" style="margin-top:10px">
-    <div><h3>Final margin by scenario</h3><div class="scroll"><table><thead><tr><th>Election Day margin</th><th>early D+1</th><th>early D+3.8</th><th>early D+6.6</th></tr></thead><tbody>${scen}</tbody></table></div></div>
-    <div><h3>Benchmark for the 8 PM ET early-vote dump</h3><div class="sub">2022's early-only count was <b>R+10</b> (final R+10.9).<br>For the poll/market prior to hold, tonight's early-only statewide margin should be about <b class="${cls(g.early_needed.for_prior)}">${m(g.early_needed.for_prior)}</b>.<br>For a Hinojosa win it needs at least: ${Object.entries(g.early_needed.for_tie_if_ED).map(([k,v])=>`${m(v)} if Election Day is ${m(+k,0)}`).join(" · ")}.<br>If Abbott leads the early vote, the polls and market are badly off.</div>
-    ${sn?`<h3 style="margin-top:12px">Senate (Talarico v Paxton)</h3><div class="sub">Same model plus the ${m(sn.split)} ticket split polls and markets expect: median <b class="${cls(sn.median)}">${m(sn.median)}</b>, P(Talarico) <b>${pc(sn.p_dem)}</b> (market ${pc(sn.p_dem_market)}).</div>`:""}</div>
-  </div>
-  <p class="note">The model is explicit about its one big assumption, the Election Day margin; the scenario table shows the result under each. Once Texas counties report (early votes post first, right after 8 PM ET), observed early and Election Day margins replace the priors.</p>`}
+  ${g?`<p class="note">Pre-close model (assumption-dependent, not a forecast to trade on): early vote D+3.8 ± 4 (two published models disagree, D+1 vs D+6.6), Election Day ${m(g.ed.mean,0)} via a gap of ${g.ed.gap.mean} ± ${g.ed.gap.sd}, total ${(g.total[0]/1e6).toFixed(1)}M → median ${m(g.median)}, P(Hinojosa) ${pc(g.p_dem)} vs market ${pc(g.p_dem_market)}. The dump replaces the first assumption; the first Election Day batches replace the second.</p>`:""}`}
 function renderTVE(s){const rows=[];s.races.forEach(r=>{const ts=r.turnout_split;if(!ts)return;
   ["full","early"].forEach(k=>{const v=ts[k];if(!v)return;[2022,2024].forEach(y=>{const x=v.years[y];if(!x||x.vs_polls==null)return;const pi=s.overall.turnout_pi||1/3;
     rows.push(`<tr><td><b>${r.label}</b></td><td class="faint">${v.label}</td><td>${y}</td><td>${m(x.expected)}${x.market_expected==null?"":` <span class="faint">${m(x.market_expected)}</span>`}</td>

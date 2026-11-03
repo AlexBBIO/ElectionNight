@@ -197,10 +197,13 @@ ED_POOL = {"mean": -20.0, "sd": 8.0,
 # The unvoted Republican-primary pool (2.1M) is about the size it was in 2022 (~2.3M); the change
 # is the smaller Democratic remainder. Harris's Election Day running at 91% of its 2024 pace argues
 # against an extreme Republican Election Day. Prior: 13 +/- 7 (wide: this is the least-known input).
-GAP = {"mean": 13.0, "sd": 7.0, "history": {"2022": 2.8, "2024": 2.6},
-       "market_implied_note": "the 6 AM poll/market prior implies ~22 given an early vote of D+3.8"}
-BENCH_2022 = {"early_only_margin": -10.0, "final": -10.9,
-              "note": "2022: Abbott 54-44 with all early votes and ~30% of Election Day precincts (Texas Tribune)"}
+GAP = {"mean": 11.0, "sd": 5.0, "history": {"2022": 7.5, "2024": 2.6},
+       "note": "Election Day minus early-vote margin, measured from the SOS county files: 2022 Governor "
+               "7.5 (early R+8.5, Election Day R+16.0), 2024 President 2.6 (R+13.2 / R+15.8). 2026 prior 11 "
+               "+/- 5: the 2022 midterm figure plus ~3-4 for the Democratic-primary voters who front-loaded "
+               "into early voting this year."}
+BENCH_2022 = {"early_only_margin": -8.5, "final": -10.9, "eday": -16.0,
+              "note": "2022 Governor from the SOS county file: early vote R+8.5, Election Day R+16.0, final R+10.9"}
 
 
 # Total turnout prior from the early-vote pace and live Election Day counts (see ED_SIZE notes):
@@ -271,3 +274,52 @@ def pre_close(cfg: dict, markets: dict | None, early_votes: float = 7_711_462, m
             # what the 8 PM early-vote dump has to show for the race to be on track
             "early_needed": {"for_prior": (prior - (1 - s0) * ed["mean"]) / s0,
                              "for_tie_if_ED": {str(md): (0 - (1 - s0) * md) / s0 for md in (-10, -15, -20, -25)}}}
+
+
+def dump_benchmarks(b: engine.Baselines, cfg: dict, markets: dict | None, live_counties: list[dict] | None = None,
+                    early_share: float = 0.76, rid: str = "TX-GOV") -> dict:
+    """Measured benchmarks for the early-vote dump: statewide and by county.
+    Expected 2026 early margin under the poll/market prior = county's 2024 early margin + uniform swing,
+    where the statewide expected early margin = prior final + (1 - s) * gap (gap: measured 2022 = 7.5,
+    and the 2026 prior 11). Live rows (feed 'pre' mode) fill the actual column."""
+    p = HERE / "data" / "tx_vote_types_2022_2024.json"
+    if not p.exists():
+        return {}
+    vt = json.loads(p.read_text())
+    g22, p24 = vt.get("gov2022") or {}, vt.get("pres2024") or {}
+    m = lambda a: 100 * (a[0] - a[1]) / sum(a) if sum(a) else None
+    E_poll = cfg_forecast(cfg, rid)
+    mk = (((markets or {}).get("races") or {}).get(rid) or {}).get("implied_margin")
+    prior = E_poll if mk is None else (E_poll + mk) / 2
+    S22 = [sum(v["pre"][i] for v in g22.values()) for i in range(3)]
+    S24 = [sum(v["pre"][i] for v in p24.values()) for i in range(3)]
+    e22, e24 = m(S22), m(S24)
+    exp_state = {f"gap {g}": prior + (1 - early_share) * g for g in (7.5, 11.0, 15.0)}
+    live = {c["fips"]: c for c in (live_counties or []) if c.get("lm") and c["lm"].get("pre") and c["lm"]["pre"][2]}
+    rows = []
+    for f, v in p24.items():
+        pre24 = v["pre"]
+        if sum(pre24) < 15000:
+            continue
+        g = g22.get(f) or {}
+        row = {"fips": f, "county": (v.get("name") or "").title(), "early_votes_2024": sum(pre24),
+               "early_2022": m(g["pre"]) if g else None, "early_2024": m(pre24),
+               "expected_early": m(pre24) + (exp_state["gap 11.0"] - e24)}
+        lv = live.get(f)
+        if lv:
+            row["actual_early"] = engine.margin(*lv["lm"]["pre"]); row["actual_early_votes"] = lv["lm"]["pre"][2]
+            row["vs_expected"] = row["actual_early"] - row["expected_early"]
+        rows.append(row)
+    rows.sort(key=lambda r: -r["early_votes_2024"])
+    tot = sum(r["early_votes_2024"] for r in rows)
+    rep = [r for r in rows if "actual_early" in r]
+    agg = None
+    if rep:
+        w = sum(r["actual_early_votes"] for r in rep)
+        agg = {"vs_expected": sum(r["vs_expected"] * r["actual_early_votes"] for r in rep) / w,
+               "counties": len(rep), "share_of_2024_early": sum(r["early_votes_2024"] for r in rep) / tot}
+    return {"prior": prior, "early_share": early_share, "statewide": {"early_2022": e22, "early_2024": e24,
+            "eday_2022": -16.0, "eday_2024": -15.8, "expected_early_by_gap": exp_state},
+            "counties": rows[:25], "reporting": agg,
+            "final_from_early": {str(g): {"needed_for_tie": (1 - early_share) * g,
+                                          "note": f"final = early - {(1 - early_share) * g:.1f}"} for g in (7.5, 11.0, 15.0, 20.0)}}
