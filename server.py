@@ -238,82 +238,95 @@ def attach_markets(results: list[dict], snap: dict, cfg: dict) -> None:
                        "baseline_ts": (base or {}).get("baseline_ts"), "races": len(braces)}
 
 
-def turnout_vs_expectation(results: list[dict], snap: dict, b) -> None:
-    """Is turnout delivering what the polls (and markets) expect?
+def _delta_y(res: dict, vt: dict, year: int):
+    """Early-minus-Election-Day margin gap for a given year (kept consistent with that year)."""
+    if year == 2022 and vt.get("source", "").startswith("2022") and vt.get("delta") is not None:
+        return vt["delta"]
+    m = (res.get(f"margin_{year}") or {})
+    pre, ed = m.get("pre"), m.get("eday")
+    return None if pre is None or ed is None else pre - ed
 
-    Registration mix G (D-R share of the electorate) is not a vote margin: independents and
-    party-switchers decide the rest. For each race:
-        needed  = E - G_2026       net D margin the polls need from independents/crossovers
-        was_y   = M_y - G_y        what that net actually was in year y (actual result - mix)
-    If needed >> was_y, the expectation relies on unusual persuasion (turnout is under-delivering
-    for Democrats); if needed << was_y, turnout alone is beating expectations.
-    Full electorate (early + Election Day projected) where check-ins exist; else early vote only,
-    with E converted to an expected early-vote margin: E + (1 - s) * lean(early - ED).
+
+def turnout_vs_expectation(results: list[dict], snap: dict, b) -> None:
+    """How much of the swing that polls (or markets) expect is the electorate's party mix
+    already delivering?  Everything for a comparison year y uses that year's numbers only.
+
+      expected swing   = E - M_y        expected margin minus that year's actual margin
+      from turnout     = G_2026 - G_y   change in the electorate's party-registration mix
+      from persuasion  = the rest       what independents / party-switchers must supply
+    Full electorate (early + Election Day projected to finish at that year's ED volume) where
+    Election Day check-ins exist (FL); otherwise the early-vote electorate, where E is turned
+    into an expected early-vote margin E + (1 - s) * gap_y and M_y is that year's early margin.
+    Registration is not vote choice, and there is no reliable norm for how a swing splits
+    between turnout and persuasion, so this is a decomposition, not a verdict.
     """
     panels = {p["state"]: p for p in (snap.get("checkins") or {}).get("panels") or [] if p.get("is_state")}
     research = engine.load_research()
     for r in results:
         t = r.get("turnout") or {}
-        out = {}
-        E = r.get("forecast")
-        mk = r.get("market_margin")
-        st, office = r["state"], r.get("baseline_2022_office")
-        # actual statewide margins: 2024 president, 2022 baseline office
-        m24 = b.state_pres_margin(st)
+        st, office, E, mk = r["state"], r.get("baseline_2022_office"), r.get("forecast"), r.get("market_margin")
+        res = research.get(st, {}) or {}
+        vt = r.get("vote_type") or {}
         agg = [0, 0, 0]
         for f in b.state_counties(st):
             c = b.c22.get((f, office))
             if c:
                 agg = [x + y for x, y in zip(agg, c)]
-        m22 = engine.margin(*agg) if agg[2] else None
+        M = {2024: b.state_pres_margin(st), 2022: engine.margin(*agg) if agg[2] else None}
         cb = (panels.get(st) or {}).get("combined")
-        if cb and cb.get("proj_mix_24") is not None:
-            G = cb["proj_mix_24"]
-            out["full"] = {"label": "early + Election Day (projected)", "mix": G, "expect": E, "needed": E - G,
-                           "market_needed": None if mk is None else mk - G,
-                           "was_24": None if cb.get("mix_2024_final") is None else m24 - cb["mix_2024_final"],
-                           "was_22": None if (cb.get("mix_2022_final") is None or m22 is None) else m22 - cb["mix_2022_final"]}
-        if t.get("party_gap_2026") is not None:
-            vt = r.get("vote_type") or {}
-            s_, d_ = vt.get("pre_share"), vt.get("delta")
-            if s_ is not None and d_ is not None:
-                Epre = E + (1 - s_) * d_
-                res = research.get(st, {}) or {}
-                pre24 = (res.get("margin_2024") or {}).get("pre")
-                # 2022 early-vote margin from county vote-type data, else research
-                pre = [0, 0, 0]
-                for f in b.state_counties(st):
-                    mm = b.c22_modes.get((f, office))
-                    if mm and mm.get("pre"):
-                        pre = [x + y for x, y in zip(pre, mm["pre"])]
-                pre22 = engine.margin(*pre) if pre[2] else (res.get("margin_2022") or {}).get("pre")
-                G = t["party_gap_2026"]
-                out["early"] = {"label": "early vote", "mix": G, "expect": Epre, "needed": Epre - G,
-                                "market_needed": None if mk is None else (mk + (1 - s_) * d_) - G,
-                                "was_24": None if (pre24 is None or t.get("party_gap_2024") is None) else pre24 - t["party_gap_2024"],
-                                "was_22": None if (pre22 is None or t.get("party_gap_2022") is None) else pre22 - t["party_gap_2022"]}
-        r["turnout_vs_exp"] = out or None
-        # one turnout read per race: full electorate if available, else early vote; 2024 persuasion
-        x = out.get("full") or out.get("early")
-        if x and x.get("was_24") is not None:
-            T = x["mix"] + x["was_24"]
-            r["turnout_implied"] = T
-            r["turnout_vs_polls"] = T - x["expect"]
-            r["turnout_vs_markets"] = None if x.get("market_needed") is None else T - (x["mix"] + x["market_needed"])
-            r["turnout_basis"] = x["label"]
-    # aggregate across states (one race per state, weighted by electorate size)
-    seen, acc = set(), {"turnout_vs_polls": [0.0, 0.0], "turnout_vs_markets": [0.0, 0.0]}
+        out = {}
+        if cb:
+            basis = {}
+            for y in (2024, 2022):
+                k = y % 100
+                Gy, G26 = cb.get(f"mix_{y}_final"), cb.get(f"proj_mix_{k}")
+                if None in (Gy, G26, M[y]):
+                    continue
+                basis[y] = {"expected": E - M[y], "market_expected": None if mk is None else mk - M[y],
+                            "turnout": G26 - Gy, "mix_2026": G26, "mix_y": Gy}
+            if basis:
+                out["full"] = {"label": "early + Election Day (projected)", "years": basis}
+        if t.get("party_gap_2026") is not None and vt.get("pre_share") is not None:
+            s_ = vt["pre_share"]
+            pre = [0, 0, 0]
+            for f in b.state_counties(st):
+                mm = b.c22_modes.get((f, office))
+                if mm and mm.get("pre"):
+                    pre = [x + y for x, y in zip(pre, mm["pre"])]
+            pre_m = {2022: engine.margin(*pre) if pre[2] else (res.get("margin_2022") or {}).get("pre"),
+                     2024: (res.get("margin_2024") or {}).get("pre")}
+            basis = {}
+            for y in (2024, 2022):
+                d_y, Gy = _delta_y(res, vt, y), t.get(f"party_gap_{y}")
+                if None in (d_y, Gy, pre_m[y]):
+                    continue
+                shift = (1 - s_) * d_y
+                basis[y] = {"expected": E + shift - pre_m[y],
+                            "market_expected": None if mk is None else mk + shift - pre_m[y],
+                            "turnout": t["party_gap_2026"] - Gy, "mix_2026": t["party_gap_2026"], "mix_y": Gy}
+            if basis:
+                out["early"] = {"label": "early vote", "years": basis}
+        for v in out.values():
+            for x in v["years"].values():
+                x["persuasion"] = x["expected"] - x["turnout"]
+                x["share"] = x["turnout"] / x["expected"] if abs(x["expected"]) > 0.5 else None
+        r["turnout_split"] = out or None
+    # headline: per state (first race with data), full electorate preferred, weighted by electorate
+    seen, acc = set(), {y: [0.0, 0.0, 0.0] for y in (2024, 2022)}
     for r in results:
-        if r["state"] in seen or r.get("turnout_vs_polls") is None:
+        ts = r.get("turnout_split")
+        if not ts or r["state"] in seen:
             continue
         seen.add(r["state"])
+        v = ts.get("full") or ts.get("early")
         w = (r.get("turnout") or {}).get("pre_ballots") or 1.0
-        for k in acc:
-            if r.get(k) is not None:
-                acc[k][0] += r[k] * w; acc[k][1] += w
-    for k, (a_, b_) in acc.items():
-        snap["overall"][k] = a_ / b_ if b_ else None
-    snap["overall"]["turnout_vs_states"] = sorted(seen)
+        for y, x in v["years"].items():
+            acc[y][0] += x["turnout"] * w; acc[y][1] += x["expected"] * w; acc[y][2] += w
+    o = snap["overall"]
+    for y, (tu, ex, w) in acc.items():
+        o[f"turnout_part_{y % 100}"] = tu / w if w else None
+        o[f"expected_swing_{y % 100}"] = ex / w if w else None
+    o["turnout_split_states"] = sorted(seen)
 
 
 def history_row(snap: dict) -> dict:

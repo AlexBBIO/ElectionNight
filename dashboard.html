@@ -79,9 +79,10 @@ h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fain
   </section>
 
   <section class="signals">
-    <div class="card"><div class="k">TURNOUT VS EXPECTATIONS</div>
-      <div class="row2"><div><div class="sub">vs polls</div><div class="mid" id="h_tp">—</div></div><div><div class="sub">vs markets</div><div class="mid" id="h_tm">—</div></div></div>
-      <div class="sub" id="h_t_sub">turnout-implied margin minus the expected margin</div>
+    <div class="card"><div class="k">TURNOUT'S PART OF THE EXPECTED SWING</div>
+      <div class="row2"><div><div class="sub">vs 2024</div><div class="mid" id="h_t24">—</div><div class="sub" id="h_t24s"></div></div>
+        <div><div class="sub">vs 2022</div><div class="mid" id="h_t22">—</div><div class="sub" id="h_t22s"></div></div></div>
+      <div class="sub" id="h_t_sub" style="margin-top:4px">how much of the swing the polls expect the electorate's party mix already delivers; the rest has to come from independents and party-switchers</div>
       <div class="hist" id="h_t_hist"></div></div>
     <div class="card"><div class="k">LATEST BATCHES VS EXPECTED</div><div class="mid" id="h_b" style="margin-top:6px">—</div><div class="sub" id="h_b_sub">no batches yet</div>
       <div class="hist">each new upload vs what that vote type should look like in that county, given expectations</div></div>
@@ -104,11 +105,12 @@ h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--fain
   </section>
 
   <section class="card">
-    <div class="head"><h2>Turnout vs expectations</h2><span class="sub">is the electorate that showed up enough to deliver what polls and markets expect?</span></div>
-    <div class="scroll"><table id="tve"><thead><tr><th>Race</th><th>Electorate</th><th title="(D−R) share of the electorate by party registration">Party mix</th>
-      <th title="Party mix + the net independent/crossover margin seen in 2024">Turnout-implied<br>(2024 persuasion)</th><th title="Same with 2022's net independent/crossover margin">(2022 persuasion)</th>
-      <th>Expected (polls)</th><th>Turnout vs polls</th><th>Expected (markets)</th><th>Turnout vs markets</th><th title="Net D margin among independents/crossovers the polls need, vs what it was in 2024 / 2022">Polls need from indep. · was '24 · '22</th></tr></thead><tbody></tbody></table></div>
-    <p class="note">Party registration isn't a vote, so the turnout-implied margin = this year's party mix + the net independent and crossover margin seen in 2024 (or 2022). An R+ "turnout vs polls" means turnout alone falls short of what the polls expect, and the expectation relies on independents swinging further toward Democrats than they did then. Early-vote rows compare against the expected early-vote margin (expectation + the usual early-vote lean). Florida's full-electorate row projects Election Day to finish at 2024's volume with today's mix.</p>
+    <div class="head"><h2>Turnout vs expectations</h2><span class="sub">how much of the swing that polls expect is the electorate's party mix already delivering?</span></div>
+    <div class="scroll"><table id="tve"><thead>
+      <tr><th class="grp"></th><th class="grp"></th><th class="grp sep" colspan="4">vs 2024</th><th class="grp sep" colspan="4">vs 2022</th></tr>
+      <tr><th>Race</th><th>Electorate</th><th class="sep" title="Expected margin (polls) minus that year's actual margin; markets in grey">Expected swing</th><th title="Change in the electorate's D−R party-registration mix">From turnout</th><th>Left to persuasion</th><th>Turnout share</th>
+      <th class="sep">Expected swing</th><th>From turnout</th><th>Left to persuasion</th><th>Turnout share</th></tr></thead><tbody></tbody></table></div>
+    <p class="note">Expected swing = the expected margin (polls; markets in grey) minus that year's actual result. From turnout = the change in the party-registration mix of the people who voted. Left to persuasion = what independents and party-switchers must add for the expectation to hold. Every number in a column uses the same year's data. Early-vote rows use that year's early-vote margin and early-vs-Election-Day gap; Florida's full-electorate row finishes Election Day at that year's volume with today's mix. Caveats: 2024 early electorates were presidential-year (bigger, less partisan), so early-vote comparisons with 2024 flatter Democrats; 2022 is the cleaner midterm comparison.</p>
   </section>
 
   <h3>Historical analogs · how today compares with 2024 and 2022</h3>
@@ -194,9 +196,11 @@ function render(data){const s=data.snapshot;if(!s)return;if(last!==data)scoreBat
     `<span class="${cls(v)}">${v>0?"Democrats ahead of":"Democrats behind"} the polls by ${Math.abs(v).toFixed(1)}</span> <span class="faint">— outside the ±${err.toFixed(1)} expected error</span>`;
   $("#h_main_sub").textContent=v==null?"":`${pct(o.counted)} of expected vote counted in ${o.races_reporting} races · adjusted for vote type and county mix · implies a national environment of ${m(o.rw_implied_generic)} (polls ${m(o.generic_ballot)})`;
   $("#h_hist").innerHTML=`<b>History</b> · swing vs 2024 president ${m(o.swing24)} · vs 2022 ${m(o.swing22)} · raw count vs polls ${m(o.vs_expect)}`;
-  set("#h_tp",o.turnout_vs_polls);set("#h_tm",o.turnout_vs_markets);
-  $("#h_t_sub").textContent=o.turnout_vs_polls==null?"needs party-registration turnout (FL, NC, KY)":`${(o.turnout_vs_states||[]).join(", ")} · registration mix + 2024 independent/crossover margin, vs expected`;
-  $("#h_t_hist").innerHTML=`<b>History</b> · early-vote party mix vs 2024 ${m(o.turnout_party_shift_24)} · vs 2022 ${m(o.turnout_party_shift)} · Election Day check-ins vs 2024 ${m(ck.d_mix_24)} · vs 2022 ${m(ck.d_mix_22)}`;
+  const tpart=(id,a,b)=>{const el=$(id);el.textContent=a==null?"—":`${m(a)} of ${m(b)}`;el.className="mid"};
+  tpart("#h_t24",o.turnout_part_24,o.expected_swing_24);tpart("#h_t22",o.turnout_part_22,o.expected_swing_22);
+  $("#h_t24s").textContent=o.turnout_part_24==null||!o.expected_swing_24?"":`${Math.round(100*o.turnout_part_24/o.expected_swing_24)}% from turnout`;
+  $("#h_t22s").textContent=o.turnout_part_22==null||!o.expected_swing_22?"":`${Math.round(100*o.turnout_part_22/o.expected_swing_22)}% from turnout`;
+  $("#h_t_hist").innerHTML=`<b>${(o.turnout_split_states||[]).join(", ")||"no states yet"}</b> · not a verdict: there is no reliable norm for how a swing splits between turnout and persuasion<br><b>History</b> · early-vote party mix vs 2024 ${m(o.turnout_party_shift_24)} · vs 2022 ${m(o.turnout_party_shift)} · Election Day check-ins vs 2024 ${m(ck.d_mix_24)} · vs 2022 ${m(ck.d_mix_22)}`;
   const b15=bAgg(15),b60=bAgg(60);set("#h_b",b15.v);$("#h_b_sub").textContent=b15.k?`last 15 min · ${b15.k} uploads · ${n(b15.w)} votes · last hour ${m(b60.v)}`:"no new votes in the last 15 minutes";
   const mv=s.races.filter(r=>r.market_move!=null);set("#h_mm",mv.length?mv.reduce((a,r)=>a+r.market_move,0)/mv.length:null);
   const nb=mk.national||{},nn=mk.national_now||{},pc=x=>x==null?"?":Math.round(x*100)+"%";
@@ -293,14 +297,11 @@ function renderCheckins(ck){const ps=ck.panels||[],sp=$("#ci_state"),cp=$("#ci_c
 $("#ci_state").onchange=()=>{ciState=$("#ci_state").value;ciCty="";last&&render(last)};
 $("#ci_cty").onchange=()=>{ciCty=$("#ci_cty").value;last&&render(last)};
 
-function renderTVE(s){const rows=[];s.races.forEach(r=>{const tv=r.turnout_vs_exp;if(!tv)return;
-  ["full","early"].forEach(k=>{const x=tv[k];if(!x)return;const T24=x.was_24==null?null:x.mix+x.was_24,T22=x.was_22==null?null:x.mix+x.was_22,
-    mE=x.market_needed==null?null:x.mix+x.market_needed,T=T24!=null?T24:T22;
-    rows.push(`<tr><td><b>${r.label}</b></td><td class="faint">${x.label}</td><td class="${cls(x.mix)}">${m(x.mix)}</td>
-      <td class="${cls(T24)}"><b>${m(T24)}</b></td><td class="${cls(T22)}">${m(T22)}</td><td class="${cls(x.expect)}">${m(x.expect)}</td>
-      <td class="${cls(T==null?null:T-x.expect)}"><b>${T==null?"—":m(T-x.expect)}</b></td><td class="${cls(mE)}">${m(mE)}</td><td class="${cls(T==null||mE==null?null:T-mE)}"><b>${T==null||mE==null?"—":m(T-mE)}</b></td>
-      <td>${m(x.needed)} · <span class="faint">${m(x.was_24)} · ${m(x.was_22)}</span></td></tr>`)})});
-  $("#tve tbody").innerHTML=rows.join("")||`<tr><td colspan="10" class="empty">Needs party-registration turnout data (FL, NC, KY)${s.demo?" — off in demo":""}.</td></tr>`}
+function renderTVE(s){const rows=[];s.races.forEach(r=>{const ts=r.turnout_split;if(!ts)return;
+  ["full","early"].forEach(k=>{const v=ts[k];if(!v)return;const cells=[2024,2022].map(y=>{const x=v.years[y];if(!x)return `<td class="sep">—</td><td>—</td><td>—</td><td>—</td>`;
+      return `<td class="sep"><b>${m(x.expected)}</b>${x.market_expected==null?"":` <span class="faint">${m(x.market_expected)}</span>`}</td><td>${m(x.turnout)}</td><td>${m(x.persuasion)}</td><td>${x.share==null?"—":Math.round(x.share*100)+"%"}</td>`}).join("");
+    rows.push(`<tr><td><b>${r.label}</b></td><td class="faint">${v.label}</td>${cells}</tr>`)})});
+  $("#tve tbody").innerHTML=rows.join("")||`<tr><td colspan="10" class="empty">Needs party-registration turnout data (FL, NC, KY)${s.demo?" (off in demo)":""}.</td></tr>`}
 function renderEV(s){const seen=new Set(),rows=[],x=v=>v==null?"—":v.toFixed(2)+"×",c=v=>`<td class="${cls(v)}">${m(v)}</td>`;
   s.races.forEach(r=>{const t=r.turnout;if(!t||seen.has(r.state))return;seen.add(r.state);const src=t.source||{};
   rows.push(`<tr><td><b>${r.state}</b></td><td>${n(t.pre_ballots)}</td><td>${x(t.pre_ratio_24)}</td><td>${x(t.pre_ratio_22)}</td>
