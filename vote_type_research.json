@@ -1,20 +1,315 @@
 {
-  "_sources_note": "PARTIAL - research in progress (written incrementally). Early-vote 2026 figures from local press citing state election offices, Oct 30 - Nov 3 2026. Reporting order from AP Decision Notes + state law; margins filled as found. null = not found, never invented.",
+  "_sources_note": "Compiled 2026-11-03 ~2pm ET from web search. Margins are D minus R in points for the statewide top race (2024 = President except OH = U.S. Senate; 2022 = Gov/Senate as noted). 2024 vote-type margins come from NBC News/NEP 'votes by type' tables (within-type candidate % rounded to whole points, so each margin is +/-1pt; 'pre' is the vote-weighted combination of early+mail computed from those rounded %s). Pre shares are pre-Election-Day (early in-person + mail) fraction of total ballots; 2022 shares mostly from AP Decision Notes ('about X% cast early or absentee'). 2026 early-vote counts from local press quoting state election offices and the callthemap.com/early-vote tracker (Oct 30 - Nov 3 2026); sources disagree by a few %. null = not found, NOT estimated. turnout_factor_guess = analyst judgment (low-moderate confidence): assumes early-vote surge partly cannibalizes Election Day (early share keeps rising each cycle), so total turnout ratio << pre-vote ratio. NC (2022+2024), GA 2022 and SC 2022 margins are exact computations from official/OpenElections precinct files with vote-method columns (higher confidence than NBC-derived rows). KEY PATTERN: in the 2022 midterm the early-vs-ED partisan gap was ~20-25pt in NC/GA/SC, far larger than in 2024 (~4-10pt) - use 2022 gaps as the midterm prior, and 2026 early electorates look even more D-leaning than 2022 where party data exist (NC, FL).",
   "states": {
     "KY": {
       "order": "mixed",
-      "order_notes": "AP 2026: almost all counties post all absentee+early results in first report; most also include in-person Election Day votes in the first report (so first dump is largely complete-county, not pre-only). Fayette Co. posts absentee first, then early+ED as precincts deliver. 2024 first results 6:05pm ET, 50% at 8:15pm ET, 90% at 9:30pm ET. Mail absentee must be RECEIVED by 6pm local ED (no postmark grace). Western KY is Central time (closes 7pm ET).",
-      "late_modes": ["provisional"],
-      "pre_share_2024": null, "pre_share_2022": 0.23,
-      "margin_2024": {"eday": null, "early": null, "mail": null, "pre": null},
-      "margin_2022": {"eday": null, "early": null, "mail": null, "pre": null},
-      "early_vote_2026": {"ballots": 438602, "vs_2022_same_point": null, "vs_2022_final_pre": 1.298, "party_split": "Day 1 early in-person: 66,166 D / 60,793 R / 8,942 other (registration, uninformative in KY)", "as_of": "2026-11-02 (SOS Adams, early in-person + absentee)"},
-      "turnout_factor_guess": null,
+      "order_notes": "AP (2026 Decision Notes): almost all counties post ALL absentee + early results in the first report, and most counties also include in-person Election Day votes in that same first report -> first dumps are largely full-county, not pre-only; treat as mixed (county-complete). Fayette Co. (Lexington, D) posts absentee first, then early+ED as precincts deliver. 2024: first results 6:05pm ET, 50% at 8:15pm ET, 90% at 9:30pm ET. Mail absentee must be RECEIVED by 6pm local on ED (no postmark grace) -> essentially nothing late except provisionals. Western KY (Central time) closes 7pm ET. Pre-ED vote is small (~23% in 2022), and only ~11% of 2026 pre-ED is mail (excused absentee). Vote-type partisan lean not found statewide (NBC does not break KY out by type). 2024 early voters were 52.6% R / 40.3% D by registration; 2026 day-1 early voters were D-plurality by registration (66,166 D vs 60,793 R) - registration is a weak proxy in KY (many registered Ds vote R) but the swing in registered-party mix of early voters vs 2024 is notable (moderate D-enthusiasm signal). Confidence: order moderate-high; margins none.",
+      "late_modes": [
+        "provisional"
+      ],
+      "pre_share_2024": 0.38,
+      "pre_share_2022": 0.23,
+      "margin_2024": {
+        "eday": null,
+        "early": null,
+        "mail": null,
+        "pre": null
+      },
+      "margin_2022": {
+        "eday": null,
+        "early": null,
+        "mail": null,
+        "pre": null
+      },
+      "early_vote_2026": {
+        "ballots": 438602,
+        "vs_2022_same_point": null,
+        "vs_2022_final_pre": 1.3,
+        "party_split": "registration only: day-1 early in-person 66,166 D / 60,793 R / 8,942 other; mail 47,866 vs in-person 390,736 (callthemap). 2022 final pre-ED = 337,975 (SOS). 2024 final early+excused = 792,476 (52.6% R / 40.3% D reg).",
+        "as_of": "2026-11-02 (SOS Adams; early in-person + absentee through Oct 31)"
+      },
+      "turnout_factor_guess": 1.1,
       "sources": [
         "https://www.usnews.com/news/politics/articles/2026-10-30/ap-decision-notes-what-to-expect-in-kentucky-on-election-day",
         "https://fox56news.com/news/kentucky/kentucky-sees-surge-in-early-voting-ahead-of-2026-midterm-election/",
         "https://www.wkyt.com/2026/11/02/kentucky-early-voting-tops-400000-uk-professor-cautions-against-reading-early-party-totals/",
-        "https://www.wkyt.com/2026/11/03/fayette-county-clerk-hopes-have-results-quickly-election-day/"
+        "https://www.wkyt.com/2026/11/03/fayette-county-clerk-hopes-have-results-quickly-election-day/",
+        "https://www.murrayledger.com/news/early-voting-in-kentucky-concludes-with-record-high-turnout-nearly-792-000-votes-cast/article_6f496518-9b0b-11ef-9147-c7871d6bc623.html",
+        "https://en.wikipedia.org/wiki/2022_United_States_Senate_election_in_Kentucky",
+        "https://www.callthemap.com/early-vote"
+      ]
+    },
+    "IN": {
+      "order": "pre_first",
+      "order_notes": "AP (2026 Decision Notes): officials in more than three-quarters of the 92 counties are expected to include nearly all absentee and early results in their FIRST update; absentee ballots may be counted as received, before polls close. In Indiana 'absentee' = early in-person + mail. ED precincts follow. 2024: first results 6:05pm ET, 50% at 8:30pm ET, 90% at 11:49pm ET. Polls close 6pm local; NW (Lake/Porter, Gary/Chicago suburbs, D-heavy) and SW (Evansville area) corners are Central time -> 7pm ET, so Lake County arrives later and is D-leaning (late D skew from geography, not vote type). Mail must be received by close of polls on ED (no postmark grace; not re-verified for 2026). Vote-type margins: NBC 2024 broke out only 9% of IN votes by type (mail 62-36 Trump, early in-person 73-25 Trump in reporting counties) - not representative, not used. IN mail voting requires an excuse (age 65+, etc.) so mail is NOT strongly D as in other states. Record early vote in Marion (86,597 vs 49,381 in 2022, Indianapolis, D) and Hamilton (~70k vs 40k; suburban, school referendums) and St. Joseph (~30k vs 6k) -> early vote likely more D than 2022. Confidence: order moderate; margins none.",
+      "late_modes": [
+        "provisional"
+      ],
+      "pre_share_2024": null,
+      "pre_share_2022": 0.36,
+      "margin_2024": {
+        "eday": null,
+        "early": null,
+        "mail": null,
+        "pre": null
+      },
+      "margin_2022": {
+        "eday": null,
+        "early": null,
+        "mail": null,
+        "pre": null
+      },
+      "early_vote_2026": {
+        "ballots": 884186,
+        "vs_2022_same_point": null,
+        "vs_2022_final_pre": 1.28,
+        "party_split": "no party registration in IN. Early in-person 714,724 (Election Division prelim) to 755,000+ (Capital Chronicle) vs 538,623 in 2022 and 1,397,163 in 2024. Total absentee ~848k-885k vs ~689k in 2022.",
+        "as_of": "2026-11-02 (Indiana Capital Chronicle / NBC / callthemap)"
+      },
+      "turnout_factor_guess": 1.12,
+      "sources": [
+        "https://www.lanacion.com.ar/usa/ap-decision-notes-what-to-expect-in-indiana-on-election-day-nid30102026/",
+        "https://indianacapitalchronicle.com/2026/11/03/live-election-coverage/",
+        "https://www.wrtv.com/news/election/early-voting-surges-in-marion-and-hamilton-counties/",
+        "https://www.wndu.com/2026/11/02/st-joseph-county-early-voter-turnout-2026-nearly-quadruples-compared-2022/",
+        "https://www.nbcnews.com/politics/2024-elections/indiana-president-results",
+        "https://www.callthemap.com/early-vote"
+      ]
+    },
+    "FL": {
+      "order": "pre_first",
+      "order_notes": "AP: counties release all or almost all early in-person AND mail results in their first update, usually before any ED results; counties expect to post early+mail ~30 min after polls close (7pm local; Panhandle 8pm ET). ED precincts follow through the evening; ~99% reported by midnight in 2020. Mail must be RECEIVED by 7pm ED (no postmark grace; only overseas/military up to 10 days). Late: mail dropped off on ED (counted after election night in some counties), provisionals. Key correction: first dump is pre-ED votes, which in 2024 were ~R+9 vs final R+13 (ED R+25), i.e. first dump understates R by ~4pt in a presidential year; in 2026 the early electorate is much more D than 2022/2024 (D turnout rate 49% vs R 38%), so the first dump should be markedly more D than the final and ED votes should be strongly R. 2024 early in-person was strongly R (R+24) while mail was D (D+17) - the split between the two matters. Note FL 2024 shares below are of the 92% of votes NBC broke out by type.",
+      "late_modes": [
+        "mail",
+        "provisional",
+        "uocava"
+      ],
+      "pre_share_2024": 0.77,
+      "pre_share_2022": 0.65,
+      "margin_2024": {
+        "eday": -25.0,
+        "early": -24.0,
+        "mail": 17.0,
+        "pre": -9.4
+      },
+      "margin_2022": {
+        "eday": null,
+        "early": null,
+        "mail": null,
+        "pre": null
+      },
+      "early_vote_2026": {
+        "ballots": 5465190,
+        "vs_2022_same_point": null,
+        "vs_2022_final_pre": 1.08,
+        "party_split": "pre-ED by registration: R 2,194,546 / D 2,065,302 / NPA+other 1,205,342 (R+2.4 of ballots). Mail: D ~832-855k vs R ~679-697k; early in-person: R ~1.50M vs D ~1.21M; NPA ~669k in person + ~382k mail. Turnout rate: D 49% vs R 38% vs NPA 31% (R have 1.5M registration edge, big unvoted R bench for ED). 5.4M = 69% of total 2022 turnout (7,796,916).",
+        "as_of": "2026-11-03 morning state file (through Nov 2)"
+      },
+      "turnout_factor_guess": 1.03,
+      "sources": [
+        "https://www.wlrn.org/government-politics/2026-11-02/voting-nears-40-ahead-of-tuesdays-election",
+        "https://www.callthemap.com/early-vote",
+        "https://www.nbcnews.com/politics/2024-elections/florida-president-results",
+        "https://www.nbcnews.com/politics/2022-elections/florida-governor-results",
+        "https://www.pbs.org/newshour/politics/what-to-expect-in-florida-on-election-day",
+        "https://www.nbcmiami.com/elections/florida-midterm-elections-2026-live-updates/3878278/",
+        "https://thecapitolist.com/wp-content/uploads/2024/05/24-LCI-FES-Report-V9.pdf"
+      ]
+    },
+    "GA": {
+      "order": "pre_first",
+      "order_notes": "Counties may begin tabulating mail ballots at 7am ED; first election-night results include most mail + early in-person votes (AP). ED precincts follow; GA is historically slower (2020: ~77% reported by midnight). In 2022 Warnock led by ~40pt in first batches, margin fell below 1pt after ~2 hours -> first dumps are heavily D-skewed because the large metro-Atlanta counties' pre-ED votes post first. Mail must be RECEIVED by 7pm ED (UOCAVA 3-day grace). Late: provisionals, UOCAVA, plus slow ED reporting in Fulton/DeKalb/Gwinnett. 2022 Gov (Kemp): NBC shows Kemp top in early in-person and ED, Abrams top in mail (exact within-type margins not found). 2022 Senate: Warnock top in early in-person and mail, Walker top on ED. 2024: early in-person was only R+3 and ED R+7 (statewide early vs ED gap small; geography/order matters more than vote type). 2022 margins = U.S. Senate first round (Warnock D+0.9 final), computed from OpenElections GA precinct file (ED 1,410,749 / advance in-person 2,276,270 / mail 245,935 / prov 2,970; matches NBC totals). Governor 2022 (Kemp R+7.5) in the same file is missing Gwinnett: excluding Gwinnett, ED -26.7 / early -1.8 / mail +25.8 / pre +0.9 - so the Gov early-vs-ED gap was ~25pt in 2022 vs only ~4pt in 2024.",
+      "late_modes": [
+        "provisional",
+        "uocava"
+      ],
+      "pre_share_2024": 0.77,
+      "pre_share_2022": 0.64,
+      "margin_2024": {
+        "eday": -7.0,
+        "early": -3.0,
+        "mail": 30.0,
+        "pre": -0.7
+      },
+      "margin_2022": {
+        "eday": -15.5,
+        "early": 7.2,
+        "mail": 37.2,
+        "pre": 10.1
+      },
+      "early_vote_2026": {
+        "ballots": 2810170,
+        "vs_2022_same_point": null,
+        "vs_2022_final_pre": 1.12,
+        "party_split": "no party registration. In-person ~2.69M + absentee 118,329. SOS certified figure 2,828,147. 2022 pre-ED record ~2.5M. ED: 300k+ voted by 10am, SOS expects >1M on ED.",
+        "as_of": "2026-10-31 (end of early voting) / 2026-11-03 10am ED update"
+      },
+      "turnout_factor_guess": 1.1,
+      "sources": [
+        "https://www.atlantanewsfirst.com/2026/10/31/early-voting-wraps-georgia-with-record-28m-ballots-what-happens-next/",
+        "https://www.atlantanewsfirst.com/2026/11/03/georgia-election-day-voters-head-precincts-high-stakes-midterm-battle/",
+        "https://www.nbcnews.com/politics/2024-elections/georgia-president-results",
+        "https://www.nbcnews.com/politics/2022-elections/georgia-governor-results",
+        "https://www.pbs.org/newshour/politics/what-to-expect-in-georgia-on-election-day",
+        "https://raw.githubusercontent.com/openelections/openelections-data-ga/master/2022/20221108__ga__general__precinct.csv"
+      ]
+    },
+    "NC": {
+      "order": "pre_first",
+      "order_notes": "County boards may tabulate mail ballots before polls close; first reports (~7:30-8pm ET) are early one-stop + mail; ED precincts follow. 2022: Beasley led Budd by ~20pt in first batches, lead disappeared after ~90 minutes (Budd won by 3.2). Only ~1% of vote uncounted after election night. 2023 law (SB 747) ended the 3-day postmark grace: civilian mail must be RECEIVED by 7:30pm ED (2026 in force); only UOCAVA later. Late: provisionals, UOCAVA. Margins computed from NCSBE official precinct file (results_pct, columns Election Day / One Stop / Absentee by Mail): 2024 President ED 1,169,088 / one-stop 4,208,839 / mail 295,602 / prov 25,612; 2022 Senate (Budd R+3.2 final) ED 1,571,681 / one-stop 2,003,761 / mail 186,810 / prov 11,672. Note the early-vs-ED gap was 25pt in 2022 (midterm) vs 10pt in 2024. 2026 early electorate is much more D than 2022 by registration (D+12.3 vs D+7.0 same point 2022), mail absentee down ~35% vs 2022.",
+      "late_modes": [
+        "provisional",
+        "uocava"
+      ],
+      "pre_share_2024": 0.79,
+      "pre_share_2022": 0.58,
+      "margin_2024": {
+        "eday": -12.6,
+        "early": -2.8,
+        "mail": 26.9,
+        "pre": -0.8
+      },
+      "margin_2022": {
+        "eday": -20.1,
+        "early": 5.3,
+        "mail": 46.1,
+        "pre": 8.8
+      },
+      "early_vote_2026": {
+        "ballots": 2828274,
+        "vs_2022_same_point": 1.3,
+        "vs_2022_final_pre": 1.34,
+        "party_split": "D 1,085,321 / R 738,748 / U 1,004,205 (registered-party gap D+12.3 vs D+7.0 at same point 2022). In-person 2,728,268, mail 100,020.",
+        "as_of": "2026-11-03 state file (through Nov 2)"
+      },
+      "turnout_factor_guess": 1.12,
+      "sources": [
+        "https://www.callthemap.com/early-vote",
+        "https://wlos.com/news/election/north-carolina-early-voting-ends-2026-election-turnout-2-million-ballots",
+        "https://portcitydaily.com/latest-news/2026/11/02/early-ballots-statewide-and-locally/",
+        "https://www.ncsbe.gov/results-data/voter-turnout/2024-general-election-turnout",
+        "https://www.nbcnews.com/politics/2024-elections/north-carolina-president-results",
+        "https://www.nbcnews.com/politics/2022-elections/north-carolina-senate-results",
+        "https://www.wsls.com/news/politics/2024/10/21/ap-decision-notes-what-to-expect-in-north-carolina-on-election-day/",
+        "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2022_11_08/results_pct_20221108.zip",
+        "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2024_11_05/results_pct_20241105.zip"
+      ]
+    },
+    "VA": {
+      "order": "mixed",
+      "order_notes": "Polls close 7pm ET; localities begin reporting ~7:10pm. Since the 2022 law early/absentee results are reported back to precincts and many localities (e.g. Fairfax City by 7:18pm in 2025) now post early votes early in the night, but practice varies by locality: some central absentee precincts (CAPs, mail-heavy, very D) still report late at night, and historically (2020) initial in-person precinct returns favored R while early/absentee, reported late, were heavily D. Also rural ED precincts tend to report fast. Mail postmarked by ED counts if RECEIVED by noon Fri Nov 6 2026 (3-day grace) -> late mail is a real late mode, strongly D (2024 mail D+48). Localities report additional absentees Nov 4-6. HB968 (2026) changes absentee processing for the 2026 general - details not verified. No 2022 statewide race (House only) -> 2022 margins null. Confidence: order low-moderate (locality-dependent).",
+      "late_modes": [
+        "mail",
+        "provisional",
+        "central_absentee_precincts"
+      ],
+      "pre_share_2024": 0.54,
+      "pre_share_2022": null,
+      "margin_2024": {
+        "eday": -5.0,
+        "early": 7.0,
+        "mail": 48.0,
+        "pre": 15.8
+      },
+      "margin_2022": {
+        "eday": null,
+        "early": null,
+        "mail": null,
+        "pre": null
+      },
+      "early_vote_2026": {
+        "ballots": 1647097,
+        "vs_2022_same_point": 1.58,
+        "vs_2022_final_pre": 1.69,
+        "party_split": "no party registration. In-person ~1.32M, mail returned ~328k. Fairfax +62% vs 2022 (2022: 140,225). 2022 final pre-ED 976,558 (VPAP).",
+        "as_of": "2026-11-02 (callthemap); VPAP"
+      },
+      "turnout_factor_guess": 1.15,
+      "sources": [
+        "https://www.fox5dc.com/news/early-voting-virginia-surges-past-2022-midterm-turnout-over-1-2-million-ballots-cast",
+        "https://www.wfxrtv.com/homepage-video/virginia-early-voter-turnout-jumps-67-percent-over-2022/",
+        "https://www.ffxnow.com/2026/11/02/fairfax-county-sees-massive-increase-in-early-voting-ahead-of-midterm-election/",
+        "https://virginiamercury.com/2026/11/03/its-election-day-in-virginia-heres-what-to-know-before-heading-to-the-polls/",
+        "https://www.vpap.org/visuals/visual/consequences-early-voting/",
+        "https://masonvotes.gmu.edu/live-election-updates-2025-virginia-gubernatorial/",
+        "https://www.nbcnews.com/politics/2024-elections/virginia-president-results",
+        "https://www.elections.virginia.gov/media/electionadministration/electionlaw/2026-Summary-of-Election-Law-Changes_FINAL.pdf",
+        "https://www.callthemap.com/early-vote"
+      ]
+    },
+    "SC": {
+      "order": "mixed",
+      "order_notes": "AP (2026): counties vary. About half release all/almost all mail results in the first update, and about half of those also release ED results at the same time; almost every county releases at least some early in-person results in the first update. 2024 first results 7:19pm ET. Polls close 7pm ET. Mail absentee must be RECEIVED by 7pm ED (no grace). Late: provisionals. Early in-person ~R+17 and ED R+23 in 2024 -> small early/ED gap; mail (tiny, ~4%) D+13. Pre-ED share jumped from 36% (2022) to 62% (2024), so 2026 early-vote ratio vs 2022 overstates turnout growth. 2022 margins = Governor (McMaster R+17.5 final) from OpenElections SC precinct file (ED 1,084,813 / early 542,512 / mail 69,790 / prov+failsafe 6,077): early vote was nearly even in 2022 but ED R+25 -> 2022 early-vs-ED gap ~21pt vs ~6pt in 2024.",
+      "late_modes": [
+        "provisional"
+      ],
+      "pre_share_2024": 0.62,
+      "pre_share_2022": 0.36,
+      "margin_2024": {
+        "eday": -23.0,
+        "early": -17.0,
+        "mail": 13.0,
+        "pre": -15.0
+      },
+      "margin_2022": {
+        "eday": -25.1,
+        "early": -4.1,
+        "mail": -0.9,
+        "pre": -3.7
+      },
+      "early_vote_2026": {
+        "ballots": 1080000,
+        "vs_2022_same_point": null,
+        "vs_2022_final_pre": 1.75,
+        "party_split": "no party registration. ~1.04M early in-person (vs 561,563 in 2022) + 42,528 absentee returned (Nov 3 report). 2022 total ~1.7M.",
+        "as_of": "2026-11-02 (SC Election Commission via WIS / SC Public Radio)"
+      },
+      "turnout_factor_guess": 1.1,
+      "sources": [
+        "https://www.lanacion.com.ar/usa/ap-decision-notes-what-to-expect-in-south-carolina-on-election-day-nid30102026/",
+        "https://www.wistv.com/2026/11/02/over-1-million-votes-cast-south-carolina-during-record-early-voting-period/",
+        "https://www.southcarolinapublicradio.org/sc-news/2026-11-02/more-than-1-million-ballots-cast-in-south-carolinas-final-tally-of-early-votes",
+        "https://www.nbcnews.com/politics/2024-elections/south-carolina-president-results",
+        "https://www.callthemap.com/early-vote",
+        "https://raw.githubusercontent.com/openelections/openelections-data-sc/master/2022/20221108__sc__general__precinct.csv"
+      ]
+    },
+    "OH": {
+      "order": "pre_first",
+      "order_notes": "AP: first votes reported after 7:30pm ET poll close are mail + early in-person ('absentee'), which have favored Ds; D leads eroded over the next ~2 hours as ED votes came in (Vance overtook Ryan ~9:30pm ET in 2022; Trump likewise in 2020). NEW FOR 2026: mail ballots must be RECEIVED by 7:30pm ED (postmark grace period eliminated; 2026 primary late-arriving ballots fell to 1,564) -> late mail mode largely gone; remaining late: provisionals, UOCAVA. 2024 margins below are for U.S. Senate (Brown-Moreno) and cover only 60% of votes broken out by type (partial, likely skewed to counties that report by type).",
+      "late_modes": [
+        "provisional",
+        "uocava"
+      ],
+      "pre_share_2024": 0.36,
+      "pre_share_2022": 0.35,
+      "margin_2024": {
+        "eday": -6.0,
+        "early": -2.0,
+        "mail": 17.0,
+        "pre": 5.7
+      },
+      "margin_2022": {
+        "eday": null,
+        "early": null,
+        "mail": null,
+        "pre": null
+      },
+      "early_vote_2026": {
+        "ballots": 1750000,
+        "vs_2022_same_point": null,
+        "vs_2022_final_pre": 1.18,
+        "party_split": "no party registration. Mail ~654k, in-person ~1.10M (callthemap, rounded). SOS: >1.7M vs nearly 1.5M in 2022 (record for gubernatorial year). 2022 total 4.13M.",
+        "as_of": "2026-11-02 (SOS LaRose / callthemap)"
+      },
+      "turnout_factor_guess": 1.08,
+      "sources": [
+        "https://www.wfmj.com/news/local-news/ohioans-crushed-early-voting-record-in-2026-midterms/article_b067a0dc-105d-4349-9b9b-7dc65b52704e.html",
+        "https://www.nbc4i.com/news/your-local-election-hq/ohio-nears-record-early-voting-ahead-of-election-day/",
+        "https://www.pbs.org/newshour/politics/what-to-expect-in-ohio-on-election-day",
+        "https://www.nbcnews.com/politics/2024-elections/ohio-senate-results",
+        "https://www.nbcnews.com/politics/2022-elections/ohio-senate-results",
+        "https://www.callthemap.com/early-vote"
       ]
     }
   }

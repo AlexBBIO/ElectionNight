@@ -133,6 +133,32 @@ def _write(path: Path, rows: list[dict], cols: list[str]) -> None:
     print(f"wrote {path.relative_to(HERE.parent)} ({len(rows)} rows)", file=sys.stderr)
 
 
+def patch_indiana() -> None:
+    """MEDSL's 2022 Indiana file covers only ~35 of 92 counties; replace IN Senate / SoS / House
+    with county totals from Indiana's official results archive (matches certified totals)."""
+    import importlib.util
+    if "election_night" not in sys.modules:
+        spec = importlib.util.spec_from_file_location(
+            "election_night", HERE / "__init__.py", submodule_search_locations=[str(HERE)])
+        pkg = importlib.util.module_from_spec(spec)
+        sys.modules["election_night"] = pkg
+        spec.loader.exec_module(pkg)
+    from election_night.feeds import in_
+    path = DATA / "county_2022.csv"
+    cols = ["state", "fips", "county", "office", "district", "special", "mode", "dem", "rep", "total"]
+    with open(path, newline="") as fh:
+        rows = [r for r in csv.DictReader(fh)
+                if not (r["state"] == "IN" and r["office"] in ("US SENATE", "US HOUSE", "SECRETARY OF STATE"))]
+    for race, office in (("U.S. Senate", "US SENATE"), ("Secretary of State", "SECRETARY OF STATE"),
+                         ("U.S. House", "US HOUSE")):
+        for r in in_.fetch(race, "2022-11-08"):
+            rows.append({"state": "IN", "fips": r["fips"], "county": r["county"], "office": office,
+                         "district": "ALL" if office == "US HOUSE" else "STATEWIDE", "special": "0",
+                         "mode": "TOTAL", "dem": r["dem"], "rep": r["rep"], "total": r["total"]})
+    _write(path, rows, cols)
+
+
 if __name__ == "__main__":
     build_pres_2024()
     build_2022()
+    patch_indiana()

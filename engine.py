@@ -293,8 +293,7 @@ def state_vote_type_params(st: str, office: str, b: Baselines, cfg: dict) -> dic
     t22 = 0
     for f in b.state_counties(st):
         c = b.c22.get((f, office))
-        if c:
-            t22 += c[2]
+        t22 += c[2] if c and c[2] else b.pres24[f]["total"] * 0.75  # same fallback as the county model
         m = b.c22_modes.get((f, office))
         if m:
             for k in agg:
@@ -312,10 +311,12 @@ def state_vote_type_params(st: str, office: str, b: Baselines, cfg: dict) -> dic
     s26 = _num(ov.get("pre_share")) or s26 or _num(res.get("pre_share_2024")) or s22 or 0.5
     delta = _num(ov.get("delta"))
     src = "config override" if delta is not None else None
-    if delta is None and d24 is not None:
-        delta, src = d24, "2024 research"
+    # Midterm prior: the 2022 early-vs-Election-Day gap (20-25 pts in NC/GA/SC) is a better guide for
+    # 2026 than 2024's (4-10 pts); fall back to 2024 research only where no 2022 split exists.
     if delta is None and d22 is not None:
         delta, src = d22, ("2022 county vote-type data" if have22 else "2022 research")
+    if delta is None and d24 is not None:
+        delta, src = d24, "2024 research (no 2022 split)"
     order = ov.get("order") or res.get("order") or "pre_first"
     return {"order": order, "pre_share": s26, "pre_share_2022": s22, "delta": delta, "delta_2022": d22,
             "turnout_factor": tf, "source": src or "none (no vote-type adjustment)",
