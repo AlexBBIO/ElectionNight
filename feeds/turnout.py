@@ -16,7 +16,11 @@ Sources (2026):
       The Stats_<n>_*.txt "Download File" links on that page lag the HTML by days - not used.)
   NC  NCSBE absentee_counts_county_<date>.csv (accepted one-stop + mail ballots, county x party),
       https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/ (rebuilt daily ~4:40am ET).
-Others: see SNAPSHOT_NOTES / the snapshot CSV.
+  KY  State Board of Elections "2026 General Election Current Voter Turnout" xlsx linked from
+      https://elect.ky.gov/ (Absentee_Public_MMDDYY.xlsx; county x D/R; unofficial).
+  SC  SC Election Commission EV-Totals-MM-DD-YY.csv (early in-person by county; no mail, no party).
+  GA, VA, OH, IN: no county-level 2026 source wired up (GA SOS data hub/absentee file sit behind a
+      Cloudflare challenge -> HTTP 403; VA ENR has statewide absentee statistics only at the top level).
 
 2022 baseline: data/turnout_2022_pre.csv (see BASELINE_NOTES).
 """
@@ -50,6 +54,13 @@ BASELINE_NOTES = {
           "on Election Day (2026 live figures are through the day before ED).",
     "NC": "NCSBE absentee_20221108.zip, ballots ACCEPTED/ACCEPTED - CURED with return date before 11/08/2022 "
           "(one-stop + mail), by county x voter party. Excludes 28k mail ballots received after ED.",
+    "GA": "2022 official results by vote method (Governor: Advanced + Absentee votes) via data/county_2022.csv "
+          "(MEDSL precinct files) - votes in the race, not ballots; no party registration.",
+    "SC": "2022 official results by vote method (Governor: Early + Absentee votes) via data/county_2022.csv - "
+          "votes, not ballots. NB the 2026 live SC file is early in-person only (no mail).",
+    "KY": "KY SBE https://elect.ky.gov/Documents/Absentee_Public_110422.xlsx (mail returned + excused & "
+          "no-excuse in-person + FPCA; D/R from the file, oth = total - D - R). Total 337,975 = SBE's final "
+          "2022 pre-ED figure. Marked unofficial by SBE.",
 }
 
 
@@ -127,8 +138,112 @@ def _nc() -> list[dict]:
     return [_row("NC", c, total=a[0], dem=a[1], rep=a[2], oth=a[3], as_of=as_of) for c, a in acc.items()]
 
 
+# ------------------------------------------------------------------ KY
+KY_HOME = "https://elect.ky.gov/"
+
+
+def xlsx_rows(data: bytes, sheet: str = "xl/worksheets/sheet1.xml") -> list[dict[str, str]]:
+    """Minimal stdlib .xlsx reader: [{column letter: cell text}] for one sheet."""
+    import xml.etree.ElementTree as ET
+    import zipfile
+    z = zipfile.ZipFile(io.BytesIO(data))
+    m = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
+    ss = []
+    if "xl/sharedStrings.xml" in z.namelist():
+        ss = ["".join(t.text or "" for t in si.iter(m + "t"))
+              for si in ET.fromstring(z.read("xl/sharedStrings.xml")).iter(m + "si")]
+    out = []
+    for row in ET.fromstring(z.read(sheet)).iter(m + "row"):
+        r = {}
+        for c in row.iter(m + "c"):
+            col = re.match(r"[A-Z]+", c.get("r", "")).group(0)
+            v = c.find(m + "v")
+            val = v.text if v is not None else "".join(x.text or "" for x in c.iter(m + "t"))
+            if c.get("t") == "s" and val:
+                val = ss[int(val)]
+            r[col] = (val or "").strip()
+        out.append(r)
+    return out
+
+
+def ky_parse(data: bytes) -> dict[str, list[int]]:
+    """KY SBE 'Absentee_Public_MMDDYY.xlsx' -> {COUNTY: [total, dem, rep, oth]}.
+    Columns located by header text: mail RETURNED + excused in-person + no-excuse in-person
+    (+ FPCA returned, party unknown -> oth); total = 'UNOFFICIAL Total Absentee'."""
+    rows = xlsx_rows(data)
+    hi = next(i for i, r in enumerate(rows) if r.get("A", "").lower() == "county")
+    h = {v.lower(): k for k, v in rows[hi].items() if v}
+
+    def col(*names):
+        for n in names:
+            if n.lower() in h:
+                return h[n.lower()]
+        raise common.FeedError(f"KY absentee xlsx: no column {names[0]!r}")
+    dc = [col("DEM Ballots RETURNED"), col("DEM Excused In-person"), col("DEM No Excuse In-person")]
+    rc = [col("REP Ballots RETURNED"), col("REP Excused In-person"), col("REP No Excuse In-person")]
+    tc = col("UNOFFICIAL Total Absentee")
+    out = {}
+    for r in rows[hi + 1:]:
+        name = r.get("A", "")
+        if not name or name.upper().startswith("TOTAL") or not r.get(tc):
+            continue
+        t = common.to_int(r[tc])
+        d = sum(common.to_int(r.get(c)) for c in dc)
+        rp = sum(common.to_int(r.get(c)) for c in rc)
+        out[name] = [t, d, rp, t - d - rp]
+    return out
+
+
+def _ky() -> list[dict]:
+    home = common.decode(_get(KY_HOME, "ky_home.html"))
+    links = re.findall(r'href="([^"]*Absentee_Public_(\d{6})\.xlsx)"', home, re.I)
+    if not links:
+        raise common.FeedError(f"KY: no Absentee_Public_*.xlsx link on {KY_HOME}")
+    href, mmddyy = max(links, key=lambda l: (l[1][4:], l[1][:4]))
+    url = href if href.startswith("http") else KY_HOME.rstrip("/") + "/" + href.lstrip("/")
+    acc = ky_parse(_get(url, f"ky_Absentee_Public_{mmddyy}.xlsx"))
+    as_of = f"KY SBE {url.rsplit('/', 1)[-1]} (unofficial; file dated {mmddyy[:2]}/{mmddyy[2:4]}/20{mmddyy[4:]})"
+    return [_row("KY", c, total=a[0], dem=a[1], rep=a[2], oth=a[3], as_of=as_of) for c, a in acc.items()]
+
+
+# ------------------------------------------------------------------ SC
+SC_UPLOADS = "https://scvotes.gov/wp-content/uploads"
+
+
+def _sc() -> list[dict]:
+    """SC Election Commission 'EV-Totals-MM-DD-YY.csv' (early in-person by county x site x day).
+    Newest file found by probing the last 10 days in the WordPress uploads folders.
+    In-person early voting only: returned mail absentee ballots (~42k) are NOT in this file."""
+    today = _dt.date.today()
+    raw = url = None
+    for back in range(10):
+        d = today - _dt.timedelta(days=back)
+        for folder in {d.strftime("%Y/%m"), (d + _dt.timedelta(days=3)).strftime("%Y/%m")}:
+            u = f"{SC_UPLOADS}/{folder}/EV-Totals-{d:%m-%d-%y}.csv"
+            try:
+                raw = _get(u, f"sc_EV-Totals-{d:%m-%d-%y}.csv", max_age=float("inf") if back else CACHE_SECONDS)
+                url = u
+                break
+            except common.FeedError:
+                continue
+        if raw:
+            break
+    if not raw:
+        raise common.FeedError(f"SC: no EV-Totals-*.csv under {SC_UPLOADS} in the last 10 days")
+    rows = list(csv.reader(io.StringIO(common.decode(raw))))
+    hi = next(i for i, r in enumerate(rows[:20]) if r and r[0].strip() == "Jurisdiction")
+    ti = [c.strip() for c in rows[hi]].index("Total")
+    report = rows[1][1].strip() if len(rows) > 1 and len(rows[1]) > 1 else "?"
+    out = []
+    for r in rows[hi + 1:]:
+        if len(r) > ti and r[0].strip() and r[0].strip() != "South Carolina" and r[1].strip():
+            out.append(_row("SC", r[0].strip(), total=common.to_int(r[ti]),
+                            as_of=f"SC EV-Totals report date {report} (in-person early only; {url})"))
+    return out
+
+
 # ------------------------------------------------------------------ registry / fallback
-_LIVE = {"FL": _fl, "NC": _nc}
+_LIVE = {"FL": _fl, "NC": _nc, "KY": _ky, "SC": _sc}
 
 
 def _opt(x):
@@ -150,20 +265,9 @@ def load_snapshot(state: str) -> list[dict]:
     return out
 
 
-def _snapshot_states() -> list[str]:
-    if not SNAPSHOT_CSV.exists():
-        return []
-    with SNAPSHOT_CSV.open(newline="") as fh:
-        return sorted({r["state"] for r in csv.DictReader(fh)})
-
-
-STATES = ["FL", "NC", "GA", "KY", "VA", "SC", "OH", "IN"]
-
-
-def supported() -> list[str]:
-    """States fetch() can return rows for right now (live adapter or snapshot)."""
-    snap = set(_snapshot_states())
-    return [s for s in STATES if s in _LIVE or s in snap]
+# States with county-level 2026 data (live adapter, snapshot fallback). GA, VA, OH and IN are not
+# supported: no reachable official county-level file (see module docstring).
+STATES = ["FL", "NC", "KY", "SC"]
 
 
 def fetch(state: str) -> list[dict]:

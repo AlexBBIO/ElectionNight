@@ -660,10 +660,7 @@ def turnout_2026(st: str, cfg: dict) -> dict:
         import importlib
         mod = importlib.import_module("election_night.feeds.turnout")
         if st in getattr(mod, "STATES", []):
-            try:
-                data = mod.fetch(st, live=(mode == "live"))
-            except TypeError:
-                data = mod.fetch(st) if mode == "live" else []
+            data = mod.fetch(st) if mode == "live" else mod.load_snapshot(st)
             rows = {(r.get("fips") or "").zfill(5): r for r in data or []}
     except Exception:  # noqa: BLE001
         rows = {}
