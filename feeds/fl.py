@@ -10,15 +10,27 @@ The 2026-11-03 file is published (all zeros) before polls close. FL releases no 
 before 8:00 pm ET (panhandle is on Central time).
 Ticket races (Governor and Lieutenant Governor) put the governor's surname in CanNameFirst,
 the running mate's in CanNameLast and "/" in CanNameMiddle -> shown as "DeSantis / Nuñez".
+
+Vote type: neither the tab file nor the pipe-delimited Info/Votes files carry a vote-type split,
+and floridaelectionwatch.gov shows none, so rows have no "modes". The site's County Reporting
+Status page (https://floridaelectionwatch.gov/CountyReportingStatus) does flag, per county,
+whether Precincts / Vote-by-Mail / Early Voting / Provisional counting is completed; for the
+live election that becomes row["mode_status"] = {"eday"|"mail"|"early"|"other":
+"complete"|"partial"|"none"} (best effort: only the "N" = not-completed marker has been seen;
+"Y" / "P" are assumed for completed / partial, any other marker is left out).
 """
 from __future__ import annotations
 
 import csv
+import html
 import io
+import re
 
 from . import common
 
 STATE = "FL"
+LIVE_ELECTION = "2026-11-03"
+STATUS_URL = "https://floridaelectionwatch.gov/CountyReportingStatus"
 URL = "https://flelectionfiles.floridados.gov/enightfilespublic/{ymd}_ElecResultsFL.txt"
 
 # 2026-11-03 general, statewide candidate contests as named in the feed (top of ticket first).
@@ -84,7 +96,40 @@ def fetch(race: str, election: str = "2026-11-03") -> list[dict]:
             parties[cand] = (r.get("PartyCode") or "").strip()
             c["votes"][cand] = c["votes"].get(cand, 0) + common.to_int(r.get("CanVotes"))
         out.append(common.build_rows(STATE, counties, parties))
-    return _combine(out)
+    res = _combine(out)
+    if election == LIVE_ELECTION:  # the status page only ever describes the current election
+        status = _mode_status()
+        for r in res:
+            if r["fips"] in status:
+                r["mode_status"] = status[r["fips"]]
+    return res
+
+
+_MARK = {"N": "none", "Y": "complete", "P": "partial"}
+# status columns after the four numeric ones: Precincts Completed, Vote-by-Mail, Early Voting,
+# Provisional, 10-day Overseas VBM (the last is not mapped).
+_STATUS_COLS = ("eday", "mail", "early", "other")
+
+
+def _mode_status() -> dict[str, dict]:
+    try:
+        page = common.decode(common.http_get(common.bust(STATUS_URL, "live", every=30), memo_seconds=30))
+    except common.FeedError:
+        return {}
+    out: dict[str, dict] = {}
+    for tr in re.findall(r'<tr class="reporting-row[^"]*">(.*?)</tr>', page, re.S):
+        m = re.search(r"<u>(.*?)</u>", tr, re.S)
+        if not m:
+            continue
+        try:
+            fips = common.county_fips(STATE, html.unescape(m.group(1)).strip())
+        except KeyError:
+            continue
+        marks = re.findall(r'<span class=["\']?([A-Za-z]*)["\']?\s*>', tr)
+        st = {mode: _MARK[k] for mode, k in zip(_STATUS_COLS, marks) if k in _MARK}
+        if st:
+            out[fips] = st
+    return out
 
 
 def _combine(built: list[list[dict]]) -> list[dict]:

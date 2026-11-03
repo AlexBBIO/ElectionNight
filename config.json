@@ -2,7 +2,8 @@
   "_notes": [
     "Margins are Democratic minus Republican, in percentage points of all votes (D+5 = 5, R+5 = -5).",
     "forecast_margin: final pre-election polling average for that race (null = derive from national generic ballot).",
-    "Sources for the defaults (checked 2026-11-03): generic ballot averages D+8.1 to D+9.0 (FiftyPlusOne final D+8.7, RCP D+8.8, Call the Map D+8.6); race averages from RCP / Silver Bulletin / PollCheck. Gov forecasts marked low_confidence come from a single aggregator. Edit before polls close."
+    "Sources for the defaults (checked 2026-11-03): generic ballot averages D+8.1 to D+9.0 (FiftyPlusOne final D+8.7, RCP D+8.8, Call the Map D+8.6); race averages from RCP / Silver Bulletin / PollCheck. Gov forecasts marked low_confidence come from a single aggregator. Edit before polls close.",
+    "firm_threshold applies to est. share of expected vote counted. expected_turnout_vs_2022 is the fallback turnout factor; per-state values come from vote_type_research.json or a 'states' override, e.g. \"states\": {\"KY\": {\"turnout_factor\": 1.2, \"pre_share\": 0.3, \"delta\": 15, \"order\": \"pre_first\"}}."
   ],
   "poll_seconds": 30,
   "election": "2026-11-03",
@@ -11,8 +12,8 @@
     "pres_2024_margin": -1.5,
     "house_2022_margin": -2.7
   },
-  "expected_turnout_vs_2022": 1.0,
-  "firm_threshold": 0.9,
+  "expected_turnout_vs_2022": 1.15,
+  "firm_threshold": 0.75,
   "races": [
     {
       "id": "KY-SEN",
@@ -161,5 +162,6 @@
       "low_confidence": true,
       "polls_close_et": "19:30"
     }
-  ]
+  ],
+  "states": {}
 }

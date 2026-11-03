@@ -41,10 +41,25 @@ def margin(d: float, r: float, t: float) -> float | None:
     return (d - r) / t * 100 if t else None
 
 
+def mode_bucket(mode: str) -> str | None:
+    """Map a MEDSL / feed vote-mode label to pre (early + mail), eday or other."""
+    m = (mode or "").upper().replace("_", " ")
+    if not m or m == "TOTAL":
+        return None
+    if "PROVISIONAL" in m or "FAILSAFE" in m or "AFFIDAVIT" in m or "LATE" in m or "POST" in m:
+        return "other"
+    if "ELECTION DAY" in m or m in ("IN-PERSON", "IN PERSON", "NOT ABSENTEE"):
+        return "eday"
+    if any(k in m for k in ("ABSENTEE", "MAIL", "EARLY", "ONE STOP", "ADVANCE", "MILITARY", "OVERSEAS")):
+        return "pre"
+    return "other"
+
+
 @dataclass
 class Baselines:
     pres24: dict[str, dict] = field(default_factory=dict)            # fips -> row
     c22: dict[tuple, list[int]] = field(default_factory=dict)        # (fips, office) -> [d, r, t]
+    c22_modes: dict[tuple, dict] = field(default_factory=dict)       # (fips, office) -> {pre|eday|other: [d,r,t]}
 
     @classmethod
     def load(cls) -> "Baselines":
@@ -71,6 +86,21 @@ class Baselines:
             a = agg[(fips, office)]
             a[0] += src[0]; a[1] += src[1]; a[2] += src[2]
         b.c22 = dict(agg)
+
+        # 2022 by vote type (pre = early + mail, eday, other), where the breakdown is complete.
+        modes: dict[tuple, dict] = collections.defaultdict(lambda: collections.defaultdict(lambda: [0, 0, 0]))
+        with open(DATA / "county_2022.csv", newline="") as fh:
+            for r in csv.DictReader(fh):
+                bucket = mode_bucket(r["mode"])
+                if not bucket:
+                    continue
+                a = modes[(r["fips"], r["office"])][bucket]
+                a[0] += int(r["dem"]); a[1] += int(r["rep"]); a[2] += int(r["total"])
+        for key, m in modes.items():
+            tot = sum(v[2] for v in m.values())
+            ref = b.c22.get(key, [0, 0, 0])[2]
+            if "pre" in m and "eday" in m and ref and abs(tot - ref) / ref < 0.03:
+                b.c22_modes[key] = {k: list(v) for k, v in m.items()}
         return b
 
     def state_counties(self, st: str) -> list[str]:
@@ -104,8 +134,9 @@ def analyze_race(race: dict, rows: list[dict], b: Baselines, cfg: dict) -> dict:
         state_swing = nat["generic_ballot_margin"] - nat["pres_2024_margin"]
         expect_source = "national generic ballot"
     forecast = st_pres + state_swing
-    tfac = cfg.get("expected_turnout_vs_2022", 1.0)
-    firm_thr = cfg.get("firm_threshold", 0.9)
+    vt = state_vote_type_params(st, office, b, cfg)
+    tfac = vt["turnout_factor"]
+    firm_thr = cfg.get("firm_threshold", 0.75)
 
     live = {}
     for r in rows:
@@ -117,6 +148,12 @@ def analyze_race(race: dict, rows: list[dict], b: Baselines, cfg: dict) -> dict:
             live[f] = {k: (r.get(k) or 0) for k in ("dem", "rep", "total")}
             live[f]["precincts_reporting"] = r.get("precincts_reporting")
             live[f]["precincts_total"] = r.get("precincts_total")
+            live[f]["pre_units"] = (r.get("pre_units_reporting"), r.get("pre_units_total"))
+        if r.get("modes"):
+            lm = live[f].setdefault("modes", {"pre": [0, 0, 0], "eday": [0, 0, 0], "other": [0, 0, 0]})
+            for k, v in r["modes"].items():
+                bk = {"early": "pre", "mail": "pre", "pre": "pre", "eday": "eday"}.get(k, "other")
+                lm[bk][0] += v.get("dem") or 0; lm[bk][1] += v.get("rep") or 0; lm[bk][2] += v.get("total") or 0
         live[f].setdefault("dem_name", r.get("dem_name"))
         live[f].setdefault("rep_name", r.get("rep_name"))
 
@@ -138,8 +175,9 @@ def analyze_race(race: dict, rows: list[dict], b: Baselines, cfg: dict) -> dict:
             "vs_expect": None if actual is None else actual - expected,
             "swing24": None if actual is None else actual - base24,
             "swing22": None if actual is None or base22 is None else actual - base22,
-            "turnout_exp": turnout,
+            "turnout_exp": turnout, "turnout22": turnout / tfac if tfac else turnout,
         })
+        counties[-1].update(adjust_county(lv, b.c22_modes.get((f, office)), vt, turnout, expected))
     rep_ = [c for c in counties if c["votes"]]
     firm = [c for c in rep_ if c["est_in"] >= firm_thr]
 
@@ -159,6 +197,7 @@ def analyze_race(race: dict, rows: list[dict], b: Baselines, cfg: dict) -> dict:
             m = share * (c["actual"] or 0.0) + (1 - share) * (c["expected"] + adj)
             num += c["turnout_exp"] * m
         proj = num / exp_tot if exp_tot else None
+    adj = adjusted_race(counties, forecast, firm_thr, tfac)
     names = next(((v.get("dem_name"), v.get("rep_name")) for v in live.values() if v.get("dem_name")), (None, None))
     return {
         "id": race["id"], "label": race["label"], "state": st, "polls_close_et": race.get("polls_close_et"),
@@ -172,6 +211,8 @@ def analyze_race(race: dict, rows: list[dict], b: Baselines, cfg: dict) -> dict:
         "firm_vs_expect": agg(firm, "vs_expect"), "firm_swing24": agg(firm, "swing24"),
         "firm_swing22": agg(firm, "swing22"),
         "projected": proj, "projected_vs_forecast": None if proj is None else proj - forecast,
+        "vote_type": {k: vt[k] for k in ("order", "pre_share", "delta", "turnout_factor", "source", "notes")},
+        **adj,
         "counties": counties,
     }
 
@@ -189,8 +230,220 @@ def overall(results: list[dict], cfg: dict) -> dict:
         "implied_generic": None if ve is None else gb + ve,
         "implied_generic_firm": None if fve is None else gb + fve,
         "generic_ballot": gb, "races_reporting": len(live), "votes": sum(r["votes"] for r in live),
+        **overall_adjusted(live, gb),
     }
 
 
 def load_config(path: Path | None = None) -> dict:
     return json.loads((path or HERE / "config.json").read_text())
+
+
+# ======================================================================================
+# Vote-type adjustment ("expected vote" model)
+#
+# The first votes posted are not a random sample: early + mail ("pre") and Election Day
+# ("eday") lean differently, and which comes first varies by state. Per county we estimate
+#   s     = 2026 share of the county's vote cast before Election Day
+#   delta = margin(pre) - margin(eday), in points
+# from 2022 county results by vote type where MEDSL has them (NC, GA, SC, VA, ...), shifted
+# to the state's latest research values; otherwise from state-level research
+# (vote_type_research.json) or config "states" overrides.
+#
+# Then for each reporting county:
+#   - observed pre and eday votes come from the feed's vote-type split when available, else
+#     are inferred from precincts reporting and the state's reporting order;
+#   - a vote type that has not reported yet gets its volume from s and its margin from the
+#     observed type +/- delta; a partially reported eday is scaled up by 1 / precinct share;
+#   - adj_margin = estimated final county margin, exp_vote = estimated final county votes.
+# A county is counted as complete (no adjustment) once precincts are ~all in.
+# ======================================================================================
+_RESEARCH = None
+
+
+def load_research() -> dict:
+    global _RESEARCH
+    if _RESEARCH is None:
+        p = HERE / "vote_type_research.json"
+        try:
+            _RESEARCH = json.loads(p.read_text()).get("states", {}) if p.exists() else {}
+        except (OSError, ValueError):
+            _RESEARCH = {}
+    return _RESEARCH
+
+
+def _num(x):
+    return x if isinstance(x, (int, float)) else None
+
+
+def _delta_from(m: dict | None) -> float | None:
+    if not m:
+        return None
+    pre, eday = _num(m.get("pre")), _num(m.get("eday"))
+    if pre is None:
+        e, ml = _num(m.get("early")), _num(m.get("mail"))
+        pre = (e + ml) / 2 if e is not None and ml is not None else (e if e is not None else ml)
+    return None if pre is None or eday is None else pre - eday
+
+
+def state_vote_type_params(st: str, office: str, b: Baselines, cfg: dict) -> dict:
+    res = load_research().get(st, {}) or {}
+    ov = (cfg.get("states") or {}).get(st, {}) or {}
+    # 2022 state aggregates from county vote-type data
+    agg = {"pre": [0, 0, 0], "eday": [0, 0, 0]}
+    t22 = 0
+    for f in b.state_counties(st):
+        c = b.c22.get((f, office))
+        if c:
+            t22 += c[2]
+        m = b.c22_modes.get((f, office))
+        if m:
+            for k in agg:
+                if k in m:
+                    agg[k] = [x + y for x, y in zip(agg[k], m[k])]
+    have22 = agg["pre"][2] and agg["eday"][2]
+    s22 = agg["pre"][2] / (agg["pre"][2] + agg["eday"][2]) if have22 else _num(res.get("pre_share_2022"))
+    d22 = (margin(*agg["pre"]) - margin(*agg["eday"])) if have22 else _delta_from(res.get("margin_2022"))
+    d24 = _delta_from(res.get("margin_2024"))
+    tf = _num(ov.get("turnout_factor")) or _num(res.get("turnout_factor_guess")) or cfg.get("expected_turnout_vs_2022", 1.0)
+    ev = res.get("early_vote_2026") or {}
+    s26 = None
+    if _num(ev.get("ballots")) and t22:
+        s26 = max(0.05, min(0.95, ev["ballots"] / (tf * t22)))
+    s26 = _num(ov.get("pre_share")) or s26 or _num(res.get("pre_share_2024")) or s22 or 0.5
+    delta = _num(ov.get("delta"))
+    src = "config override" if delta is not None else None
+    if delta is None and d24 is not None:
+        delta, src = d24, "2024 research"
+    if delta is None and d22 is not None:
+        delta, src = d22, ("2022 county vote-type data" if have22 else "2022 research")
+    order = ov.get("order") or res.get("order") or "pre_first"
+    return {"order": order, "pre_share": s26, "pre_share_2022": s22, "delta": delta, "delta_2022": d22,
+            "turnout_factor": tf, "source": src or "none (no vote-type adjustment)",
+            "notes": ov.get("notes") or res.get("order_notes"), "have_county_modes": bool(have22)}
+
+
+def adjust_county(lv: dict, m22: dict | None, vt: dict, turnout: float, expected: float) -> dict:
+    V = lv.get("total") or 0
+    out = {"pre_votes": None, "eday_votes": None, "s": None, "delta": None, "adj_margin": None,
+           "adj_vs_expect": None, "exp_vote": turnout, "est_in_adj": 0.0, "method": "no votes"}
+    # county-specific s and delta
+    s, delta = vt["pre_share"], vt["delta"]
+    if m22 and m22.get("pre") and m22.get("eday") and m22["pre"][2] and m22["eday"][2]:
+        s22c = m22["pre"][2] / (m22["pre"][2] + m22["eday"][2])
+        if vt.get("pre_share_2022"):
+            s = s22c * vt["pre_share"] / vt["pre_share_2022"]
+        else:
+            s = s22c
+        d22c = margin(*m22["pre"]) - margin(*m22["eday"])
+        delta = d22c + ((vt["delta"] - vt["delta_2022"]) if vt["delta"] is not None and vt.get("delta_2022") is not None else 0.0)
+    s = max(0.03, min(0.97, s))
+    out["s"], out["delta"] = s, delta
+    if not V:
+        return out
+    d = delta or 0.0
+    M_obs = margin(lv["dem"], lv["rep"], V)
+    pr, pt = lv.get("precincts_reporting"), lv.get("precincts_total")
+    p = (pr / pt) if (pr is not None and pt) else None
+    pu = lv.get("pre_units") or (None, None)
+    pre_frac = (pu[0] / pu[1]) if (pu[0] is not None and pu[1]) else 1.0
+
+    modes = lv.get("modes")
+    if modes and (modes["pre"][2] or modes["eday"][2] or modes["other"][2]):
+        Vp = modes["pre"][2]
+        e = [x + y for x, y in zip(modes["eday"], modes["other"])]
+        Ve = e[2]
+        Mp = margin(*modes["pre"]) if Vp else None
+        Me = margin(*e) if Ve else None
+        method = "feed vote types"
+    elif p is not None and vt["order"] in ("pre_first", "mixed"):
+        if p >= 0.999:
+            Vp, Ve, Mp, Me = 0, V, None, M_obs
+        else:
+            T = V / (s + p * (1 - s))
+            Vp = min(V, s * T); Ve = V - Vp
+            Mp = M_obs + (Ve / V) * d
+            Me = Mp - d if Ve else None
+            if not Ve:
+                Mp = M_obs
+        method = "inferred from precincts"
+    elif p is not None and vt["order"] == "eday_first" and p < 0.999:
+        Vp, Ve, Mp, Me = 0, V, None, M_obs
+        method = "inferred (Election Day first)"
+    else:
+        out.update({"adj_margin": M_obs, "adj_vs_expect": M_obs - expected,
+                    "est_in_adj": min(1.0, V / turnout) if turnout else 0.0, "method": "unadjusted"})
+        return out
+
+    if p is not None and p >= 0.999 and pre_frac >= 0.999:
+        T, M_hat = V, M_obs
+    else:
+        # final pre volume / margin
+        if Vp:
+            Vp_f = Vp / max(pre_frac, 0.05)
+            Mp_f = Mp
+        else:
+            Vp_f = None
+            Mp_f = (Me + d) if Me is not None else None
+        # final eday volume / margin
+        if Ve and p:
+            Ve_f = Ve / max(p, 0.02)
+            Me_f = Me
+        else:
+            Ve_f = None
+            Me_f = (Mp - d) if Mp is not None else Me
+        if Vp_f is None and Ve_f is None:
+            Vp_f, Ve_f = s * turnout, (1 - s) * turnout
+        elif Vp_f is None:
+            Vp_f = Ve_f * s / (1 - s)
+        elif Ve_f is None:
+            Ve_f = Vp_f * (1 - s) / s
+        T = max(V, Vp_f + Ve_f)
+        T = min(T, 3 * turnout) if turnout else T
+        Mp_f = Mp_f if Mp_f is not None else Me_f
+        Me_f = Me_f if Me_f is not None else Mp_f
+        M_hat = (Vp_f * Mp_f + Ve_f * Me_f) / (Vp_f + Ve_f)
+    out.update({"pre_votes": round(Vp), "eday_votes": round(Ve), "adj_margin": M_hat,
+                "adj_vs_expect": M_hat - expected, "exp_vote": T, "est_in_adj": min(1.0, V / T) if T else 0.0,
+                "method": method})
+    return out
+
+
+def adjusted_race(counties: list[dict], forecast: float, firm_thr: float, tfac: float) -> dict:
+    rep_ = [c for c in counties if c["votes"] and c["adj_margin"] is not None]
+    firm = [c for c in rep_ if c["est_in_adj"] >= firm_thr]
+    ve = _wmean((c["adj_vs_expect"], c["votes"]) for c in rep_)
+    fve = _wmean((c["adj_vs_expect"], c["votes"]) for c in firm)
+    # implied turnout vs 2022 from counties at least 30% in (more stable)
+    stable = [c for c in rep_ if c["est_in_adj"] >= 0.3 and c["turnout22"]]
+    t_ratio = (sum(c["exp_vote"] for c in stable) / sum(c["turnout22"] for c in stable)) if stable else None
+    ratio = t_ratio or tfac
+    exp_total = num = 0.0
+    for c in counties:
+        if c["votes"] and c["adj_margin"] is not None:
+            w, mm = c["exp_vote"], c["adj_margin"]
+        else:
+            w, mm = c["turnout22"] * ratio, c["expected"] + (ve or 0.0)
+        exp_total += w; num += w * mm
+    proj = (num / exp_total) if (rep_ and exp_total) else None
+    methods = collections.Counter(c["method"] for c in rep_)
+    return {
+        "adj_vs_expect": ve, "adj_firm_vs_expect": fve, "adj_counties_firm": len(firm),
+        "adj_projected": proj, "adj_projected_vs_forecast": None if proj is None else proj - forecast,
+        "adj_est_in": (sum(c["votes"] for c in counties) / exp_total) if exp_total else 0.0,
+        "exp_vote_total": exp_total, "implied_turnout_vs_2022": t_ratio,
+        "adj_methods": dict(methods), "adj_firm_votes": sum(c["votes"] for c in firm),
+    }
+
+
+def overall_adjusted(live: list[dict], gb: float) -> dict:
+    a = [r for r in live if r.get("adj_vs_expect") is not None]
+    ve = _wmean((r["adj_vs_expect"], r["votes"]) for r in a)
+    f = [r for r in a if r.get("adj_firm_vs_expect") is not None]
+    fve = _wmean((r["adj_firm_vs_expect"], r["adj_firm_votes"]) for r in f)
+    tr = [r for r in a if r.get("implied_turnout_vs_2022")]
+    return {
+        "adj_vs_expect": ve, "adj_firm_vs_expect": fve,
+        "adj_implied_generic": None if ve is None else gb + ve,
+        "adj_implied_generic_firm": None if fve is None else gb + fve,
+        "implied_turnout_vs_2022": _wmean((r["implied_turnout_vs_2022"], r["votes"]) for r in tr),
+    }

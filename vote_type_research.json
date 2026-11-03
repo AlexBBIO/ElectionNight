@@ -1,0 +1,21 @@
+{
+  "_sources_note": "PARTIAL - research in progress (written incrementally). Early-vote 2026 figures from local press citing state election offices, Oct 30 - Nov 3 2026. Reporting order from AP Decision Notes + state law; margins filled as found. null = not found, never invented.",
+  "states": {
+    "KY": {
+      "order": "mixed",
+      "order_notes": "AP 2026: almost all counties post all absentee+early results in first report; most also include in-person Election Day votes in the first report (so first dump is largely complete-county, not pre-only). Fayette Co. posts absentee first, then early+ED as precincts deliver. 2024 first results 6:05pm ET, 50% at 8:15pm ET, 90% at 9:30pm ET. Mail absentee must be RECEIVED by 6pm local ED (no postmark grace). Western KY is Central time (closes 7pm ET).",
+      "late_modes": ["provisional"],
+      "pre_share_2024": null, "pre_share_2022": 0.23,
+      "margin_2024": {"eday": null, "early": null, "mail": null, "pre": null},
+      "margin_2022": {"eday": null, "early": null, "mail": null, "pre": null},
+      "early_vote_2026": {"ballots": 438602, "vs_2022_same_point": null, "vs_2022_final_pre": 1.298, "party_split": "Day 1 early in-person: 66,166 D / 60,793 R / 8,942 other (registration, uninformative in KY)", "as_of": "2026-11-02 (SOS Adams, early in-person + absentee)"},
+      "turnout_factor_guess": null,
+      "sources": [
+        "https://www.usnews.com/news/politics/articles/2026-10-30/ap-decision-notes-what-to-expect-in-kentucky-on-election-day",
+        "https://fox56news.com/news/kentucky/kentucky-sees-surge-in-early-voting-ahead-of-2026-midterm-election/",
+        "https://www.wkyt.com/2026/11/02/kentucky-early-voting-tops-400000-uk-professor-cautions-against-reading-early-party-totals/",
+        "https://www.wkyt.com/2026/11/03/fayette-county-clerk-hopes-have-results-quickly-election-day/"
+      ]
+    }
+  }
+}

@@ -208,9 +208,9 @@ def parse_nist(xml: bytes | str, race: str) -> list[dict]:
             if sel.get("IsWriteIn") == "true" and not party:
                 party = "WI"
             pmap.setdefault(nm, party)
+            typed: dict[str, dict[str, int]] = {}  # fips -> {mode: votes} from non-total counts
             for vc in sel.iter(f"{ns}VoteCounts"):
-                if (vc.get("Type") or vc.findtext(f"{ns}Type") or "Total") != "Total":
-                    continue
+                vtype = (vc.get("Type") or vc.findtext(f"{ns}Type") or "total").strip().lower()
                 uid = (vc.findtext(f"{ns}GpUnitId") or "").strip()
                 fips = county_units.get(uid)
                 if fips is None:
@@ -223,9 +223,22 @@ def parse_nist(xml: bytes | str, race: str) -> list[dict]:
                 prt, ptl = reporting.get(fips, (None, None))
                 rec = counties.setdefault(fips, {"county": common.county_name(fips, units[uid]["name"]),
                                                  "votes": {}, "prt": prt, "ptl": ptl})
-                rec["votes"][nm] = rec["votes"].get(nm, 0) + common.to_int(vc.get("Count") or vc.findtext(f"{ns}Count"))
+                n = common.to_int(vc.get("Count") or vc.findtext(f"{ns}Count"))
+                if vtype == "total":
+                    rec["votes"][nm] = rec["votes"].get(nm, 0) + n
+                else:  # NIST CountItemType: election-day, early, absentee(-mail/-in-person), provisional...
+                    label = vc.get("OtherType") or vtype if vtype == "other" else vtype
+                    m = common.vote_mode(label)
+                    typed.setdefault(fips, {})[m] = typed.get(fips, {}).get(m, 0) + n
+            for fips, md in typed.items():
+                rec = counties[fips]
+                if nm not in rec["votes"]:  # no Total line: the typed counts are the total
+                    rec["votes"][nm] = sum(md.values())
+                for m, n in md.items():
+                    mv = rec.setdefault("modes", {}).setdefault(m, {})
+                    mv[nm] = mv.get(nm, 0) + n
         if counties:
-            per.append(common.build_rows(STATE, counties, pmap))
+            per.append(common.add_modes(common.build_rows(STATE, counties, pmap), counties))
     if not per:
         return []
     if len(per) == 1:

@@ -14,7 +14,7 @@ h1{font-size:18px;margin:0}
 .badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--line)}
 .badge.live{background:#1d7a3a;color:#fff}.badge.demo{background:var(--warn);color:#fff}
 .muted{color:var(--muted)}
-main{padding:16px;max-width:1400px;margin:0 auto;display:grid;gap:16px}
+main{padding:16px;max-width:1400px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 .tile,.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .tile .k{font-size:12px;color:var(--muted)}.tile .v{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}
@@ -52,13 +52,29 @@ td.err{color:var(--warn)}
   <section class="tiles" id="tiles"></section>
 
   <section class="panel">
+    <h2>Vote-type adjusted · expected vote</h2>
+    <div class="scroll"><table id="adj"><thead><tr>
+      <th>Race</th><th title="Estimated final total votes (expected vote)">Expected vote</th><th>Counted</th>
+      <th title="Expected vote ÷ 2022 votes, counties ≥30% in">Turnout vs '22</th>
+      <th title="Vote-weighted (estimated final county margin − expected margin)">Adj vs expect</th>
+      <th title="Same, counties ≥ firm threshold of expected vote">Adj firm</th>
+      <th>Adj projected</th><th>Forecast</th><th>Adj proj − fcst</th>
+      <th title="How each county was adjusted">Method</th>
+      <th title="Reporting order · 2026 pre-Election-Day share · lean of pre vs Election Day votes (D−R pts) · source">Vote-type model</th>
+    </tr></thead><tbody></tbody></table></div>
+    <p class="note">Each county's final margin is estimated by filling in the vote types not yet counted: their volume from the expected early/mail share, their margin from the counted type ± the typical early-vs-Election-Day gap (2022 county vote-type data where available, otherwise state research). Feed vote-type splits are used where the state publishes them (GA, NC, SC, VA, KY); elsewhere the split is inferred from precincts reporting. "none" = no vote-type information for that state, so it is unadjusted.</p>
+  </section>
+
+  <section class="tiles" id="rawtiles"></section>
+
+  <section class="panel">
     <h2>Running read: Democrats vs expectations over time</h2>
     <div class="chartwrap"><svg id="chart" width="100%" height="260"></svg></div>
     <div class="legend" id="legend"></div>
   </section>
 
   <section class="panel">
-    <h2>Races</h2>
+    <h2>Races — unadjusted</h2>
     <div class="scroll"><table id="races"><thead><tr>
       <th>Race</th><th>Close ET</th><th>Est. in</th><th>Counties in / firm</th><th>Current</th>
       <th title="Vote-weighted county margin minus expected margin (2024 county result + swing implied by polls)">vs expect</th>
@@ -74,8 +90,10 @@ td.err{color:var(--warn)}
     <div class="controls"><h2 id="ctitle" style="margin:0">Counties</h2>
       <label><input type="checkbox" id="onlyrep" checked> reporting only</label></div>
     <div class="scroll" style="max-height:520px;overflow-y:auto"><table id="counties"><thead><tr>
-      <th data-k="county">County</th><th data-k="est_in">Est. in</th><th data-k="votes">Votes</th><th data-k="actual">Actual</th>
-      <th data-k="expected">Expected</th><th data-k="vs_expect">vs expect</th><th data-k="base24">2024 pres</th>
+      <th data-k="county">County</th><th data-k="est_in_adj">Counted (of exp.)</th><th data-k="votes">Votes</th><th data-k="exp_vote">Exp. vote</th>
+      <th data-k="pre_votes">Pre-ED</th><th data-k="eday_votes">Elec. Day</th><th data-k="actual">Actual</th>
+      <th data-k="adj_margin">Adj. final</th><th data-k="expected">Expected</th><th data-k="adj_vs_expect">Adj vs exp</th>
+      <th data-k="vs_expect">Raw vs exp</th><th data-k="base24">2024 pres</th>
       <th data-k="swing24">swing vs '24</th><th data-k="base22">2022</th><th data-k="swing22">swing vs '22</th>
     </tr></thead><tbody></tbody></table></div>
   </section>
@@ -95,11 +113,16 @@ function render(data){
   $("#ts").textContent="updated "+new Date(s.ts).toLocaleTimeString()+" · "+s.overall.races_reporting+" races reporting · "+n(s.overall.votes)+" votes";
   const o=s.overall;
   $("#tiles").innerHTML=
-    tile("Democrats vs expectations (all reporting counties)",o.vs_expect,"vote-weighted across races; positive = Dems beating polls",true)+
-    tile("Firm counties only",o.firm_vs_expect,`counties ≥ ${Math.round(s.firm_threshold*100)}% in — least vote-type bias`)+
-    tile("Implied national environment",o.implied_generic,`polls: ${m(o.generic_ballot)} generic ballot · firm: ${m(o.implied_generic_firm)}`)+
+    tile("Dems vs expectations — vote-type adjusted",o.adj_vs_expect,"estimated final county margins vs poll-implied expectation; positive = Dems beating polls",true)+
+    tile("Adjusted, firm counties only",o.adj_firm_vs_expect,`counties ≥ ${Math.round(s.firm_threshold*100)}% of their expected vote counted`)+
+    tile("Implied national environment (adjusted)",o.adj_implied_generic,`polls: ${m(o.generic_ballot)} generic ballot · firm: ${m(o.adj_implied_generic_firm)}`)+
+    `<div class="tile"><div class="k">Implied turnout vs 2022</div><div class="v">${o.implied_turnout_vs_2022==null?"—":(o.implied_turnout_vs_2022*100).toFixed(0)+"%"}</div><div class="s">from estimated expected vote in counties ≥30% in</div></div>`;
+  $("#rawtiles").innerHTML=
+    tile("Unadjusted vs expectations",o.vs_expect,"raw counted votes — biased by which vote types report first")+
+    tile("Unadjusted, firm counties",o.firm_vs_expect,"")+
     tile("Swing vs 2024 president",o.swing24,`2024 national: ${m(s.national.pres_2024_margin)}`)+
     tile("Swing vs 2022 midterm",o.swing22,`2022 House national: ${m(s.national.house_2022_margin)}`);
+  renderAdj(s);
   const tb=$("#races tbody"); tb.innerHTML="";
   if(!sel){const f=s.races.find(r=>r.votes)||s.races[0]; sel=f&&f.id;}
   s.races.forEach(r=>{
@@ -121,14 +144,27 @@ function render(data){
   renderCounties(s.races.find(r=>r.id===sel));
   renderChart(data.history,s.races);
 }
+function renderAdj(s){
+  $("#adj tbody").innerHTML=s.races.map(r=>{const v=r.vote_type||{};
+    const meth=Object.entries(r.adj_methods||{}).map(([k,c])=>`${k}: ${c}`).join(", ")||"—";
+    return `<tr><td><b>${r.label}</b></td><td>${r.votes?n(r.exp_vote_total):"—"}</td><td>${pct(r.adj_est_in)}</td>
+    <td>${r.implied_turnout_vs_2022==null?"—":(r.implied_turnout_vs_2022*100).toFixed(0)+"%"}</td>
+    <td class="${cls(r.adj_vs_expect)}"><b>${m(r.adj_vs_expect)}</b></td><td class="${cls(r.adj_firm_vs_expect)} firm">${m(r.adj_firm_vs_expect)}</td>
+    <td class="${cls(r.adj_projected)}">${m(r.adj_projected)}</td><td class="${cls(r.forecast)}">${m(r.forecast)}</td>
+    <td class="${cls(r.adj_projected_vs_forecast)}">${m(r.adj_projected_vs_forecast)}</td>
+    <td class="status">${meth}</td>
+    <td class="status" title="${(v.notes||"").replace(/"/g,"'")}">${v.order||""} · pre ${v.pre_share==null?"?":Math.round(v.pre_share*100)+"%"} · lean ${v.delta==null?"none":m(v.delta,0)} · ${v.source||""}</td></tr>`}).join("");
+}
 function renderCounties(r){
   if(!r) return; $("#ctitle").textContent="Counties — "+r.label+` (2022 baseline: ${r.baseline_2022_office})`;
   let cs=r.counties.slice(); if($("#onlyrep").checked) cs=cs.filter(c=>c.votes>0);
   cs.sort((a,b)=>{const x=a[sortK],y=b[sortK]; if(x==null) return 1; if(y==null) return -1; return (x>y?1:x<y?-1:0)*sortDir});
   const thr=last.snapshot.firm_threshold;
-  $("#counties tbody").innerHTML=cs.map(c=>`<tr><td${c.est_in>=thr?' class="firm"':""}>${c.county}</td><td>${pct(c.est_in)}</td><td>${n(c.votes)}</td>
-    <td class="${cls(c.actual)}">${m(c.actual)}</td><td class="${cls(c.expected)}">${m(c.expected)}</td>
-    <td class="${cls(c.vs_expect)}"><b>${m(c.vs_expect)}</b></td><td class="${cls(c.base24)}">${m(c.base24)}</td>
+  $("#counties tbody").innerHTML=cs.map(c=>`<tr><td${c.est_in_adj>=thr?' class="firm"':""} title="${c.method}">${c.county}</td><td>${pct(c.est_in_adj)}</td><td>${n(c.votes)}</td>
+    <td>${n(c.exp_vote)}</td><td>${n(c.pre_votes)}</td><td>${n(c.eday_votes)}</td>
+    <td class="${cls(c.actual)}">${m(c.actual)}</td><td class="${cls(c.adj_margin)}">${m(c.adj_margin)}</td><td class="${cls(c.expected)}">${m(c.expected)}</td>
+    <td class="${cls(c.adj_vs_expect)}"><b>${m(c.adj_vs_expect)}</b></td>
+    <td class="${cls(c.vs_expect)}">${m(c.vs_expect)}</td><td class="${cls(c.base24)}">${m(c.base24)}</td>
     <td class="${cls(c.swing24)}">${m(c.swing24)}</td><td class="${cls(c.base22)}">${m(c.base22)}</td>
     <td class="${cls(c.swing22)}">${m(c.swing22)}</td></tr>`).join("");
 }
@@ -136,9 +172,10 @@ document.querySelectorAll("#counties th").forEach(th=>th.onclick=()=>{const k=th
 $("#onlyrep").onchange=()=>last&&render(last);
 function renderChart(hist,races){
   const svg=$("#chart"); const W=svg.clientWidth||800,H=260,L=48,R=10,T=10,B=24;
-  const series=[{id:"__all",label:"All races",color:"var(--ink)",w:3,get:h=>h.overall.vs_expect},
-    {id:"__firm",label:"Firm counties",color:"var(--muted)",w:2,dash:"5 4",get:h=>h.overall.firm_vs_expect}];
-  races.forEach((r,i)=>series.push({id:r.id,label:r.id,color:COLORS[i%COLORS.length],w:1.5,get:h=>(h.races[r.id]||{}).vs_expect}));
+  const series=[{id:"__adj",label:"All races, adjusted",color:"var(--ink)",w:3,get:h=>h.overall.adj_vs_expect},
+    {id:"__adjfirm",label:"Adjusted, firm",color:"var(--ink)",w:1.5,dash:"2 3",get:h=>h.overall.adj_firm_vs_expect},
+    {id:"__raw",label:"Unadjusted",color:"var(--muted)",w:2,dash:"6 4",get:h=>h.overall.vs_expect}];
+  races.forEach((r,i)=>series.push({id:r.id,label:r.id+" adj",color:COLORS[i%COLORS.length],w:1.5,get:h=>{const x=h.races[r.id]||{};return x.adj_vs_expect!==undefined?x.adj_vs_expect:x.vs_expect}}));
   const pts=hist.map(h=>({t:new Date(h.ts).getTime(),h}));
   let lo=-2,hi=2;
   series.forEach(s=>{if(hidden.has(s.id))return; pts.forEach(p=>{const v=s.get(p.h); if(v!=null){lo=Math.min(lo,v);hi=Math.max(hi,v)}})});
@@ -158,7 +195,7 @@ function renderChart(hist,races){
 // Serverless deploys return history:null -> keep the running history in the browser.
 const HKEY="en_hist"+location.search;
 let localHist=[];try{localHist=JSON.parse(localStorage.getItem(HKEY)||"[]")}catch(e){}
-function histRow(s){const races={};s.races.forEach(r=>{races[r.id]={vs_expect:r.vs_expect,firm_vs_expect:r.firm_vs_expect,projected:r.projected,projected_vs_forecast:r.projected_vs_forecast,est_in:r.est_in,votes:r.votes}});return {ts:s.ts,overall:s.overall,races}}
+function histRow(s){const races={};s.races.forEach(r=>{races[r.id]={adj_vs_expect:r.adj_vs_expect,vs_expect:r.vs_expect,firm_vs_expect:r.firm_vs_expect,projected:r.projected,projected_vs_forecast:r.projected_vs_forecast,est_in:r.est_in,votes:r.votes}});return {ts:s.ts,overall:s.overall,races}}
 async function tick(){try{const r=await fetch("/api/state"+location.search,{cache:"no-store"}); const data=await r.json();
   if(data.error) throw new Error(data.error);
   if(data.history==null&&data.snapshot){const h=histRow(data.snapshot); if(!localHist.length||localHist[localHist.length-1].ts!==h.ts){localHist.push(h); localHist=localHist.slice(-1500); try{localStorage.setItem(HKEY,JSON.stringify(localHist))}catch(e){}} data.history=localHist}

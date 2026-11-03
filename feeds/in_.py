@@ -19,6 +19,8 @@ Quirks: the files are XML converted to JSON, so a one-element list arrives as a 
 the version suffix flips between A and B as the site republishes (read settings.json first);
 OFFICECATEGORYIDs change between elections, so categories are matched by name. No per-county
 precinct counts are published (precincts_* are None); only the statewide count is.
+No vote-type split exists in the candidate data either, so rows carry no "modes" (the
+statewideTurnout file has county InPerson/Absentee *voter* counts only, not votes by party).
 Indiana has no Senate or Governor race in 2026; statewide offices are Secretary of State,
 State Comptroller (Auditor) and Treasurer. race="U.S. House" sums every district by county
 (uncontested districts contribute only one party). Polls close 6pm local; the two Central-time

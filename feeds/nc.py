@@ -4,7 +4,8 @@ The public ENR site reads JSON arrays (served as .txt) from:
   https://er.ncsbe.gov/enr/{YYYYMMDD}/data/county.txt         counties: cid, cnm, prt/ptl, imp (last import)
   https://er.ncsbe.gov/enr/{YYYYMMDD}/data/results_{cid}.txt  one row per (contest, candidate) in county cid
        fields: cnm contest, bnm candidate, pty party, vct votes, prt/ptl precincts reporting/total,
-               evc/ovc/avc/pvc = election-day / one-stop(early) / absentee-mail / provisional votes,
+               evc/ovc/avc/pvc = election-day / one-stop(early) / absentee-mail / provisional votes
+               (-> row["modes"] eday / early / mail / other),
                ogl contest group (FED, COS, NCS, NCH, JUD, REF, ...)
   (results_0.txt is the statewide roll-up; enr/elections.txt lists available election dates.)
 cid 1..100 is alphabetical (FIPS ~ 37000 + 2*cid - 1, except McDowell). One small file per county, fetched in
@@ -30,12 +31,29 @@ RACES = [
 
 WORKERS = 8
 
+# per-candidate vote-type fields -> row["modes"] keys (they sum to vct)
+MODE_FIELDS = {"evc": "eday", "ovc": "early", "avc": "mail", "pvc": "other"}
+
 
 def _get_json(election: str, name: str):
     ymd = election.replace("-", "")
     url = common.bust(BASE.format(ymd=ymd) + name, election, every=10)
     return common.http_get_json(url, memo_seconds=10, cache_name=f"nc/{ymd}/{name}",
                                 cache_max_age=common.cache_policy(election)) or []
+
+
+_last_good: dict[tuple[str, str], list] = {}
+
+
+def _county_results(election: str, cid: str) -> list | None:
+    """One county's rows; on a transient error (the ENR host throws the odd 503) reuse the
+    last good copy from this process, else None (that county is left out of this poll)."""
+    try:
+        rows = _get_json(election, f"results_{cid}.txt")
+    except common.FeedError:
+        return _last_good.get((election, cid))
+    _last_good[(election, cid)] = rows
+    return rows
 
 
 def _fips(cid: str, cnm: str) -> str:
@@ -53,7 +71,12 @@ def fetch(race: str, election: str = "2026-11-03") -> list[dict]:
     counties = [c for c in _get_json(election, "county.txt") if str(c.get("cid")) not in ("0", "-1")]
     with cf.ThreadPoolExecutor(WORKERS) as ex:
         results = dict(zip([c["cid"] for c in counties],
-                           ex.map(lambda c: _get_json(election, f"results_{c['cid']}.txt"), counties)))
+                           ex.map(lambda c: _county_results(election, c["cid"]), counties)))
+    failed = [cid for cid, r in results.items() if r is None]
+    if len(failed) > len(counties) // 5:
+        raise common.FeedError(f"NC: {len(failed)} of {len(counties)} county result files unavailable")
+    results = {cid: r for cid, r in results.items() if r is not None}
+    counties = [c for c in counties if c["cid"] in results]
 
     seen: dict[str, set] = {}
     for cid, rows in results.items():
@@ -77,7 +100,11 @@ def fetch(race: str, election: str = "2026-11-03") -> list[dict]:
                 cand = (r.get("bnm") or "").strip()
                 parties[cand] = (r.get("pty") or "").strip()
                 d["votes"][cand] = d["votes"].get(cand, 0) + common.to_int(r.get("vct"))
-        out.append(common.build_rows(STATE, per, parties))
+                if all(k in r for k in MODE_FIELDS):
+                    for k, mode in MODE_FIELDS.items():
+                        m = d.setdefault("modes", {}).setdefault(mode, {})
+                        m[cand] = m.get(cand, 0) + common.to_int(r.get(k))
+        out.append(common.add_modes(common.build_rows(STATE, per, parties), per))
     return _combine(out)
 
 

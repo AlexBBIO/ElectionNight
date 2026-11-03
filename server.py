@@ -64,29 +64,35 @@ class DemoFeed:
         res = engine.analyze_race(race, [], self.b, self.cfg)
         el = time.time() - self.t0
         order = [r["id"] for r in self.cfg["races"]].index(race["id"])
+        with_modes = order % 2 == 0  # odd races exercise the precinct-inference path
         rows = []
         for c in res["counties"]:
             p = self._county_plan(race, c["fips"], c["expected"], c["turnout_exp"], order)
-            if el < p["start"]:
-                frac = 0.0
-            else:
-                frac = min(1.0, 0.15 + (el - p["start"]) / p["dur"])
+            frac = 0.0 if el < p["start"] else min(1.0, 0.15 + (el - p["start"]) / p["dur"])
+            base = {"state": race["state"], "county": c["county"], "fips": c["fips"],
+                    "dem_name": "Demo Dem", "rep_name": "Demo Rep", "precincts_total": 20}
             if frac <= 0:
-                rows.append({"state": race["state"], "county": c["county"], "fips": c["fips"],
-                             "dem": 0, "rep": 0, "total": 0})
+                rows.append({**base, "dem": 0, "rep": 0, "total": 0, "precincts_reporting": 0})
                 continue
-            T = p["turnout"]; es = p["early_share"]
-            m_early = p["true_m"] + p["early_bias"] * (1 - es)
-            m_day = (p["true_m"] - es * m_early) / (1 - es)
-            early_v = min(frac, es) * T
-            day_v = max(0.0, frac - es) * T
-            dmr = (early_v * m_early + day_v * m_day) / 100
-            tot = early_v + day_v
-            two = tot * 0.98
-            d = (two + dmr) / 2; r = (two - dmr) / 2
-            rows.append({"state": race["state"], "county": c["county"], "fips": c["fips"],
-                         "dem": int(max(d, 0)), "rep": int(max(r, 0)), "total": int(tot),
-                         "dem_name": "Demo Dem", "rep_name": "Demo Rep"})
+            T = p["turnout"]
+            es = c["s"] if c.get("s") else p["early_share"]
+            bias = c["delta"] if c.get("delta") is not None else p["early_bias"]
+            m_early = p["true_m"] + bias * (1 - es)
+            m_day = m_early - bias
+            early_v = min(frac, es) * T                     # pre votes post first
+            day_frac = max(0.0, frac - es) / (1 - es)
+            day_v = day_frac * (1 - es) * T
+
+            def split(v, mm):
+                two = v * 0.98
+                return {"dem": int(max((two + v * mm / 100) / 2, 0)), "rep": int(max((two - v * mm / 100) / 2, 0)),
+                        "total": int(v)}
+            pre, day = split(early_v, m_early), split(day_v, m_day)
+            row = {**base, "dem": pre["dem"] + day["dem"], "rep": pre["rep"] + day["rep"],
+                   "total": pre["total"] + day["total"], "precincts_reporting": int(20 * day_frac)}
+            if with_modes:
+                row["modes"] = {"pre": pre, "eday": day}
+            rows.append(row)
         return rows
 
 
@@ -123,7 +129,9 @@ def history_row(snap: dict) -> dict:
     return {"ts": snap["ts"], "overall": snap["overall"],
             "races": {r["id"]: {k: r.get(k) for k in ("vs_expect", "firm_vs_expect", "projected",
                                                        "projected_vs_forecast", "est_in", "votes",
-                                                       "swing24", "swing22", "current_margin")}
+                                                       "swing24", "swing22", "current_margin",
+                                                       "adj_vs_expect", "adj_firm_vs_expect", "adj_projected",
+                                                       "adj_est_in", "implied_turnout_vs_2022")}
                       for r in snap["races"]}}
 
 

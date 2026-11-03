@@ -11,6 +11,10 @@ JSON API used by that site:
   API = https://enr.elections.virginia.gov/results/public/api
 2026-11-03 slug: "2026-November-General"; 2024-11-05: "2024NovemberGeneral";
 2025-11-04: "2025-November-General" (all resolved from the jurisdiction's election list by date).
+row["modes"] from each option's groupResults (count groups = vote method): Election Day -> eday,
+Early Voting -> early, Mailed Absentee -> mail, Provisional + Post-Election -> other. VA's ENR
+reports by vote method, not by central-absentee-precinct, so no CAP counts; instead
+row["mode_status"] = {mode: "complete"|"partial"|"none"} from the locality's count-group status.
 Independent cities are their own FIPS county-equivalents (e.g. Fairfax city 51600 vs Fairfax
 County 51059) - taken straight from mapFeatureId.
 """
@@ -69,6 +73,7 @@ def fetch(race: str, election: str = "2026-11-03") -> list[dict]:
     chosen = common.pick_contests(race, {k: v[1] for k, v in items.items()})
 
     out: list[list[dict]] = []
+    status: dict[str, dict] = {}
     for contest in chosen:
         bid = items[contest][0]
         d = _get(f"elections/{JURIS}/{slug}/data/ballot-item/{bid}", election, memo=10,
@@ -94,8 +99,46 @@ def fetch(race: str, election: str = "2026-11-03") -> list[dict]:
                 cand = _en(o.get("name"))
                 parties.setdefault(cand, (o.get("party") or {}).get("abbreviation"))
                 c["votes"][cand] = c["votes"].get(cand, 0) + common.to_int(o.get("voteCount"))
-        out.append(common.build_rows(STATE, per, parties))
-    return _combine(out)
+                for g in o.get("groupResults") or []:
+                    m = c.setdefault("modes", {}).setdefault(common.vote_mode(_en(g.get("groupName"))), {})
+                    m[cand] = m.get(cand, 0) + common.to_int(g.get("voteCount"))
+        status.update(_mode_status(d))
+        out.append(common.add_modes(common.build_rows(STATE, per, parties), per))
+    rows = _combine(out)
+    for r in rows:
+        if r["fips"] in status:
+            r["mode_status"] = status[r["fips"]]
+    return rows
+
+
+_STATUS = {"reporting-status-fully-reported": "complete", "reporting-status-election-night-complete": "complete",
+           "reporting-status-partially-reported": "partial", "reporting-status-not-reported": "none"}
+_RANK = {"none": 0, "partial": 1, "complete": 2}
+
+
+def _mode_status(d: dict) -> dict[str, dict]:
+    """{fips: {mode: "complete"|"partial"|"none"}} from each locality's count-group (vote method)
+    reporting status. Several groups in one mode (Provisional + Post-Election -> other) take the
+    least-complete status. Empty before the night starts (the feed sends null)."""
+    ids = {}
+    for loc in (d.get("jurisdiction") or {}).get("childLocalities") or []:
+        fid = (loc.get("mapFeatureId") or "").strip()
+        if re.fullmatch(r"\d{3}", fid):
+            ids[(loc.get("id") or "").lower()] = "51" + fid
+    out: dict[str, dict] = {}
+    for le in d.get("localityElections") or []:
+        fips = ids.get((le.get("jurisdictionId") or "").lower())
+        if not fips:
+            continue
+        for g in le.get("groupReportingStatus") or []:
+            st = _STATUS.get(g.get("reportingStatusClientTextKey") or "")
+            if st is None:
+                continue
+            mode = common.vote_mode(_en(g.get("groupName")))
+            cur = out.setdefault(fips, {}).get(mode)
+            if cur is None or _RANK[st] < _RANK[cur]:
+                out[fips][mode] = st
+    return out
 
 
 def _combine(built: list[list[dict]]) -> list[dict]:

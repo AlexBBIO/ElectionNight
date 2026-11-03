@@ -6,6 +6,8 @@
 detail.xml: <Contest text=...> -> <ParticipatingCounties><County name precinctsParticipating
 precinctsReported/> and <Choice text="REP Name" party="REP"><VoteType name="Election Day|Early
 Voting|Absentee By Mail|Failsafe|Provisional|..."><County name votes/>; county votes = sum of vote types.
+row["modes"]: Election Day -> eday, Early Voting -> early, Absentee By Mail -> mail,
+Failsafe / Failsafe Provisional / Provisional (sic "Provionsal" in 2024) -> other.
 Election ids: 2026-11-03 general = 127300 ("2026 Statewide General Election", linked from scvotes.gov),
 2024-11-05 = 122436, 2022-11-08 = 115412. A numeric election id can be passed instead of a date.
 """
@@ -106,13 +108,17 @@ def fetch(race: str, election: str = "2026-11-03") -> list[dict]:
             cand = _cand(ch)
             parties[cand] = (ch.get("party") or "").strip()
             for vt in ch.findall("VoteType"):
+                mode = common.vote_mode(vt.get("name") or "")
                 for cty in vt.findall("County"):
                     cname = (cty.get("name") or "").strip()
                     fips = common.county_fips(STATE, cname)
                     c = per.setdefault(fips, {"county": common.county_name(fips, cname), "votes": {},
                                               "prt": None, "ptl": None})
-                    c["votes"][cand] = c["votes"].get(cand, 0) + common.to_int(cty.get("votes"))
-        out.append(common.build_rows(STATE, per, parties))
+                    v = common.to_int(cty.get("votes"))
+                    c["votes"][cand] = c["votes"].get(cand, 0) + v
+                    m = c.setdefault("modes", {}).setdefault(mode, {})
+                    m[cand] = m.get(cand, 0) + v
+        out.append(common.add_modes(common.build_rows(STATE, per, parties), per))
     return _combine(out)
 
 

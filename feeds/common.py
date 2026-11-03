@@ -463,6 +463,10 @@ def merge_rows(state: str, row_lists: list[list[dict]], dem_name: str, rep_name:
                                       "dem_name": dem_name, "rep_name": rep_name}
             for k in ("dem", "rep", "total"):
                 a[k] += int(r.get(k) or 0)
+            for m, v in (r.get("modes") or {}).items():
+                am = a.setdefault("modes", {}).setdefault(m, {"dem": 0, "rep": 0, "total": 0})
+                for k in ("dem", "rep", "total"):
+                    am[k] += int(v.get(k) or 0)
             if precincts == "none":
                 continue
             for k in ("precincts_reporting", "precincts_total"):
@@ -475,6 +479,13 @@ def merge_rows(state: str, row_lists: list[list[dict]], dem_name: str, rep_name:
                     a[k] = max(a[k], int(v))
                 else:
                     a[k] += int(v)
+    for a in acc.values():  # a contest without modes in a county -> its votes count as "other"
+        if a.get("modes"):
+            rest = {k: a[k] - sum(x[k] for x in a["modes"].values()) for k in ("dem", "rep", "total")}
+            if any(rest.values()):
+                o = a["modes"].setdefault("other", {"dem": 0, "rep": 0, "total": 0})
+                for k in rest:
+                    o[k] += rest[k]
     return [acc[f] for f in sorted(acc)]
 
 
@@ -509,3 +520,47 @@ def select_house(query: str, names) -> list[str]:
     if want is not None:
         out = [n for n in out if district_number(n) == want]
     return out
+
+
+# ------------------------------------------------------------------ vote-type ("mode") breakdown
+MODES = ("eday", "early", "mail", "pre", "other")
+
+
+def vote_mode(label: str) -> str:
+    """Map a feed's vote-type label to eday / early / mail / pre / other.
+    'Election Day Votes' -> eday; 'Advance Voting', 'Early Vote', 'absentee-in-person' -> early;
+    'Absentee by Mail', 'Absentee', 'Mail' -> mail; 'Provisional', 'UOCAVA', ... -> other."""
+    s = re.sub(r"[^a-z]+", " ", (label or "").lower()).strip()
+    if re.search(r"\b(election ?day|eday|polls?)\b", s):
+        return "eday"
+    if re.search(r"\b(advanced?|early|one stop|absentee in person|in person absentee)\b", s):
+        return "early"
+    if re.search(r"\b(mail|absentee)\b", s):
+        return "mail"
+    return "other"
+
+
+def add_modes(rows: list[dict], counties: dict[str, dict]) -> list[dict]:
+    """Attach row["modes"] = {mode: {"dem","rep","total"}} from counties[fips]["modes"]
+    ({mode: {candidate: votes}}), using the row's dem_name/rep_name. Votes the feed does not
+    break down (row total minus the modes) go to "other", so the modes always sum to the row.
+    Rows whose county has no mode data are left without "modes"."""
+    for r in rows:
+        cm = (counties.get(r["fips"]) or {}).get("modes")
+        if not cm:
+            continue
+        modes = {}
+        for m in MODES:
+            v = cm.get(m)
+            if v is None:
+                continue
+            modes[m] = {"dem": int(v.get(r["dem_name"], 0)) if r["dem_name"] else 0,
+                        "rep": int(v.get(r["rep_name"], 0)) if r["rep_name"] else 0,
+                        "total": int(sum(v.values()))}
+        rest = {k: r[k] - sum(x[k] for x in modes.values()) for k in ("dem", "rep", "total")}
+        if any(rest.values()):
+            o = modes.setdefault("other", {"dem": 0, "rep": 0, "total": 0})
+            for k in rest:
+                o[k] += rest[k]
+        r["modes"] = modes
+    return rows

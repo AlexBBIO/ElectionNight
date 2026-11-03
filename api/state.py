@@ -55,7 +55,11 @@ def build(query: dict) -> bytes:
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        q = parse_qs(urlparse(self.path).query)
+        raw = parse_qs(urlparse(self.path).query)
+        # Only these params matter; ignoring the rest stops junk query strings from forcing fresh upstream fetches.
+        q = {k: raw[k] for k in ("demo", "races") if k in raw}
+        if "races" in q:
+            q["races"] = [",".join(sorted(set(q["races"][0].split(","))))]
         key = json.dumps(sorted(q.items()))
         hit = _MEMO.get(key)
         if hit and time.time() - hit[0] < CACHE_SECONDS:

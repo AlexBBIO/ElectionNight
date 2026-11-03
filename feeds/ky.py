@@ -26,7 +26,8 @@ directory holding saved copies (<Dataset>.xml) for testing.
 The host sits behind an Akamai-style WAF that answered 403 ("KY SBE Acceptable Use Policy")
 to the build container, so this parser was checked only against XML captured from the live
 feed on 2026-11-01 by a third party (zero votes), not against a live fetch.
-ElectionDayVotes lets you split Election Day from early/absentee (Total - ElectionDay).
+Each CandidateData row carries ElectionDayVotes, returned as "modes": eday = ElectionDayVotes,
+pre = TotalVotes - ElectionDayVotes (early in-person + mail; the feed does not separate them).
 Polls close 6pm local: most of the state at 6pm ET, the western (Central-time) third at 7pm ET.
 """
 from __future__ import annotations
@@ -159,9 +160,17 @@ def fetch(race: str, election: str = "2026-11-03") -> list[dict]:
             if _b(cand.get("IsWriteIn")):
                 nm = f"Write-in ({nm})" if nm.lower() not in ("write-in", "write in") else "Write-in"
             pmap.setdefault(nm, parties.get(cand.get("PoliticalPartyId") or "", ""))
-            rec["votes"][nm] = rec["votes"].get(nm, 0) + common.to_int(r.get("TotalVotes"))
+            tot = common.to_int(r.get("TotalVotes"))
+            rec["votes"][nm] = rec["votes"].get(nm, 0) + tot
+            ed = r.get("ElectionDayVotes")
+            if ed not in (None, ""):  # eday = ElectionDayVotes, pre = everything else
+                ed = min(common.to_int(ed), tot)
+                md = rec.setdefault("modes", {})
+                for m, v in (("eday", ed), ("pre", tot - ed)):
+                    mv = md.setdefault(m, {})
+                    mv[nm] = mv.get(nm, 0) + v
         if counties:
-            per.append(common.build_rows(STATE, counties, pmap))
+            per.append(common.add_modes(common.build_rows(STATE, counties, pmap), counties))
     if not per:
         return []
     if len(per) == 1:

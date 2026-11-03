@@ -21,7 +21,8 @@ Georgia left Clarity ENR (results.enr.clarityelections.com/GA) for an Enhanced V
 
 Ids: 2026-11-03 = 11032026GeneralAndSpecialElection, 2024-11-05 = 2024NovGen,
 2022-11-08 = 2022NovGen. Vote types for 2026: Election Day, Advance Voting, Absentee by Mail,
-Provisional (Georgia reports advance + mail first, from 7pm ET). The API is CDN-cached
+Provisional, returned per county and candidate as "modes" (eday / early / mail / other).
+Georgia reports advance + mail first, from 7pm ET. The API is CDN-cached
 (Cache-Control max-age=60), so a poll can be up to a minute behind.
 
 `election` may also be a publicElectionId, or "clarity:<id>" for an old Clarity election
@@ -113,7 +114,12 @@ def _rows_for_item(item: dict) -> list[dict]:
             party = ((opt.get("party") or {}).get("abbreviation")) or suffix
             parties.setdefault(name, party)
             rec["votes"][name] = rec["votes"].get(name, 0) + common.to_int(opt.get("voteCount"))
-    return common.build_rows(STATE, counties, parties)
+            # vote types (count groups): Election Day / Advance Voting / Absentee by Mail / Provisional
+            for g in opt.get("groupResults") or []:
+                m = common.vote_mode(_text(g.get("groupName")))
+                mv = rec.setdefault("modes", {}).setdefault(m, {})
+                mv[name] = mv.get(name, 0) + common.to_int(g.get("voteCount"))
+    return common.add_modes(common.build_rows(STATE, counties, parties), counties)
 
 
 def fetch(race: str, election: str = "2026-11-03") -> list[dict]:

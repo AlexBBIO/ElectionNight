@@ -25,7 +25,9 @@ detail.xml (state site):
 
 A county site has the same shape with <Precinct> in place of <County> under VoteType, and
 <VoterTurnout><Precincts> instead of <ElectionVoterTurnout><Counties>; it is reported as a
-single county row. Vote types (and their order) differ by jurisdiction; they are summed.
+single county row. Vote types (and their order) differ by jurisdiction; they are summed into
+the row and also returned as "modes" via common.vote_mode() (e.g. GA's old "Election Day Votes"
+/ "Advance Voting Votes" / "Absentee by Mail Votes" / "Provisional Votes" -> eday/early/mail/other).
 
 Clarity answers 403 to requests from some networks (it did from the build container), so
 this adapter was verified only against the openelections/clarify test fixtures
@@ -112,19 +114,24 @@ def parse_detail(xml: bytes | str) -> dict:
             text = " ".join((ch.get("text") or "").split())
             clean, suffix_party = common.split_party_suffix(text)
             votes: dict[str, int] = {}
+            modes: dict[str, dict[str, int]] = {}  # unit -> {mode: votes}
             sub_found = False
             for vt in ch.findall("VoteType"):
+                mode = common.vote_mode(vt.get("name", ""))
                 for sub in vt:
                     if sub.tag in ("County", "Precinct"):
                         sub_found = True
                         n = sub.get("name", "")
-                        votes[n] = votes.get(n, 0) + common.to_int(sub.get("votes"))
+                        v = common.to_int(sub.get("votes"))
+                        votes[n] = votes.get(n, 0) + v
+                        um = modes.setdefault(n, {})
+                        um[mode] = um.get(mode, 0) + v
                         if sub.tag == "Precinct":
                             out["level"] = "Precinct"
             if not sub_found:  # no breakdown at all: put the total on the region
                 votes[out["region"]] = common.to_int(ch.get("totalVotes"))
             choices.append({"name": clean or text, "party": ch.get("party") or suffix_party,
-                            "votes": votes, "total": common.to_int(ch.get("totalVotes"))})
+                            "votes": votes, "modes": modes, "total": common.to_int(ch.get("totalVotes"))})
         out["contests"][name] = {"choices": choices, "reporting": reporting,
                                  "is_question": contest.get("isQuestion") == "true"}
     return out
@@ -164,7 +171,10 @@ def rows_from_parsed(parsed: dict, race: str, state: str, county: str | None = N
                     rec = counties[fips] = {"county": common.county_name(fips, cname), "votes": {},
                                             "prt": prt, "ptl": ptl}
                 rec["votes"][ch["name"]] = rec["votes"].get(ch["name"], 0) + v
-        per_contest.append(common.build_rows(state, counties, parties))
+                for m, mv in (ch.get("modes") or {}).get(unit, {}).items():
+                    d = rec.setdefault("modes", {}).setdefault(m, {})
+                    d[ch["name"]] = d.get(ch["name"], 0) + mv
+        per_contest.append(common.add_modes(common.build_rows(state, counties, parties), counties))
     if len(per_contest) == 1:
         return per_contest[0]
     label = "U.S. House" if house else race
