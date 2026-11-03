@@ -154,7 +154,111 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
             comb[f"d_{y % 100}"] = g(c26) - g(cy)
             comb[f"proj_mix_{y % 100}"] = g(p26); comb[f"proj_d_{y % 100}"] = g(p26) - g(cy)
         pnl["combined"] = comb
+    try:
+        attach_markets(results, snap, cfg)
+    except Exception:  # noqa: BLE001
+        traceback.print_exc()
+    try:
+        turnout_vs_expectation(results, snap, b)
+    except Exception:  # noqa: BLE001
+        traceback.print_exc()
     return snap
+
+
+_MK: tuple[float, dict] = (0.0, {})
+
+
+def attach_markets(results: list[dict], snap: dict, cfg: dict) -> None:
+    """Market-implied expected margin per race (Kalshi / Polymarket), and the live read against it:
+    rw_vs_market = projected margin (adjusted + reweighted) - market-implied margin."""
+    global _MK
+    mode = cfg.get("markets_mode", "live")
+    data = {}
+    if mode != "off":
+        if time.time() - _MK[0] < 60:
+            data = _MK[1]
+        else:
+            try:
+                if mode == "live":
+                    data = importlib.import_module("election_night.feeds.markets").fetch() or {}
+            except Exception:  # noqa: BLE001
+                data = {}
+            if not data:
+                p = HERE / "data" / "markets_snapshot.json"
+                if p.exists():
+                    data = json.loads(p.read_text())
+                    data["_snapshot"] = True
+            _MK = (time.time(), data)
+    races = (data or {}).get("races") or {}
+    num = den = 0.0
+    for r in results:
+        mk = races.get(r["id"]) or {}
+        r["market_margin"] = mk.get("implied_margin")
+        r["market_p_dem"] = mk.get("p_dem")
+        r["rw_vs_market"] = None
+        if r["market_margin"] is not None and r.get("rw_projected") is not None:
+            r["rw_vs_market"] = r["rw_projected"] - r["market_margin"]
+            num += r["rw_vs_market"] * r["votes"]; den += r["votes"]
+    snap["overall"]["rw_vs_market"] = num / den if den else None
+    snap["markets"] = {"national": (data or {}).get("national"), "as_of": (data or {}).get("as_of"),
+                       "snapshot": bool((data or {}).get("_snapshot")), "races": len(races)}
+
+
+def turnout_vs_expectation(results: list[dict], snap: dict, b) -> None:
+    """Is turnout delivering what the polls (and markets) expect?
+
+    Registration mix G (D-R share of the electorate) is not a vote margin: independents and
+    party-switchers decide the rest. For each race:
+        needed  = E - G_2026       net D margin the polls need from independents/crossovers
+        was_y   = M_y - G_y        what that net actually was in year y (actual result - mix)
+    If needed >> was_y, the expectation relies on unusual persuasion (turnout is under-delivering
+    for Democrats); if needed << was_y, turnout alone is beating expectations.
+    Full electorate (early + Election Day projected) where check-ins exist; else early vote only,
+    with E converted to an expected early-vote margin: E + (1 - s) * lean(early - ED).
+    """
+    panels = {p["state"]: p for p in (snap.get("checkins") or {}).get("panels") or [] if p.get("is_state")}
+    research = engine.load_research()
+    for r in results:
+        t = r.get("turnout") or {}
+        out = {}
+        E = r.get("forecast")
+        mk = r.get("market_margin")
+        st, office = r["state"], r.get("baseline_2022_office")
+        # actual statewide margins: 2024 president, 2022 baseline office
+        m24 = b.state_pres_margin(st)
+        agg = [0, 0, 0]
+        for f in b.state_counties(st):
+            c = b.c22.get((f, office))
+            if c:
+                agg = [x + y for x, y in zip(agg, c)]
+        m22 = engine.margin(*agg) if agg[2] else None
+        cb = (panels.get(st) or {}).get("combined")
+        if cb and cb.get("proj_mix_24") is not None:
+            G = cb["proj_mix_24"]
+            out["full"] = {"label": "early + Election Day (projected)", "mix": G, "expect": E, "needed": E - G,
+                           "market_needed": None if mk is None else mk - G,
+                           "was_24": None if cb.get("mix_2024_final") is None else m24 - cb["mix_2024_final"],
+                           "was_22": None if (cb.get("mix_2022_final") is None or m22 is None) else m22 - cb["mix_2022_final"]}
+        if t.get("party_gap_2026") is not None:
+            vt = r.get("vote_type") or {}
+            s_, d_ = vt.get("pre_share"), vt.get("delta")
+            if s_ is not None and d_ is not None:
+                Epre = E + (1 - s_) * d_
+                res = research.get(st, {}) or {}
+                pre24 = (res.get("margin_2024") or {}).get("pre")
+                # 2022 early-vote margin from county vote-type data, else research
+                pre = [0, 0, 0]
+                for f in b.state_counties(st):
+                    mm = b.c22_modes.get((f, office))
+                    if mm and mm.get("pre"):
+                        pre = [x + y for x, y in zip(pre, mm["pre"])]
+                pre22 = engine.margin(*pre) if pre[2] else (res.get("margin_2022") or {}).get("pre")
+                G = t["party_gap_2026"]
+                out["early"] = {"label": "early vote", "mix": G, "expect": Epre, "needed": Epre - G,
+                                "market_needed": None if mk is None else (mk + (1 - s_) * d_) - G,
+                                "was_24": None if (pre24 is None or t.get("party_gap_2024") is None) else pre24 - t["party_gap_2024"],
+                                "was_22": None if (pre22 is None or t.get("party_gap_2022") is None) else pre22 - t["party_gap_2022"]}
+        r["turnout_vs_exp"] = out or None
 
 
 def history_row(snap: dict) -> dict:
@@ -164,7 +268,7 @@ def history_row(snap: dict) -> dict:
                                                        "projected_vs_forecast", "est_in", "votes",
                                                        "swing24", "swing22", "current_margin",
                                                        "adj_vs_expect", "adj_firm_vs_expect", "adj_projected",
-                                                       "adj_est_in", "implied_turnout_vs_2022", "rw_vs_expect", "rw_projected")}
+                                                       "adj_est_in", "implied_turnout_vs_2022", "rw_vs_expect", "rw_projected", "rw_vs_market")}
                       for r in snap["races"]}}
 
 
@@ -266,6 +370,7 @@ def main():
     b = engine.Baselines.load()
     if a.demo:
         cfg["turnout_mode"] = "off"
+        cfg["markets_mode"] = "off"
     fetcher = DemoFeed(b, cfg, shift=a.demo_shift).fetch if a.demo else live_fetch
     interval = a.interval or (3 if a.demo else cfg.get("poll_seconds", 30))
 

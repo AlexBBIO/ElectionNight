@@ -46,6 +46,7 @@ def build(query: dict) -> bytes:
     # check-in snapshots are pushed to data/checkins.csv every 30 min; read those, don't write
     cfg["checkins_live"] = os.environ.get("CHECKINS_LIVE", "0") == "1"
     cfg["checkins_save"] = False
+    cfg["markets_mode"] = "off" if demo else os.environ.get("MARKETS_MODE", "live")
     if demo:
         feed = server.DemoFeed(_B, cfg, span=DEMO_CYCLE * 0.5)
         now = time.time()

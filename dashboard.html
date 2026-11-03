@@ -56,9 +56,10 @@ details .card{margin-top:10px}
 </header>
 <main>
   <section class="hero">
-    <div class="card"><div class="k">DEMOCRATS VS EXPECTATIONS</div><div class="big" id="h_main">—</div>
+    <div class="card"><div class="k">DEMOCRATS VS EXPECTATIONS (POLLS)</div><div class="big" id="h_main">—</div>
       <div class="sub" id="h_main_sub">waiting for votes</div>
-      <div class="row2"><div><div class="k">Implied national environment</div><div class="mid" id="h_nat">—</div><div class="sub" id="h_nat_sub"></div></div>
+      <div class="row2"><div><div class="k">vs prediction markets</div><div class="mid" id="h_mk">—</div><div class="sub" id="h_mk_sub">same read against market-implied margins</div></div>
+        <div><div class="k">Implied national environment</div><div class="mid" id="h_nat">—</div><div class="sub" id="h_nat_sub"></div></div>
         <div><div class="k">Expected vote counted</div><div class="mid" id="h_cnt">—</div><div class="sub">reporting races</div></div></div></div>
     <div class="card"><div class="k">TURNOUT · PARTY MIX SHIFT</div>
       <table style="margin-top:4px"><thead><tr><th></th><th>vs 2024</th><th>vs 2022</th></tr></thead><tbody>
@@ -78,7 +79,7 @@ details .card{margin-top:10px}
   <section class="card">
     <div class="head"><h2>Races</h2><span class="sub">click a race for counties and model detail</span></div>
     <div class="scroll"><table id="races"><thead><tr><th>Race</th><th>Polls close (ET)</th><th>Counted</th>
-      <th title="Adjusted for vote type and county mix">Dems vs exp.</th><th>Projected</th><th>Forecast</th></tr></thead><tbody></tbody></table></div>
+      <th title="Adjusted for vote type and county mix, vs poll expectation">Dems vs polls</th><th title="Projected margin minus market-implied margin">vs markets</th><th>Projected</th><th>Polls</th><th title="Market-implied margin (Kalshi/Polymarket win probability or margin brackets)">Markets</th></tr></thead><tbody></tbody></table></div>
     <div id="detail" style="margin-top:14px"></div>
   </section>
 
@@ -88,6 +89,14 @@ details .card{margin-top:10px}
     <div class="sub" id="ci_sum" style="margin-bottom:6px"></div>
     <div id="ci_chart"></div>
     <p class="note">Cumulative in-person Election Day check-ins by party registration. Horizontal lines = that year's final Election Day total; dots = snapshots saved through the day. Registration isn't vote choice, and Election Day's share keeps shrinking as voters (lately more Republicans) vote early, so read this with the early-vote mix below.</p>
+  </section>
+
+  <section class="card">
+    <div class="head"><h2>Is turnout delivering what's expected?</h2><span class="sub">turnout-implied margin vs the poll and market expectation</span></div>
+    <div class="scroll"><table id="tve"><thead><tr><th>Race</th><th>Electorate</th><th title="(D−R) share of the electorate by party registration">Party mix</th>
+      <th title="Party mix + the net independent/crossover margin seen in 2024">Turnout-implied<br>(2024 persuasion)</th><th title="Same with 2022's net independent/crossover margin">(2022 persuasion)</th>
+      <th>Expected (polls)</th><th>Turnout vs polls</th><th>Expected (markets)</th><th>Turnout vs markets</th><th title="Net D margin among independents/crossovers the polls need, vs what it was in 2024 / 2022">Polls need from indep. · was '24 · '22</th></tr></thead><tbody></tbody></table></div>
+    <p class="note">Party registration isn't a vote, so the turnout-implied margin = this year's party mix + the net independent and crossover margin seen in 2024 (or 2022). An R+ "turnout vs polls" means turnout alone falls short of what the polls expect, and the expectation relies on independents swinging further toward Democrats than they did then. Early-vote rows compare against the expected early-vote margin (expectation + the usual early-vote lean). Florida's full-electorate row projects Election Day to finish at 2024's volume with today's mix.</p>
   </section>
 
   <section class="card">
@@ -158,6 +167,7 @@ function render(data){const s=data.snapshot;if(!s)return;if(last!==data)scoreBat
   $("#ts").textContent="updated "+new Date(s.ts).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"})+" · "+o.races_reporting+" of "+s.races.length+" races reporting";
   set("#h_main",o.rw_vs_expect,true);
   $("#h_main_sub").textContent=o.rw_vs_expect==null?"waiting for votes":`± ${errAt(o.counted||0).toFixed(1)} pts expected error · adjusted for vote type and county mix · raw count says ${m(o.vs_expect)}`;
+  set("#h_mk",o.rw_vs_market);$("#h_mk_sub").textContent=s.markets&&s.markets.races?`Kalshi/Polymarket · ${s.markets.races} races${s.markets.snapshot?" (saved prices)":""}`:"market data unavailable";
   set("#h_nat",o.rw_implied_generic);$("#h_nat_sub").textContent="polls: "+m(o.generic_ballot);
   $("#h_cnt").textContent=o.races_reporting?pct(o.counted):"—";
   const ck=s.checkins||{};set("#h_ev",o.turnout_party_shift);set("#h_ev24",o.turnout_party_shift_24);set("#h_ed",ck.d_mix_22);set("#h_ed24",ck.d_mix_24);
@@ -167,11 +177,12 @@ function render(data){const s=data.snapshot;if(!s)return;if(last!==data)scoreBat
   $("#races tbody").innerHTML=s.races.map(r=>{const st=r.status||"",dot=st==="ok"?"ok":(st.startsWith("error")||st.startsWith("no feed"))?"err":"";
     return `<tr class="click ${r.id===sel?"sel":""}" data-id="${r.id}"><td><span class="dot ${dot}" title="${st.replace(/"/g,"'")}"></span><b>${r.label}</b>${r.dem_name?` <span class="faint">${r.dem_name} v ${r.rep_name}</span>`:""}</td>
       <td>${closeFmt(r.polls_close_et)}</td><td>${r.votes?pct(r.adj_est_in):"—"}<span class="bar"><i style="width:${Math.min(100,(r.adj_est_in||0)*100)}%"></i></span></td>
-      <td class="${cls(r.rw_vs_expect)}"><b>${m(r.rw_vs_expect)}</b></td><td class="${cls(r.rw_projected)}">${m(r.rw_projected)}</td>
-      <td class="${cls(r.forecast)}" title="${r.expect_source}">${m(r.forecast)}${r.expect_source==="national generic ballot"?"†":""}</td></tr>`}).join("");
+      <td class="${cls(r.rw_vs_expect)}"><b>${m(r.rw_vs_expect)}</b></td><td class="${cls(r.rw_vs_market)}"><b>${m(r.rw_vs_market)}</b></td><td class="${cls(r.rw_projected)}">${m(r.rw_projected)}</td>
+      <td class="${cls(r.forecast)}" title="${r.expect_source}">${m(r.forecast)}${r.expect_source==="national generic ballot"?"†":""}</td>
+      <td class="${cls(r.market_margin)}" title="${r.market_p_dem==null?"":"P(Dem win) "+Math.round(r.market_p_dem*100)+"%"}">${m(r.market_margin)}${r.market_p_dem==null?"":` <span class="faint">${Math.round(r.market_p_dem*100)}%</span>`}</td></tr>`}).join("");
   document.querySelectorAll("#races tbody tr").forEach(tr=>tr.onclick=()=>{sel=sel===tr.dataset.id?null:tr.dataset.id;render(last)});
   renderDetail(s.races.find(r=>r.id===sel));
-  renderChart(data.history||[],s.races);renderCheckins(ck);renderEV(s);renderMore(s);}
+  renderChart(data.history||[],s.races);renderCheckins(ck);renderEV(s);renderTVE(s);renderMore(s);}
 
 function renderDetail(r){const el=$("#detail");if(!r){el.innerHTML="";return}
   const cp=r.rw_components||{},v=r.vote_type||{};
@@ -249,6 +260,14 @@ function renderCheckins(ck){const ps=ck.panels||[],sp=$("#ci_state"),cp=$("#ci_c
 $("#ci_state").onchange=()=>{ciState=$("#ci_state").value;ciCty="";last&&render(last)};
 $("#ci_cty").onchange=()=>{ciCty=$("#ci_cty").value;last&&render(last)};
 
+function renderTVE(s){const rows=[];s.races.forEach(r=>{const tv=r.turnout_vs_exp;if(!tv)return;
+  ["full","early"].forEach(k=>{const x=tv[k];if(!x)return;const T24=x.was_24==null?null:x.mix+x.was_24,T22=x.was_22==null?null:x.mix+x.was_22,
+    mE=x.market_needed==null?null:x.mix+x.market_needed,T=T24!=null?T24:T22;
+    rows.push(`<tr><td><b>${r.label}</b></td><td class="faint">${x.label}</td><td class="${cls(x.mix)}">${m(x.mix)}</td>
+      <td class="${cls(T24)}"><b>${m(T24)}</b></td><td class="${cls(T22)}">${m(T22)}</td><td class="${cls(x.expect)}">${m(x.expect)}</td>
+      <td class="${cls(T==null?null:T-x.expect)}"><b>${T==null?"—":m(T-x.expect)}</b></td><td class="${cls(mE)}">${m(mE)}</td><td class="${cls(T==null||mE==null?null:T-mE)}"><b>${T==null||mE==null?"—":m(T-mE)}</b></td>
+      <td>${m(x.needed)} · <span class="faint">${m(x.was_24)} · ${m(x.was_22)}</span></td></tr>`)})});
+  $("#tve tbody").innerHTML=rows.join("")||`<tr><td colspan="10" class="empty">Needs party-registration turnout data (FL, NC, KY)${s.demo?" — off in demo":""}.</td></tr>`}
 function renderEV(s){const seen=new Set(),rows=[],x=v=>v==null?"—":v.toFixed(2)+"×",c=v=>`<td class="${cls(v)}">${m(v)}</td>`;
   s.races.forEach(r=>{const t=r.turnout;if(!t||seen.has(r.state))return;seen.add(r.state);const src=t.source||{};
   rows.push(`<tr><td><b>${r.state}</b></td><td>${n(t.pre_ballots)}</td><td>${x(t.pre_ratio_24)}</td><td>${x(t.pre_ratio_22)}</td>
