@@ -14,25 +14,152 @@
   "expected_turnout_vs_2022": 1.0,
   "firm_threshold": 0.9,
   "races": [
-    {"id": "KY-SEN", "state": "KY", "label": "Kentucky Senate", "feed": "ky", "race": "U.S. Senate",
-     "baseline_2022": {"office": "US SENATE"}, "forecast_margin": null, "polls_close_et": "18:00"},
-    {"id": "IN-HOUSE", "state": "IN", "label": "Indiana U.S. House (all districts)", "feed": "in_", "race": "U.S. House",
-     "baseline_2022": {"office": "US HOUSE"}, "forecast_margin": null, "polls_close_et": "18:00"},
-    {"id": "FL-GOV", "state": "FL", "label": "Florida Governor", "feed": "fl", "race": "Governor",
-     "baseline_2022": {"office": "GOVERNOR"}, "forecast_margin": -3.9, "low_confidence": true, "polls_close_et": "20:00 (state file)"},
-    {"id": "FL-SEN", "state": "FL", "label": "Florida Senate (special)", "feed": "fl", "race": "U.S. Senate",
-     "baseline_2022": {"office": "US SENATE"}, "forecast_margin": -6.3, "polls_close_et": "20:00 (state file)"},
-    {"id": "GA-SEN", "state": "GA", "label": "Georgia Senate", "feed": "ga", "race": "U.S. Senate",
-     "baseline_2022": {"office": "US SENATE"}, "forecast_margin": 8.8, "polls_close_et": "19:00"},
-    {"id": "VA-SEN", "state": "VA", "label": "Virginia Senate", "feed": "va", "race": "U.S. Senate",
-     "baseline_2022": {"office": "US HOUSE"}, "forecast_margin": null, "polls_close_et": "19:00"},
-    {"id": "SC-SEN", "state": "SC", "label": "South Carolina Senate", "feed": "sc", "race": "U.S. Senate",
-     "baseline_2022": {"office": "US SENATE"}, "forecast_margin": null, "polls_close_et": "19:00"},
-    {"id": "NC-SEN", "state": "NC", "label": "North Carolina Senate", "feed": "nc", "race": "U.S. Senate",
-     "baseline_2022": {"office": "US SENATE"}, "forecast_margin": 10.6, "polls_close_et": "19:30"},
-    {"id": "OH-SEN", "state": "OH", "label": "Ohio Senate (special)", "feed": "oh", "race": "U.S. Senate",
-     "baseline_2022": {"office": "US SENATE"}, "forecast_margin": 2.9, "polls_close_et": "19:30"},
-    {"id": "OH-GOV", "state": "OH", "label": "Ohio Governor", "feed": "oh", "race": "Governor",
-     "baseline_2022": {"office": "GOVERNOR"}, "forecast_margin": 3.3, "low_confidence": true, "polls_close_et": "19:30"}
+    {
+      "id": "KY-SEN",
+      "state": "KY",
+      "label": "Kentucky Senate",
+      "feed": "ky",
+      "race": "U.S. Senate",
+      "baseline_2022": {
+        "office": "US SENATE"
+      },
+      "forecast_margin": null,
+      "polls_close_et": "18:00"
+    },
+    {
+      "id": "IN-SOS",
+      "state": "IN",
+      "label": "Indiana Secretary of State",
+      "feed": "in_",
+      "race": "Secretary of State",
+      "baseline_2022": {
+        "office": "US SENATE"
+      },
+      "forecast_margin": null,
+      "polls_close_et": "18:00"
+    },
+    {
+      "id": "IN-HOUSE",
+      "state": "IN",
+      "label": "Indiana U.S. House (all districts)",
+      "feed": "in_",
+      "race": "U.S. House",
+      "baseline_2022": {
+        "office": "US HOUSE"
+      },
+      "forecast_margin": null,
+      "polls_close_et": "18:00"
+    },
+    {
+      "id": "FL-GOV",
+      "state": "FL",
+      "label": "Florida Governor",
+      "feed": "fl",
+      "race": "Governor",
+      "baseline_2022": {
+        "office": "GOVERNOR"
+      },
+      "forecast_margin": -3.9,
+      "low_confidence": true,
+      "polls_close_et": "20:00 (state file)"
+    },
+    {
+      "id": "FL-SEN",
+      "state": "FL",
+      "label": "Florida Senate (special)",
+      "feed": "fl",
+      "race": "U.S. Senate",
+      "baseline_2022": {
+        "office": "US SENATE"
+      },
+      "forecast_margin": -6.3,
+      "polls_close_et": "20:00 (state file)"
+    },
+    {
+      "id": "GA-SEN",
+      "state": "GA",
+      "label": "Georgia Senate",
+      "feed": "ga",
+      "race": "U.S. Senate",
+      "baseline_2022": {
+        "office": "US SENATE"
+      },
+      "forecast_margin": 8.8,
+      "polls_close_et": "19:00"
+    },
+    {
+      "id": "GA-GOV",
+      "state": "GA",
+      "label": "Georgia Governor",
+      "feed": "ga",
+      "race": "Governor",
+      "baseline_2022": {
+        "office": "GOVERNOR"
+      },
+      "forecast_margin": -1.4,
+      "low_confidence": true,
+      "polls_close_et": "19:00"
+    },
+    {
+      "id": "VA-SEN",
+      "state": "VA",
+      "label": "Virginia Senate",
+      "feed": "va",
+      "race": "U.S. Senate",
+      "baseline_2022": {
+        "office": "US HOUSE"
+      },
+      "forecast_margin": null,
+      "polls_close_et": "19:00"
+    },
+    {
+      "id": "SC-SEN",
+      "state": "SC",
+      "label": "South Carolina Senate",
+      "feed": "sc",
+      "race": "U.S. Senate",
+      "baseline_2022": {
+        "office": "US SENATE"
+      },
+      "forecast_margin": null,
+      "polls_close_et": "19:00"
+    },
+    {
+      "id": "NC-SEN",
+      "state": "NC",
+      "label": "North Carolina Senate",
+      "feed": "nc",
+      "race": "U.S. Senate",
+      "baseline_2022": {
+        "office": "US SENATE"
+      },
+      "forecast_margin": 10.6,
+      "polls_close_et": "19:30"
+    },
+    {
+      "id": "OH-SEN",
+      "state": "OH",
+      "label": "Ohio Senate (special)",
+      "feed": "oh",
+      "race": "U.S. Senate",
+      "baseline_2022": {
+        "office": "US SENATE"
+      },
+      "forecast_margin": 2.9,
+      "polls_close_et": "19:30"
+    },
+    {
+      "id": "OH-GOV",
+      "state": "OH",
+      "label": "Ohio Governor",
+      "feed": "oh",
+      "race": "Governor",
+      "baseline_2022": {
+        "office": "GOVERNOR"
+      },
+      "forecast_margin": 3.3,
+      "low_confidence": true,
+      "polls_close_et": "19:30"
+    }
   ]
 }
