@@ -178,6 +178,7 @@ if __name__ == "__main__":
 # M_eday assumptions so the dependence on that assumption is visible. As counties report,
 # observed early-vote and Election Day margins replace the priors (update()).
 # ======================================================================================
+import math
 import random as _random
 from statistics import NormalDist as _ND
 
@@ -188,6 +189,16 @@ ED_POOL = {"mean": -20.0, "sd": 8.0,
                    "final R+10.9, i.e. Election Day was only a few points more Republican than the early vote. "
                    "The prior used is the average of the pool estimate and the Election Day margin implied by the "
                    "poll/market prior (which equals ~R+14 when the early vote is D+3.8)."}
+# Election Day relative to the early vote ("gap", pts; positive = Election Day redder).
+# History: 2022 ~3 (early-only R+10, final R+10.9), 2024 2.6 (early R+13.2, Election Day R+15.8).
+# 2026: Democratic-primary voters front-loaded into early voting (early electorate at parity by
+# primary history vs R+10-11 in 2022/2024), so the Election Day remainder is ~R+10-17 more
+# Republican by party mix than the early electorate (~9-15 pts of margin) on top of the usual ~3.
+# The unvoted Republican-primary pool (2.1M) is about the size it was in 2022 (~2.3M); the change
+# is the smaller Democratic remainder. Harris's Election Day running at 91% of its 2024 pace argues
+# against an extreme Republican Election Day. Prior: 13 +/- 5.
+GAP = {"mean": 13.0, "sd": 5.0, "history": {"2022": 2.8, "2024": 2.6},
+       "market_implied_note": "the 6 AM poll/market prior implies ~22 given an early vote of D+3.8"}
 BENCH_2022 = {"early_only_margin": -10.0, "final": -10.9,
               "note": "2022: Abbott 54-44 with all early votes and ~30% of Election Day precincts (Texas Tribune)"}
 
@@ -203,7 +214,7 @@ ED_SIZE = {"mean": 2.5e6, "sd": 0.45e6,
                          "late early-vote pace x 2022 ED (fails the Harris check)": 3.59e6}}
 
 
-def pre_close(cfg: dict, markets: dict | None, early_votes: float = 7_711_462, m_early=(3.8, 3.0),
+def pre_close(cfg: dict, markets: dict | None, early_votes: float = 7_711_462, m_early=(3.8, 4.0),
               total=(7_711_462 + ED_SIZE["mean"], ED_SIZE["sd"]), ed=None, n: int = 40000, seed: int = 5, rid: str = "TX-GOV",
               observed: dict | None = None) -> dict:
     rng = _random.Random(seed)
@@ -222,8 +233,9 @@ def pre_close(cfg: dict, markets: dict | None, early_votes: float = 7_711_462, m
     s0 = early_votes / total[0]
     # Election Day prior: implied by the overall prior given the early-vote prior, blended with pool evidence
     ed_implied = (prior - s0 * m_early[0]) / (1 - s0)
-    ed = ed or {"mean": 0.5 * ed_implied + 0.5 * (ED_POOL["mean"] + split), "sd": ED_POOL["sd"],
-                "implied_by_prior": ed_implied, "pool": ED_POOL["mean"], "note": ED_POOL["note"]}
+    ed = ed or {"mode": "gap", "mean": m_early[0] - GAP["mean"], "sd": math.sqrt(GAP["sd"] ** 2 + m_early[1] ** 2),
+                "gap": GAP, "implied_by_prior": ed_implied, "implied_gap": m_early[0] - ed_implied,
+                "pool": ED_POOL["mean"] + split, "note": ED_POOL["note"]}
     obs = observed or {}
     finals = []
     for _ in range(n):
@@ -237,6 +249,8 @@ def pre_close(cfg: dict, markets: dict | None, early_votes: float = 7_711_462, m
             ed_total = max(1.0, T - early_votes)
             frac = min(1.0, obs.get("eday_counted", 0) / ed_total)
             md = rng.gauss(obs["m_eday"], max(1.0, ed["sd"] * (1 - frac)))
+        elif ed.get("mode") == "gap":
+            md = me - rng.gauss(GAP["mean"], GAP["sd"])
         else:
             md = rng.gauss(ed["mean"], ed["sd"])
         finals.append(s * me + (1 - s) * md)
