@@ -166,9 +166,17 @@ def poll_once(cfg: dict, b: engine.Baselines, fetcher) -> dict:
             if not fin or not ey:
                 continue
             cy = [ey[0] + fin[1], ey[1] + fin[0], ey[2] + fin[2]]
-            # projection: rest of Election Day at that year's final ED volume, with today's ED mix
-            k = max(1.0, sum(fin) / l["total"]) if l["total"] else 1.0
-            p26 = [e26[0] + l["dem"] * k, e26[1] + l["rep"] * k, e26[2] + l["oth"] * k]
+            # projection of the full Election Day: pace-based (each county's count / typical share of
+            # the day done by its local time) when available, else that year's final ED volume
+            pace = pnl.get("pace")
+            if pace and pace.get("proj"):
+                pr = pace["proj"]  # [rep, dem, oth]
+                p26 = [e26[0] + pr[1], e26[1] + pr[0], e26[2] + pr[2]]
+                comb["ed_projection"] = "pace"
+            else:
+                k = max(1.0, sum(fin) / l["total"]) if l["total"] else 1.0
+                p26 = [e26[0] + l["dem"] * k, e26[1] + l["rep"] * k, e26[2] + l["oth"] * k]
+                comb["ed_projection"] = f"{y} volume"
             comb[f"mix_{y}_final"] = g(cy); comb[f"votes_{y}"] = sum(cy)
             comb[f"d_{y % 100}"] = g(c26) - g(cy)
             comb[f"proj_mix_{y % 100}"] = g(p26); comb[f"proj_d_{y % 100}"] = g(p26) - g(cy)

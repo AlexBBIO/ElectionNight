@@ -266,6 +266,7 @@ function renderCheckins(ck){const ps=ck.panels||[],sp=$("#ci_state"),cp=$("#ci_c
   $("#ci_sum").innerHTML=`<b>${p.name}</b> · as of ${hh(l.hour)}${p.is_state?" ET":""} · Election Day mix <b class="${cls(p.mix_2026)}">${m(p.mix_2026)}</b>`+
     [2024,2022].map(y=>p["mix_"+y]!=null?` · ${y} ${p["basis_"+y]==="same hour"?"same hour":"final"} <span class="${cls(p["mix_"+y])}">${m(p["mix_"+y])}</span> (Δ <b class="${cls(p["d_mix_"+(y%100)])}">${m(p["d_mix_"+(y%100)])}</b>)`:"").join("")+
     (p.pace_2022?` · volume ${pct(p.pace_2022.total)} of 2022 final`:"")+
+    (p.pace&&p.pace.proj?`<br><b>Election Day projected from pace:</b> ${kfmt(p.pace.proj.reduce((a,b)=>a+b,0))} voters (${pct(p.pace.vs_2022_ed)} of 2022's Election Day, ${pct(p.pace.vs_2024_ed)} of 2024's) · about ${pct(p.pace.share_done)} of the day's vote in so far, using a typical hourly turnout curve`:"")+
     (cb?`<br><b>Early + Election Day so far:</b> <b class="${cls(cb.mix_2026)}">${m(cb.mix_2026)}</b> (${kfmt(cb.votes_2026)} voters)`+
       [2024,2022].map(y=>cb["mix_"+y+"_final"]!=null?` · ${y} total <span class="${cls(cb["mix_"+y+"_final"])}">${m(cb["mix_"+y+"_final"])}</span> (Δ <b class="${cls(cb["d_"+(y%100)])}">${m(cb["d_"+(y%100)])}</b>)`:"").join("")+
       `<br><b>Projected</b> if the rest of Election Day reaches that year's volume at today's mix:`+

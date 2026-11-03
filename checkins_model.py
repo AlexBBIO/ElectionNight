@@ -34,6 +34,21 @@ SAVED = DATA / "checkins.csv"
 ET = _dt.timezone(_dt.timedelta(hours=-5))
 _LIVE: tuple[float, list] = (0.0, [])
 
+# Typical cumulative share of the day's in-person Election Day vote by local clock time, polls
+# 7 AM - 7 PM (morning bump, midday lull, after-work surge). An assumption, not FL-specific
+# data; used to project each county's final Election Day vote from its count so far.
+CURVE = [(7, 0.0), (8, 0.09), (9, 0.18), (10, 0.26), (11, 0.33), (12, 0.40), (13, 0.47),
+         (14, 0.54), (15, 0.61), (16, 0.69), (17, 0.78), (18, 0.89), (19, 1.0)]
+
+
+def curve_share(h: float) -> float:
+    if h <= CURVE[0][0]:
+        return 0.0
+    for (h0, a), (h1, b) in zip(CURVE, CURVE[1:]):
+        if h <= h1:
+            return a + (b - a) * (h - h0) / (h1 - h0)
+    return 1.0
+
 
 def _num(x):
     try:
@@ -182,11 +197,40 @@ def summary(live: bool = True, save: bool = True) -> dict:
                     tot = [a + b for a, b in zip(tot, last[-1][1:])]
             ser.append([t] + tot)
         finals = {y: [sum(p["finals"][y][i] for p in ps) for i in range(3)] for y in (2022, 2024)}
+        # pace projection: each county's latest count / typical share of the day done by its
+        # local time (skip counties whose latest snapshot is too early to project from)
+        proj, done_w, used = [0.0, 0.0, 0.0], 0.0, 0
+        for p in ps:
+            h, R, D, O = p["series"][2026][-1]
+            sh = curve_share(h)
+            if sh < 0.25:  # stale/early snapshot: scale its 2022 final ED by the state's pace later
+                continue
+            proj = [proj[0] + R / sh, proj[1] + D / sh, proj[2] + O / sh]
+            done_w += (R + D + O); used += 1
+        pace_info = None
+        if used:
+            cur = sum(sum(p["series"][2026][-1][1:]) for p in ps if curve_share(p["series"][2026][-1][0]) >= 0.25)
+            frac = cur / sum(proj) if sum(proj) else None
+            # counties skipped: assume they finish at the same ratio to their 2022 ED as the rest
+            rest = [p for p in ps if curve_share(p["series"][2026][-1][0]) < 0.25]
+            f22_used = sum(sum(p["finals"][2022]) for p in ps if p not in rest)
+            ratio = sum(proj) / f22_used if f22_used else 1.0
+            for p in rest:
+                f = p["finals"][2022]
+                tot = sum(f) * ratio
+                h, R, D, O = p["series"][2026][-1]
+                cs = R + D + O
+                mix = [R / cs, D / cs, O / cs] if cs else [f[0] / sum(f), f[1] / sum(f), f[2] / sum(f)]
+                proj = [proj[i] + tot * mix[i] for i in range(3)]
+            pace_info = {"proj": proj, "share_done": frac, "counties_used": used, "counties_scaled": len(rest),
+                         "vs_2022_ed": sum(proj) / sum(finals[2022]) if sum(finals[2022]) else None,
+                         "vs_2024_ed": sum(proj) / sum(finals[2024]) if sum(finals[2024]) else None}
         pn = _panel(f"{st} — {len(ps)} counties", st, {2026: ser}, finals,
                     note="sum of counties reporting today that also have 2022 and 2024 finals; Eastern time")
         if pn:
             pn["key"] = f"{st}|__state"
             pn["is_state"] = True
+            pn["pace"] = pace_info
             states.append(pn)
     # headline: state sums + jurisdictions in states without a sum
     summed = {s["state"] for s in states}
