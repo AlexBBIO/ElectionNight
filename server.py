@@ -32,17 +32,44 @@ LOCK = threading.Lock()
 
 # ---------------------------------------------------------------- feeds
 def _nbc_rows(race: dict) -> list[dict]:
-    """AP county results via NBC's results pages; batches are marked early/mail when the
-    statewide split shows no Election Day votes yet."""
+    """AP county results via NBC's results pages. AP gives the vote-type split only statewide,
+    so each county's count is split into early/mail and Election Day using the statewide
+    Election Day share f of counted votes and the statewide early-minus-Election-Day gap d
+    observed in AP's split: county margin M = (1-f)*Mp + f*Me with Me = Mp - d, so
+    Mp = M + f*d. While Election Day is a negligible share (f < 5%) the batch is all early/mail."""
     nbc = importlib.import_module("election_night.feeds.nbc")
     rows = nbc.fetch(f"{race['state']}|{race['race']}")
     split = nbc.statewide_split(nbc._slug(race["state"], race["race"]))
-    ed = sum((x["votes"] or 0) for x in split if (x["type"] or "").startswith("Election"))
-    tot = sum((x["votes"] or 0) for x in split) or 1
+    tot = sum((x["votes"] or 0) for x in split) or 0
+    edv = [x for x in split if (x["type"] or "").startswith("Election")]
+    ed = sum((x["votes"] or 0) for x in edv)
+    f = ed / tot if tot else 0.0
+    dname = next((r["dem_name"] for r in rows if r.get("dem_name")), "") or ""
+    rname = next((r["rep_name"] for r in rows if r.get("rep_name")), "") or ""
+    dl, rl = dname.split()[-1] if dname else "", rname.split()[-1] if rname else ""
+
+    def mg(xs):
+        v = sum((x["votes"] or 0) for x in xs)
+        if not v:
+            return None
+        return sum(((x["shares"].get(dl) or 0) - (x["shares"].get(rl) or 0)) * (x["votes"] or 0) for x in xs) / v
+    pre_x = [x for x in split if x not in edv]
+    gap = (mg(pre_x) - mg(edv)) if (pre_x and edv and mg(pre_x) is not None and mg(edv) is not None) else None
     for r in rows:
         r["source"] = "AP via NBC"
-        if r["total"] and ed / tot < 0.05:   # Election Day still a negligible share of counted votes
-            r["modes"] = {"pre": {"dem": r["dem"], "rep": r["rep"], "total": r["total"]}}
+        if not r["total"]:
+            continue
+        if f < 0.05 or gap is None:
+            if f < 0.05:
+                r["modes"] = {"pre": {"dem": r["dem"], "rep": r["rep"], "total": r["total"]}}
+            continue
+        T = r["total"]; M = 100 * (r["dem"] - r["rep"]) / T
+        mp = M + f * gap; me = mp - gap
+        tp, te = T * (1 - f), T * f
+        two_p, two_e = (r["dem"] + r["rep"]) * (1 - f), (r["dem"] + r["rep"]) * f
+        r["modes"] = {"pre": {"dem": (two_p + tp * mp / 100) / 2, "rep": (two_p - tp * mp / 100) / 2, "total": tp},
+                      "eday": {"dem": (two_e + te * me / 100) / 2, "rep": (two_e - te * me / 100) / 2, "total": te}}
+        r["ap_split"] = {"eday_share": f, "gap": gap}
     return rows
 
 
