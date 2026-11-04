@@ -196,6 +196,20 @@
       "delta": 10.0,
       "turnout_factor": 1.26,
       "notes": "TX: early vote (7.71M) posts first after 8 PM ET. Measured 2022 gap (Election Day minus early) 7.5 pts, 2024 2.6; 10 used because Democratic-primary voters front-loaded into early voting this year. turnout_factor 1.26 = ~10.2M expected / 8.1M in 2022. County 2022 early/Election Day splits are loaded from data/tx_vote_types_2022_2024.json."
+    },
+    "FL": {
+      "delta": 31.0,
+      "notes": "FL early-minus-Election-Day gap: 2024 15.6; 2026 Election Day check-ins are R+26 by registration vs early R+2.4 (gap 24 vs 6.4 in 2024), so ~31 used."
+    },
+    "IN": {
+      "delta": 40.0,
+      "pre_share": 0.43,
+      "notes": "IN: observed tonight (AP split) early in-person Bayh +1, Election Day Engling +39 -> gap ~40."
+    },
+    "KY": {
+      "delta": 8.0,
+      "pre_share": 0.27,
+      "notes": "KY: observed tonight (AP split) early in-person R+52 vs Election Day R+58, mail R+28 -> gap ~8."
     }
   }
 }

@@ -31,9 +31,40 @@ LOCK = threading.Lock()
 
 
 # ---------------------------------------------------------------- feeds
+def _nbc_rows(race: dict) -> list[dict]:
+    """AP county results via NBC's results pages; batches are marked early/mail when the
+    statewide split shows no Election Day votes yet."""
+    nbc = importlib.import_module("election_night.feeds.nbc")
+    rows = nbc.fetch(f"{race['state']}|{race['race']}")
+    split = nbc.statewide_split(nbc._slug(race["state"], race["race"]))
+    ed = sum((x["votes"] or 0) for x in split if (x["type"] or "").startswith("Election"))
+    for r in rows:
+        r["source"] = "AP via NBC"
+        if r["total"] and ed == 0:
+            r["modes"] = {"pre": {"dem": r["dem"], "rep": r["rep"], "total": r["total"]}}
+    return rows
+
+
 def live_fetch(race: dict, election: str) -> list[dict]:
-    mod = importlib.import_module(f"election_night.feeds.{race['feed']}")
-    return mod.fetch(race["race"], election)
+    """Official state feed first; AP (via NBC) when the state feed is blocked or still empty,
+    or when AP has materially more votes (states publish later than AP collects)."""
+    err = None
+    rows = []
+    try:
+        mod = importlib.import_module(f"election_night.feeds.{race['feed']}")
+        rows = mod.fetch(race["race"], election)
+    except Exception as exc:  # noqa: BLE001
+        err = exc
+    if election == "2026-11-03":
+        try:
+            alt = _nbc_rows(race)
+            if sum(r["total"] for r in alt) > 1.2 * sum((r.get("total") or 0) for r in rows):
+                return alt
+        except Exception:  # noqa: BLE001
+            pass
+    if err is not None:
+        raise err
+    return rows
 
 
 class DemoFeed:
