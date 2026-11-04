@@ -202,9 +202,9 @@
       "notes": "FL early-minus-Election-Day gap: 2024 15.6; 2026 Election Day check-ins are R+26 by registration vs early R+2.4 (gap 24 vs 6.4 in 2024), so ~31 used."
     },
     "IN": {
-      "delta": 40.0,
+      "delta": 17.0,
       "pre_share": 0.43,
-      "notes": "IN: observed tonight (AP split) early in-person Bayh +1, Election Day Engling +39 -> gap ~40."
+      "notes": "IN: AP split at ~85% in (10:15 PM ET): early in-person Bayh +18, Election Day Bayh +1 -> gap ~17 (the earlier 40 came from a small first Election Day batch)."
     },
     "KY": {
       "delta": 8.0,
