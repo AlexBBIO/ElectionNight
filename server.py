@@ -38,9 +38,10 @@ def _nbc_rows(race: dict) -> list[dict]:
     rows = nbc.fetch(f"{race['state']}|{race['race']}")
     split = nbc.statewide_split(nbc._slug(race["state"], race["race"]))
     ed = sum((x["votes"] or 0) for x in split if (x["type"] or "").startswith("Election"))
+    tot = sum((x["votes"] or 0) for x in split) or 1
     for r in rows:
         r["source"] = "AP via NBC"
-        if r["total"] and ed == 0:
+        if r["total"] and ed / tot < 0.05:   # Election Day still a negligible share of counted votes
             r["modes"] = {"pre": {"dem": r["dem"], "rep": r["rep"], "total": r["total"]}}
     return rows
 
